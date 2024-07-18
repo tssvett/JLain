@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: schedule-bot
+
+bot:
+  name: ${BOT_NAME}
+  token: ${BOT_TOKEN}
