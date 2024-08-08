@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.config;
 
-import dev.tssvett.schedule_bot.bot.BotCommandsMenu;
+import dev.tssvett.schedule_bot.actions.handler.MenuHandler;
 import dev.tssvett.schedule_bot.bot.TelegramBot;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 @RequiredArgsConstructor
 public class BotInitializerConfig {
     private final TelegramBot telegramBot;
-    private final BotCommandsMenu botCommandsMenu;
+    private final MenuHandler menuHandler;
 
     @EventListener({ContextRefreshedEvent.class})
     public void init() throws TelegramApiException {
@@ -36,7 +36,7 @@ public class BotInitializerConfig {
     public void initBotMenu() {
         log.info("Initializing bot menu...");
         try {
-            telegramBot.execute(new SetMyCommands(botCommandsMenu.getBotCommandList(), new BotCommandScopeDefault(), null));
+            telegramBot.execute(new SetMyCommands(menuHandler.getBotCommandList(), new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
             log.error(e.getMessage());
         }

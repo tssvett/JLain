@@ -1,25 +1,29 @@
-package dev.tssvett.schedule_bot.actions.keyboard.callback;
+package dev.tssvett.schedule_bot.actions.keyboard.callback.impl;
 
 
-import dev.tssvett.schedule_bot.actions.command.schedule.group.Group;
-import dev.tssvett.schedule_bot.actions.command.schedule.parser.GroupParser;
-import dev.tssvett.schedule_bot.actions.keyboard.inline.InlineKeyboardMaker;
+import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
+import dev.tssvett.schedule_bot.actions.keyboard.callback.KeyboardCallback;
 import dev.tssvett.schedule_bot.constants.MessageConstants;
+import dev.tssvett.schedule_bot.schedule.group.Group;
+import dev.tssvett.schedule_bot.schedule.parser.GroupParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GroupKeyboardCallback {
+public class GroupKeyboardCallback implements KeyboardCallback {
     private final GroupParser groupParser;
-    private final InlineKeyboardMaker inlineKeyboardMaker;
 
-    public SendMessage callback(String chatId, CallbackDetails callbackDetails) {
+    @Override
+    public SendMessage callback(Update update) {
+        CallbackDetails callbackDetails = CallbackDetails.fromString(update.getCallbackQuery().getData());
+        String chatId = update.getCallbackQuery().getMessage().getChatId().toString();
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
 

@@ -1,6 +1,6 @@
-package dev.tssvett.schedule_bot.actions.command.schedule.parser;
+package dev.tssvett.schedule_bot.schedule.parser;
 
-import dev.tssvett.schedule_bot.actions.command.schedule.group.Group;
+import dev.tssvett.schedule_bot.schedule.group.Group;
 import dev.tssvett.schedule_bot.exceptions.ConnectionException;
 import dev.tssvett.schedule_bot.exceptions.ParseException;
 import lombok.extern.slf4j.Slf4j;

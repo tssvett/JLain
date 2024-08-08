@@ -41,8 +41,9 @@ public class MessageConstants {
             "\n" +
             "Если ты не уверен, как использовать команды, напиши /help, и я дам тебе подсказки. \uD83D\uDE09";
 
-    public static final String REGISTER_CHOOSE_COURSE_MESSAGE = "Теперь выбери свой курс!";
-    public static final String REGISTER_CHOOSE_GROUP_MESSAGE = "Теперь выбери свою группу!";
+    public static final String REGISTER_CHOOSE_FACULTY_SUCCESSFULLY_MESSAGE = "Начем регистрацию. Выбери свой факультет!";
+    public static final String REGISTER_CHOOSE_COURSE_MESSAGE = "Готово! Теперь выбери свой курс!";
+    public static final String REGISTER_CHOOSE_GROUP_SUCCESSFULLY_MESSAGE = "Готово! Теперь выбери свою группу!";
     public static final String SUCCESSFULLY_REGISTERED_MESSAGE = """
             ❤️ Поздравляем! Вы успешно зарегистрированы! ❤️
 

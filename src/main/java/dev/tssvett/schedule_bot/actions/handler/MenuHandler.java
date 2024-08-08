@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.bot;
+package dev.tssvett.schedule_bot.actions.handler;
 
 import dev.tssvett.schedule_bot.enums.Command;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Component
 @Getter
-public class BotCommandsMenu {
+public class MenuHandler {
     private final List<BotCommand> botCommandList = initCommands();
 
     private List<BotCommand> initCommands() {

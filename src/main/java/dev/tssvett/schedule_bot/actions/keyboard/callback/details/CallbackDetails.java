@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.actions.keyboard.callback;
+package dev.tssvett.schedule_bot.actions.keyboard.callback.details;
 
 import dev.tssvett.schedule_bot.enums.Action;
 import lombok.Builder;
@@ -14,7 +14,7 @@ public class CallbackDetails {
     private String callbackText;
 
     @Override
-    public String toString(){
+    public String toString() {
         return action + " " + callbackText;
     }
 
