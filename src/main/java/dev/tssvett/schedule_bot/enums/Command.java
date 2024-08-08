@@ -15,7 +15,9 @@ public enum Command {
     HELP(CommandConstants.HELP, HELP_DESCRIPTION),
     PICTURE(CommandConstants.PICTURE, PICTURE_DESCRIPTION),
     SCHEDULE(CommandConstants.SCHEDULE, SCHEDULE_DESCRIPTION),
-    REGISTER(CommandConstants.REGISTER, REGISTER_DESCRIPTION);
+    REGISTER(CommandConstants.REGISTER, REGISTER_DESCRIPTION),
+    GADIT(CommandConstants.GADIT, "null");
+
 
 
     private final String commandName;

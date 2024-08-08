@@ -1,7 +1,8 @@
 package dev.tssvett.schedule_bot.bot;
 
-import dev.tssvett.schedule_bot.handler.CallbackProvider;
+import dev.tssvett.schedule_bot.actions.provider.CallbackProvider;
 import dev.tssvett.schedule_bot.properties.BotProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -11,16 +12,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
     private final BotProperties botProperties;
     private final CallbackProvider callbackProvider;
-
-
-    public TelegramBot(BotProperties botProperties, CallbackProvider callbackProvider) {
-        this.botProperties = botProperties;
-        this.callbackProvider = callbackProvider;
-    }
-
+    
 
     @Override
     public String getBotUsername() {

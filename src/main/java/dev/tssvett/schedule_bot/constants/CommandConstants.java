@@ -6,4 +6,5 @@ public class CommandConstants {
     public static final String SCHEDULE = "/schedule";
     public static final String PICTURE = "/picture";
     public static final String REGISTER = "/register";
+    public static final String GADIT = "/gadit";
 }

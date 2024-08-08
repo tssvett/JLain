@@ -31,7 +31,7 @@ public class MessageConstants {
 
     public static final String PICTURE_COMMAND = "Картинка рандомная будет верь мне";
 
-    public static final String REGISTER_COMMAND = "Регистрация будет верь мне";
+    public static final String REGISTER_CHOOSE_FACULTY_MESSAGE = "Для начала выбери свой факультет!";
 
     public static final String UNAVAILABLE_COMMAND = "Извини, но я не понимаю твоей команды. \uD83D\uDE14\n" +
             "\n" +
@@ -40,4 +40,13 @@ public class MessageConstants {
             "Если ты хочешь добавить, изменить или удалить дело в своем расписании, используй команду /schedule.\n" +
             "\n" +
             "Если ты не уверен, как использовать команды, напиши /help, и я дам тебе подсказки. \uD83D\uDE09";
+
+    public static final String REGISTER_CHOOSE_COURSE_MESSAGE = "Теперь выбери свой курс!";
+    public static final String REGISTER_CHOOSE_GROUP_MESSAGE = "Теперь выбери свою группу!";
+    public static final String SUCCESSFULLY_REGISTERED_MESSAGE = """
+            ❤️ Поздравляем! Вы успешно зарегистрированы! ❤️
+
+            Чтобы узнать своё расписание занятий, просто введите команду /schedule в меню.
+            
+            Если у вас возникнут вопросы, не стесняйтесь обращаться! Добро пожаловать! \uD83C\uDF1F""";
 }
