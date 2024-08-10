@@ -4,6 +4,8 @@ import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetail
 import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.CourseKeyboardCallback;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.FacultyKeyboardCallback;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.GroupKeyboardCallback;
+import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.ReRegistrateCallback;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.ReRegistrateKeyboard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,7 @@ public class KeyboardHandler {
     private final FacultyKeyboardCallback facultyKeyboardCallback;
     private final CourseKeyboardCallback courseKeyboardCallback;
     private final GroupKeyboardCallback groupKeyboardCallback;
+    private final ReRegistrateCallback reRegistrateCallback;
 
 
     public SendMessage handleKeyboardAction(Update update) {
@@ -25,6 +28,7 @@ public class KeyboardHandler {
             case FACULTY_CHOOSE -> facultyKeyboardCallback.callback(update);
             case COURSE_CHOOSE -> courseKeyboardCallback.callback(update);
             case GROUP_CHOOSE -> groupKeyboardCallback.callback(update);
+            case REREGISTRATE -> reRegistrateCallback.callback(update);
         };
     }
 }

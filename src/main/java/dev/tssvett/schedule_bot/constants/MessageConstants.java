@@ -31,7 +31,7 @@ public class MessageConstants {
 
     public static final String PICTURE_COMMAND = "Картинка рандомная будет верь мне";
 
-    public static final String REGISTER_CHOOSE_FACULTY_MESSAGE = "Для начала выбери свой факультет!";
+    public static final String REGISTER_FACULTY_CHOOSING_MESSAGE = "Для начала выбери свой факультет!";
 
     public static final String UNAVAILABLE_COMMAND = "Извини, но я не понимаю твоей команды. \uD83D\uDE14\n" +
             "\n" +
@@ -50,4 +50,8 @@ public class MessageConstants {
             Чтобы узнать своё расписание занятий, просто введите команду /schedule в меню.
             
             Если у вас возникнут вопросы, не стесняйтесь обращаться! Добро пожаловать! \uD83C\uDF1F""";
+
+    public static final String ALREADY_REGISTERED_MESSAGE = """
+             ❤️ Вы уже прошли регистрацию ❤️
+             Желаете обновить свои данные и пройти регистрацию снова?""";
 }
