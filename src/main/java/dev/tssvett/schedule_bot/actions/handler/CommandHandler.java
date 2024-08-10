@@ -7,11 +7,10 @@ import dev.tssvett.schedule_bot.actions.command.impl.ScheduleCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.StartCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.ToChatCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.UnknownCommand;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.FacultyKeyboard;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.ReRegistrateKeyboard;
 import dev.tssvett.schedule_bot.constants.MessageConstants;
 import dev.tssvett.schedule_bot.enums.Command;
 import dev.tssvett.schedule_bot.repository.UserRepository;
+import dev.tssvett.schedule_bot.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -32,8 +31,7 @@ import static dev.tssvett.schedule_bot.constants.CommandConstants.START;
 @RequiredArgsConstructor
 public class CommandHandler {
     private final UserRepository userRepository;
-    private final FacultyKeyboard facultyKeyboard;
-    private final ReRegistrateKeyboard reRegistrateKerboard;
+    private final RegistrationService registrationService;
 
     public SendMessage handleCommands(Update update) {
         String command = update.getMessage().getText().split(" ")[0];
@@ -45,7 +43,7 @@ public class CommandHandler {
                 case HELP -> new HelpCommand().execute(update);
                 case SCHEDULE -> new ScheduleCommand().execute(update);
                 case PICTURE -> new PictureCommand().execute(update);
-                case REGISTER -> new RegisterCommand(facultyKeyboard,reRegistrateKerboard, userRepository).execute(update);
+                case REGISTER -> new RegisterCommand(registrationService).execute(update);
                 case GADIT -> new ToChatCommand().execute(update);
                 default -> new UnknownCommand().execute(update);
             };
