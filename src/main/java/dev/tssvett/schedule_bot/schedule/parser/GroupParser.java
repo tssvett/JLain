@@ -37,7 +37,6 @@ public class GroupParser implements Parser<Group> {
 
     private List<Group> parseAll(Elements rawGroups) {
         List<Group> groups = new ArrayList<>();
-        log.info(rawGroups.toString());
         for (org.jsoup.nodes.Element rawGroup : rawGroups) {
             String rawHref = rawGroup.attr("href");
             String rawName = rawGroup.select("a.btn-text.group-catalog__group span").first().text();
@@ -47,7 +46,6 @@ public class GroupParser implements Parser<Group> {
                     .build();
             groups.add(group);
         }
-        log.info(groups.toString());
         return groups;
     }
 

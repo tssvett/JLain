@@ -11,9 +11,9 @@ public class ToChatCommand implements Command {
 
     @Override
     public SendMessage execute(Update update) {
-        String command = update.getMessage().getText().split(" ")[0];
-        String chatId = String.valueOf(update.getMessage().getChatId());
-        log.info("Command: " + command);
+        Long userId = update.getMessage().getFrom().getId();
+        Long chatId = update.getMessage().getChatId();
+        log.info("Received " + this.getClass().getSimpleName() +  " from userId: {}", userId);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId("-4191336905");
         sendMessage.setText("А ведь даже почти не насрано с фабриками почти симпатично даже");

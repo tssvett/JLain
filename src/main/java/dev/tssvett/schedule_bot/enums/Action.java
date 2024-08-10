@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum Action {
     FACULTY_CHOOSE("faculty"),
     COURSE_CHOOSE("course"),
-    GROUP_CHOOSE("group");
+    GROUP_CHOOSE("group"),
+    REREGISTRATE("reregistrate");
 
 
     private final String actionName;

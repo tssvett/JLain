@@ -11,9 +11,9 @@ public class ScheduleCommand implements Command {
 
     @Override
     public SendMessage execute(Update update) {
-        String command = update.getMessage().getText().split(" ")[0];
-        String chatId = String.valueOf(update.getMessage().getChatId());
-        log.info("Command: " + command);
+        Long userId = update.getMessage().getFrom().getId();
+        Long chatId = update.getMessage().getChatId();
+        log.info("Received " + this.getClass().getSimpleName() +  " from userId: {}", userId);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(MessageConstants.SCHEDULE_COMMAND);

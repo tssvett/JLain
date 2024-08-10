@@ -2,29 +2,25 @@ package dev.tssvett.schedule_bot.actions.keyboard.callback.impl;
 
 import dev.tssvett.schedule_bot.actions.keyboard.callback.KeyboardCallback;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.GroupKeyboard;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.FacultyKeyboard;
 import dev.tssvett.schedule_bot.constants.MessageConstants;
 import dev.tssvett.schedule_bot.entity.BotUser;
 import dev.tssvett.schedule_bot.enums.RegistrationState;
-import dev.tssvett.schedule_bot.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.repository.UserRepository;
-import dev.tssvett.schedule_bot.schedule.faculty.Faculty;
+import dev.tssvett.schedule_bot.schedule.parser.FacultyParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static dev.tssvett.schedule_bot.enums.Action.GROUP_CHOOSE;
+import static dev.tssvett.schedule_bot.enums.Action.FACULTY_CHOOSE;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CourseKeyboardCallback implements KeyboardCallback {
-
-    private final GroupKeyboard groupKeyboard;
+public class ReRegistrateCallback implements KeyboardCallback {
     private final UserRepository userRepository;
-
     @Override
     public SendMessage callback(Update update) {
         CallbackDetails callbackDetails = CallbackDetails.fromString(update.getCallbackQuery().getData());
@@ -32,31 +28,27 @@ public class CourseKeyboardCallback implements KeyboardCallback {
         Long userId = update.getCallbackQuery().getFrom().getId();
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
+        changeState(userId, RegistrationState.REREGISTRATE);
 
         //Установка кастомного коллбека тут
-        Integer courseNumber = Integer.parseInt(callbackDetails.getCallbackText());
-        try {
-            saveUserToDatabase(userId, courseNumber);
+        String answer = callbackDetails.getCallbackText();
+        log.info("Answer: {}", answer);
+        if (answer.equals("Да")) {
+            sendMessage.setChatId(chatId);
+            sendMessage.setReplyMarkup(new FacultyKeyboard(new FacultyParser()).createInlineKeyboard(FACULTY_CHOOSE));
+            sendMessage.setText(MessageConstants.REGISTER_CHOOSE_FACULTY_MESSAGE);
+            changeState(userId, RegistrationState.START);
         }
-        catch (NotValidRegistrationStateException e){
-            log.warn(e.getMessage());
-            sendMessage.setText("Вы уже выбрали курс, не надо сюда жмать. Выбирайте группу");
-            return sendMessage;
+        else if (answer.equals("Нет")) {
+            sendMessage.setText("Ну нет так нет...");
         }
-        sendMessage.setText(MessageConstants.REGISTER_CHOOSE_GROUP_SUCCESSFULLY_MESSAGE);
-        sendMessage.setReplyMarkup(groupKeyboard.createInlineKeyboard(GROUP_CHOOSE));
         return sendMessage;
     }
 
-    private void saveUserToDatabase(Long userId, Integer courseNumber) {
-        log.info("Saving user to database with userId: {} and courseNumber: {}", userId, courseNumber);
+    private void changeState(Long userId, RegistrationState state) {
+        log.info("Saving user to database with userId: {}", userId);
         BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("No user with id: " + userId));
-        if (!botUser.getRegistrationState().equals(RegistrationState.FACULTY_CHOOSED)){
-            throw new NotValidRegistrationStateException("User clicked on already chosen course");
-        }
-        botUser.setCourse(courseNumber.toString());
-        botUser.setRegistrationState(RegistrationState.COURSE_CHOOSED);
+        botUser.setRegistrationState(state);
         userRepository.save(botUser);
     }
-
 }
