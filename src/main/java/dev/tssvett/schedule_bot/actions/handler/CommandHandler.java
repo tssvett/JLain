@@ -27,9 +27,7 @@ import static dev.tssvett.schedule_bot.constants.CommandConstants.START;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class CommandHandler {
-    private final FacultyKeyboard facultyKeyboard;
     public SendMessage handleCommands(Update update) {
         String command = update.getMessage().getText().split(" ")[0];
         if (!messageIsAvailableCommand(command)) {
@@ -40,7 +38,7 @@ public class CommandHandler {
                 case HELP -> new HelpCommand().execute(update);
                 case SCHEDULE -> new ScheduleCommand().execute(update);
                 case PICTURE -> new PictureCommand().execute(update);
-                case REGISTER -> new RegisterCommand(facultyKeyboard).execute(update);
+                case REGISTER -> new RegisterCommand().execute(update);
                 case GADIT -> new ToChatCommand().execute(update);
                 default -> new UnknownCommand().execute(update);
             };
