@@ -1,0 +1,27 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: schedule-bot
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+
+
+  liquibase:
+    change-log: db/changelog/changelog-master.xml
+    enabled: true
+
+
+bot:
+  name: ${BOT_NAME}
+  token: ${BOT_TOKEN}
