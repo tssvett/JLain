@@ -1,7 +1,6 @@
 package dev.tssvett.schedule_bot.actions.command.impl;
 
 import dev.tssvett.schedule_bot.actions.command.Command;
-import dev.tssvett.schedule_bot.constants.MessageConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,10 +12,10 @@ public class ToChatCommand implements Command {
     public SendMessage execute(Update update) {
         Long userId = update.getMessage().getFrom().getId();
         Long chatId = update.getMessage().getChatId();
-        log.info("Received " + this.getClass().getSimpleName() +  " from userId: {}", userId);
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId("-4191336905");
-        sendMessage.setText("А ведь даже почти не насрано с фабриками почти симпатично даже");
-        return sendMessage;
+        log.info("Received " + this.getClass().getSimpleName() + " from userId: {}", userId);
+        return SendMessage.builder()
+                .chatId("-4191336905")
+                .text("лютое гадство")
+                .build();
     }
 }
