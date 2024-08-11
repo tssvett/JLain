@@ -5,5 +5,5 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 public interface Command {
 
-    SendMessage execute(Update update);
+    SendMessage execute(Long userId, Long chatId);
 }

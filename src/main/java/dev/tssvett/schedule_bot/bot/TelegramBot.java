@@ -16,7 +16,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class TelegramBot extends TelegramLongPollingBot {
     private final BotProperties botProperties;
     private final CallbackProvider callbackProvider;
-    
+
 
     @Override
     public String getBotUsername() {
@@ -32,7 +32,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         sendMessage(callbackProvider.handleMessage(update));
     }
-
 
     private void sendMessage(SendMessage sendMessage) {
         try {

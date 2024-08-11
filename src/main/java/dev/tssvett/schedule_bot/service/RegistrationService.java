@@ -216,4 +216,5 @@ public class RegistrationService {
         log.info("Current registration state: {} ", botUser.getRegistrationState().toString());
         return botUser.getRegistrationState().equals(SUCCESSFUL_REGISTRATION);
     }
+
 }

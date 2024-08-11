@@ -9,8 +9,6 @@ import dev.tssvett.schedule_bot.actions.command.impl.ToChatCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.UnknownCommand;
 import dev.tssvett.schedule_bot.constants.MessageConstants;
 import dev.tssvett.schedule_bot.enums.Command;
-import dev.tssvett.schedule_bot.repository.UserRepository;
-import dev.tssvett.schedule_bot.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -30,22 +28,30 @@ import static dev.tssvett.schedule_bot.constants.CommandConstants.START;
 @Component
 @RequiredArgsConstructor
 public class CommandHandler {
-    private final UserRepository userRepository;
-    private final RegistrationService registrationService;
+    private final StartCommand startCommand;
+    private final HelpCommand helpCommand;
+    private final ScheduleCommand scheduleCommand;
+    private final PictureCommand pictureCommand;
+    private final RegisterCommand registerCommand;
+    private final ToChatCommand toChatCommand;
+    private final UnknownCommand unknownCommand;
+
 
     public SendMessage handleCommands(Update update) {
         String command = update.getMessage().getText().split(" ")[0];
+        Long userId = update.getMessage().getFrom().getId();
+        Long chatId = update.getMessage().getChatId();
         if (!messageIsAvailableCommand(command)) {
             return new SendMessage(String.valueOf(update.getMessage().getChatId()), MessageConstants.UNAVAILABLE_COMMAND);
         } else {
-            return switch (command) {
-                case START -> new StartCommand(userRepository).execute(update);
-                case HELP -> new HelpCommand().execute(update);
-                case SCHEDULE -> new ScheduleCommand().execute(update);
-                case PICTURE -> new PictureCommand().execute(update);
-                case REGISTER -> new RegisterCommand(registrationService).execute(update);
-                case GADIT -> new ToChatCommand().execute(update);
-                default -> new UnknownCommand().execute(update);
+            return switch (getBaseCommand(command)) {
+                case START -> startCommand.execute(userId, chatId);
+                case HELP -> helpCommand.execute(userId, chatId);
+                case SCHEDULE -> scheduleCommand.execute(userId, chatId);
+                case PICTURE -> pictureCommand.execute(userId, chatId);
+                case REGISTER -> registerCommand.execute(userId, chatId);
+                case GADIT -> toChatCommand.execute(userId, chatId);
+                default -> unknownCommand.execute(userId, chatId);
             };
         }
     }
@@ -55,6 +61,20 @@ public class CommandHandler {
     }
 
     private boolean isCommandInEnum(String command) {
-        return Arrays.stream(Command.values()).anyMatch(enumCommand -> enumCommand.getCommandName().equals(command));
+        return Arrays.stream(Command.values())
+                .anyMatch(enumCommand -> {
+                    String commandName = enumCommand.getCommandName();
+                    return command.equals(commandName) ||
+                            command.equalsIgnoreCase(commandName + "@JLainBot");
+                });
+    }
+
+    private String getBaseCommand(String command) {
+        int atIndex = command.indexOf("@");
+        if (atIndex != -1) {
+            return command.substring(0, atIndex);
+        } else {
+            return command;
+        }
     }
 }
