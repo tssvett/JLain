@@ -175,6 +175,18 @@ public class RegistrationService {
         }
     }
 
+    public void startCommandCallback(Long userId, Long chatId) {
+        if (userRepository.findById(userId).isPresent()) {
+            return;
+        }
+        log.info("User {} use /start command. Save new user to database.", userId);
+        userRepository.save(BotUser.builder()
+                .userId(userId)
+                .chatId(chatId)
+                .registrationState(RegistrationState.START)
+                .build());
+    }
+
     private SendMessage reRegistrationSendMessage(Long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)

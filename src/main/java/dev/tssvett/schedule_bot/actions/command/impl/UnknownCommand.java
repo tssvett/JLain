@@ -12,10 +12,10 @@ public class UnknownCommand implements Command {
     public SendMessage execute(Update update) {
         Long userId = update.getMessage().getFrom().getId();
         Long chatId = update.getMessage().getChatId();
-        log.info("Received " + this.getClass().getSimpleName() +  " from userId: {}", userId);
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText(MessageConstants.UNAVAILABLE_COMMAND);
-        return sendMessage;
+        log.info("Received " + this.getClass().getSimpleName() + " from userId: {}", userId);
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(MessageConstants.UNAVAILABLE_COMMAND)
+                .build();
     }
 }
