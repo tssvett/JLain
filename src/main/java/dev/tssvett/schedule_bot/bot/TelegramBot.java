@@ -17,7 +17,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotProperties botProperties;
     private final CallbackProvider callbackProvider;
 
-
     @Override
     public String getBotUsername() {
         return botProperties.getName();

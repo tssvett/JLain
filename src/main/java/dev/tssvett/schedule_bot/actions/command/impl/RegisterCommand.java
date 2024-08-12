@@ -2,7 +2,6 @@ package dev.tssvett.schedule_bot.actions.command.impl;
 
 import dev.tssvett.schedule_bot.actions.command.Command;
 import dev.tssvett.schedule_bot.annotation.DirectMessageRequired;
-import dev.tssvett.schedule_bot.annotation.NoneRequired;
 import dev.tssvett.schedule_bot.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

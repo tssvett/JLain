@@ -47,4 +47,3 @@ public class GroupKeyboardCallback implements KeyboardCallback {
         return null;
     }
 }
-

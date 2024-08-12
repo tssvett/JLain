@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.schedule.parser;
 
+import dev.tssvett.schedule_bot.exception.ConnectionException;
+import dev.tssvett.schedule_bot.exception.ParseException;
 import dev.tssvett.schedule_bot.schedule.faculty.Faculty;
-import dev.tssvett.schedule_bot.exceptions.ConnectionException;
-import dev.tssvett.schedule_bot.exceptions.ParseException;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,7 +26,7 @@ public class FacultyParser implements Parser<Faculty> {
             " > div > div > a";
 
     @Override
-    public List<Faculty> parse(){
+    public List<Faculty> parse() {
         Document document = null;
         try {
             document = Jsoup.connect(URL).userAgent(USER_AGENT).get();
