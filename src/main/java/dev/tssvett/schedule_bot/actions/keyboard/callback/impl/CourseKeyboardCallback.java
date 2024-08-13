@@ -13,7 +13,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 @RequiredArgsConstructor
 public class CourseKeyboardCallback implements KeyboardCallback {
-
     private final RegistrationService registrationService;
 
     @Override
