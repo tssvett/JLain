@@ -9,4 +9,5 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "scheduling")
 public class SchedulingProperties {
     private Long delay;
+    private Boolean enabled;
 }

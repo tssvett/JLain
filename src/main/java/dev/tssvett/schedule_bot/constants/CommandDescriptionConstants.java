@@ -6,4 +6,5 @@ public class CommandDescriptionConstants {
     public static final String SCHEDULE_DESCRIPTION = "Показать расписание";
     public static final String PICTURE_DESCRIPTION = "Рандомная картинка";
     public static final String REGISTER_DESCRIPTION = "Регистрация нового пользователя";
+    public static final String INFO_DESCRIPTION = "Информация о пользователе";
 }

@@ -1,5 +1,7 @@
 package dev.tssvett.schedule_bot.constants;
 
+import dev.tssvett.schedule_bot.enums.RegistrationState;
+
 public class MessageConstants {
     public static final String START_COMMAND = "\uD83D\uDC4B Приветствую тебя в новом мире планирования! \uD83D\uDC4B\n" +
             "\n" +
@@ -63,4 +65,24 @@ public class MessageConstants {
 
     public static final String YES = "Да";
     public static final String NO = "Нет";
+
+
+    public static String crateNotFoundUserMessage(Long userId) {
+        return "🚫 Пользователь с ID " + userId + " не найден.";
+    }
+
+
+    public static String createInfoMessageFromParams(Long userId, Long chatId, String facultyName, String groupName, String course,
+                                                     RegistrationState registrationState, Boolean enabled) {
+
+        return "ℹ️ **Информация о пользователе:**\n\n" +
+                "👤 **ID пользователя:** " + userId + "\n\n" +
+                "💬 **ID чата:** " + chatId + "\n\n" +
+                "🏫 **Факультет:** " + facultyName + "\n\n" +
+                "📚 **Курс:** " + course + "\n\n" +
+                "👥 **Группа:** " + groupName + "\n\n" +
+                "📝 **Статус регистрации:** " +
+                (registrationState.equals(RegistrationState.SUCCESSFUL_REGISTRATION) ? "✅ Успешно пройдена" : "❌ Не завершена") + "\n\n" +
+                "🔔 **Уведомления:** " + (enabled ? "✅ Включены" : "❌ Выключены");
+    }
 }

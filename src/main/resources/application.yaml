@@ -31,3 +31,4 @@ admin:
 
 scheduling:
   delay: ${SCHEDULING_DELAY:60000}
+  enabled: false
