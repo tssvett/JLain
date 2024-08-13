@@ -6,8 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "bot")
-public class BotProperties {
-    String name;
-    String token;
+@ConfigurationProperties(prefix = "scheduling")
+public class SchedulingProperties {
+    private Long delay;
 }

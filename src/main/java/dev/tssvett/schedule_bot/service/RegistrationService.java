@@ -6,15 +6,18 @@ import dev.tssvett.schedule_bot.actions.keyboard.impl.GroupKeyboard;
 import dev.tssvett.schedule_bot.actions.keyboard.impl.ReRegistrateKeyboard;
 import dev.tssvett.schedule_bot.constants.MessageConstants;
 import dev.tssvett.schedule_bot.entity.BotUser;
+import dev.tssvett.schedule_bot.entity.Notification;
 import dev.tssvett.schedule_bot.enums.RegistrationState;
 import dev.tssvett.schedule_bot.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.exception.UserNotExistsException;
+import dev.tssvett.schedule_bot.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.repository.UserRepository;
 import dev.tssvett.schedule_bot.schedule.faculty.Faculty;
 import dev.tssvett.schedule_bot.schedule.group.Group;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import static dev.tssvett.schedule_bot.constants.MessageConstants.COURSE_CLICK_WITH_ERROR_STATE;
@@ -37,20 +40,33 @@ import static dev.tssvett.schedule_bot.enums.RegistrationState.SUCCESSFUL_REGIST
 @RequiredArgsConstructor
 public class RegistrationService {
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
     private final ReRegistrateKeyboard reRegistrateKeyboard;
     private final FacultyKeyboard facultyKeyboard;
     private final CourseKeyboard courseKeyboard;
     private final GroupKeyboard groupKeyboard;
 
+    @Transactional
     public SendMessage registerUserCommandCallback(Long userId, Long chatId) {
         BotUser botUser = userRepository.findById(userId).orElseGet(() -> {
             log.info("User {} is not in database. Add them to database and continue registration process", userId);
+            Notification notification = Notification.builder()
+                    .enabled(true)
+                    .build();
+
             BotUser newUser = BotUser.builder()
                     .userId(userId)
                     .chatId(chatId)
                     .registrationState(START_REGISTER)
+                    .notification(notification)
                     .build();
+
+
+            //устанавливаем связи
+            notification.setBotUser(newUser);
+
             userRepository.save(newUser);
+            notificationRepository.save(notification);
 
             return newUser;
         });
@@ -186,16 +202,28 @@ public class RegistrationService {
         }
     }
 
+    @Transactional
     public void startCommandCallback(Long userId, Long chatId) {
         if (userRepository.findById(userId).isPresent()) {
             return;
         }
         log.info("User {} use /start command. Save new user to database.", userId);
-        userRepository.save(BotUser.builder()
+
+        Notification notification = Notification.builder()
+                .enabled(true)
+                .build();
+
+        BotUser botUser = BotUser.builder()
                 .userId(userId)
                 .chatId(chatId)
                 .registrationState(RegistrationState.START)
-                .build());
+                .notification(notification)
+                .build();
+
+        notification.setBotUser(botUser);
+
+        userRepository.save(botUser);
+        notificationRepository.save(notification);
     }
 
     private SendMessage reRegistrationSendMessage(Long chatId) {

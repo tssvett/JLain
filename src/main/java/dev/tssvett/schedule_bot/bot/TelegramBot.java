@@ -32,7 +32,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         sendMessage(callbackProvider.handleMessage(update));
     }
 
-    private void sendMessage(SendMessage sendMessage) {
+    public void sendMessage(SendMessage sendMessage) {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
