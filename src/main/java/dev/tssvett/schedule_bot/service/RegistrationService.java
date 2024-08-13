@@ -17,6 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
+import static dev.tssvett.schedule_bot.constants.MessageConstants.COURSE_CLICK_WITH_ERROR_STATE;
+import static dev.tssvett.schedule_bot.constants.MessageConstants.FACULTY_CLICK_WITH_ERROR_STATE;
+import static dev.tssvett.schedule_bot.constants.MessageConstants.GROUP_CLICK_WITH_ERROR_STATE;
+import static dev.tssvett.schedule_bot.constants.MessageConstants.NO_RE_REGISTRATION_ANSWER;
+import static dev.tssvett.schedule_bot.constants.MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE;
+import static dev.tssvett.schedule_bot.constants.MessageConstants.REGISTRATION_CLICK_WITH_ERROR_STATE;
+import static dev.tssvett.schedule_bot.constants.MessageConstants.YES;
 import static dev.tssvett.schedule_bot.enums.Action.COURSE_CHOOSE;
 import static dev.tssvett.schedule_bot.enums.Action.FACULTY_CHOOSE;
 import static dev.tssvett.schedule_bot.enums.Action.GROUP_CHOOSE;
@@ -29,7 +36,6 @@ import static dev.tssvett.schedule_bot.enums.RegistrationState.SUCCESSFUL_REGIST
 @Service
 @RequiredArgsConstructor
 public class RegistrationService {
-
     private final UserRepository userRepository;
     private final ReRegistrateKeyboard reRegistrateKeyboard;
     private final FacultyKeyboard facultyKeyboard;
@@ -45,24 +51,25 @@ public class RegistrationService {
                     .registrationState(START_REGISTER)
                     .build();
             userRepository.save(newUser);
+
             return newUser;
         });
 
         if (isSuccessfullyRegistered(botUser)) {
             log.info("User {} is successfully registered. Asking for re-registration.", userId);
+
             return reRegistrationSendMessage(chatId);
         } else {
-            log.info("User {} is not registered with SUCCESSFUL_REGISTRATION. Continuing registration process.", userId);
+            log.info("User {} is not registered with SUCCESSFUL_REGISTRATION. Starting registration process.", userId);
             botUser.setRegistrationState(FACULTY_CHOOSING);
             userRepository.save(botUser);
+
             return chooseFacultySendMessage(userId, chatId);
         }
     }
 
     public SendMessage chooseFacultyStepCallback(Long userId, Long chatId, Faculty faculty) {
-
         BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
-
         try {
             if (!botUser.getRegistrationState().equals(RegistrationState.FACULTY_CHOOSING)) {
                 throw new NotValidRegistrationStateException(String.format("User click on %s faculty with wrong state %s",
@@ -72,6 +79,7 @@ public class RegistrationService {
                 botUser.setFacultyName(faculty.getName());
                 botUser.setRegistrationState(RegistrationState.COURSE_CHOOSING);
                 userRepository.save(botUser);
+
                 return SendMessage.builder()
                         .chatId(chatId)
                         .text(MessageConstants.REGISTER_CHOOSE_COURSE_MESSAGE)
@@ -80,9 +88,10 @@ public class RegistrationService {
             }
         } catch (NotValidRegistrationStateException e) {
             log.warn(e.getMessage());
+
             return SendMessage.builder()
                     .chatId(chatId)
-                    .text("Вы пытаетесь нажать на кнопку выбора факультета будучи в другом состоянии регистрации. Будьте внимательнее гады.")
+                    .text(FACULTY_CLICK_WITH_ERROR_STATE)
                     .build();
         }
     }
@@ -99,6 +108,7 @@ public class RegistrationService {
                 botUser.setCourse(courseNumber.toString());
                 botUser.setRegistrationState(RegistrationState.GROUP_CHOOSING);
                 userRepository.save(botUser);
+
                 return SendMessage.builder()
                         .chatId(chatId)
                         .text(MessageConstants.REGISTER_CHOOSE_GROUP_SUCCESSFULLY_MESSAGE)
@@ -107,17 +117,16 @@ public class RegistrationService {
             }
         } catch (NotValidRegistrationStateException e) {
             log.warn(e.getMessage());
+
             return SendMessage.builder()
                     .chatId(chatId)
-                    .text("Вы пытаетесь нажать на кнопку выбора курса будучи в другом состоянии регистрации. Будьте внимательнее гады.")
+                    .text(COURSE_CLICK_WITH_ERROR_STATE)
                     .build();
         }
     }
 
     public SendMessage chooseGroupStepCallback(Long userId, Long chatId, Group group) {
-
         BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
-
         try {
             if (!botUser.getRegistrationState().equals(RegistrationState.GROUP_CHOOSING)) {
                 throw new NotValidRegistrationStateException(String.format("User click on %s group with wrong state %s",
@@ -127,6 +136,7 @@ public class RegistrationService {
                 botUser.setGroupName(group.getName());
                 botUser.setRegistrationState(SUCCESSFUL_REGISTRATION);
                 userRepository.save(botUser);
+
                 return SendMessage.builder()
                         .chatId(chatId)
                         .text(MessageConstants.SUCCESSFULLY_REGISTERED_MESSAGE)
@@ -134,43 +144,44 @@ public class RegistrationService {
             }
         } catch (NotValidRegistrationStateException e) {
             log.warn(e.getMessage());
+
             return SendMessage.builder()
                     .chatId(chatId)
-                    .text("Вы пытаетесь нажать на кнопку выбора группы будучи в другом состоянии регистрации. Будьте внимательнее гады.")
+                    .text(GROUP_CLICK_WITH_ERROR_STATE)
                     .build();
         }
     }
 
     public SendMessage reRegistrationStepCallback(Long userId, Long chatId, String answer) {
-
         BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
-
         try {
             if (!botUser.getRegistrationState().equals(SUCCESSFUL_REGISTRATION)) {
                 throw new NotValidRegistrationStateException(String.format("User click on %s re-registration with wrong state %s",
                         answer, botUser.getRegistrationState()));
             } else {
                 log.info("User {} choose answer {} to re-registration.", userId, answer);
-                if (answer.equals("Да")) {
+                if (answer.equals(YES)) {
                     botUser.setRegistrationState(FACULTY_CHOOSING);
                     userRepository.save(botUser);
+
                     return SendMessage.builder()
                             .chatId(chatId)
-                            .text(MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE)
+                            .text(REGISTER_FACULTY_CHOOSING_MESSAGE)
                             .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE))
                             .build();
                 } else {
                     return SendMessage.builder()
                             .chatId(chatId)
-                            .text("Ну нет так нет...")
+                            .text(NO_RE_REGISTRATION_ANSWER)
                             .build();
                 }
             }
         } catch (NotValidRegistrationStateException e) {
             log.warn(e.getMessage());
+
             return SendMessage.builder()
                     .chatId(chatId)
-                    .text("Вы пытаетесь нажать на кнопку выбора ре-регистрации будучи в другом состоянии регистрации. Будьте внимательнее гады.")
+                    .text(REGISTRATION_CLICK_WITH_ERROR_STATE)
                     .build();
         }
     }
@@ -197,10 +208,11 @@ public class RegistrationService {
 
     private SendMessage chooseFacultySendMessage(Long userId, Long chatId) {
         changeUserRegistrationState(userId, FACULTY_CHOOSING);
+
         return SendMessage.builder()
                 .chatId(chatId)
                 .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE))
-                .text(MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE)
+                .text(REGISTER_FACULTY_CHOOSING_MESSAGE)
                 .build();
     }
 
@@ -212,8 +224,8 @@ public class RegistrationService {
     }
 
     private boolean isSuccessfullyRegistered(BotUser botUser) {
-
         log.info("Current registration state: {} ", botUser.getRegistrationState().toString());
+
         return botUser.getRegistrationState().equals(SUCCESSFUL_REGISTRATION);
     }
 }

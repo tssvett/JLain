@@ -9,7 +9,6 @@ public enum Action {
     GROUP_CHOOSE("group"),
     REREGISTRATE("reregistrate");
 
-
     private final String actionName;
 
     Action(String actionName) {

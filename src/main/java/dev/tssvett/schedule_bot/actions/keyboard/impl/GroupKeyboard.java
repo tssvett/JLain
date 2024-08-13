@@ -18,8 +18,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class GroupKeyboard implements Keyboard {
-
-
     private final GroupParser groupParser;
     private static final Integer GROUP_KEYS_IN_ROW = 3;
 

@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.schedule.parser;
 
+import dev.tssvett.schedule_bot.exception.ConnectionException;
+import dev.tssvett.schedule_bot.exception.ParseException;
 import dev.tssvett.schedule_bot.schedule.group.Group;
-import dev.tssvett.schedule_bot.exceptions.ConnectionException;
-import dev.tssvett.schedule_bot.exceptions.ParseException;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,12 +19,12 @@ import java.util.regex.Pattern;
 @Component
 public class GroupParser implements Parser<Group> {
 
-    private static final String URL = String.format("https://ssau.ru/rasp/faculty/%d?course=%d",492430598, 3);
+    private static final String URL = String.format("https://ssau.ru/rasp/faculty/%d?course=%d", 492430598, 3);
     private static final String USER_AGENT = "Mozilla/5.0";
     private static final String GROUP_SELECTOR = "body > div.container.timetable > div > div > div > a";
 
     @Override
-    public List<Group> parse(){
+    public List<Group> parse() {
         Document document = null;
         try {
             document = Jsoup.connect(URL).userAgent(USER_AGENT).get();

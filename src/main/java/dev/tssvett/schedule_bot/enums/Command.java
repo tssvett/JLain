@@ -18,8 +18,6 @@ public enum Command {
     REGISTER(CommandConstants.REGISTER, REGISTER_DESCRIPTION),
     GADIT(CommandConstants.GADIT, "null");
 
-
-
     private final String commandName;
     private final String description;
 

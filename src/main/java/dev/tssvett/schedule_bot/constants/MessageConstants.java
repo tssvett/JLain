@@ -48,10 +48,19 @@ public class MessageConstants {
             ❤️ Поздравляем! Вы успешно зарегистрированы! ❤️
 
             Чтобы узнать своё расписание занятий, просто введите команду /schedule в меню.
-            
+                        
             Если у вас возникнут вопросы, не стесняйтесь обращаться! Добро пожаловать! \uD83C\uDF1F""";
 
     public static final String ALREADY_REGISTERED_MESSAGE = """
-             ❤️ Вы уже прошли регистрацию ❤️
-             Желаете обновить свои данные и пройти регистрацию снова?""";
+            ❤️ Вы уже прошли регистрацию ❤️
+            Желаете обновить свои данные и пройти регистрацию снова?""";
+
+    public static final String REGISTRATION_CLICK_WITH_ERROR_STATE = "\uD83C\uDF1F Похоже, вы пытаетесь нажать на кнопку для повторной регистрации, но ваше текущее состояние регистрации не позволяет это сделать. Вероятно, вы не прошли регистрацию \uD83D\uDE0A";
+    public static final String FACULTY_CLICK_WITH_ERROR_STATE = "\uD83C\uDF1F Похоже, вы пытаетесь нажать на кнопку с факультетом, но ваше текущее состояние регистрации не позволяет это сделать \uD83D\uDE0A";
+    public static final String COURSE_CLICK_WITH_ERROR_STATE = "\uD83C\uDF1F Похоже, вы пытаетесь нажать на кнопку с курсом, но ваше текущее состояние регистрации не позволяет это сделать \uD83D\uDE0A";
+    public static final String GROUP_CLICK_WITH_ERROR_STATE = "\uD83C\uDF1F Похоже, вы пытаетесь нажать на кнопку с группой, но ваше текущее состояние регистрации не позволяет это сделать \uD83D\uDE0A";
+    public static final String NO_RE_REGISTRATION_ANSWER = "\uD83C\uDF1F Похоже, в другой раз \uD83C\uDF1F";
+
+    public static final String YES = "Да";
+    public static final String NO = "Нет";
 }
