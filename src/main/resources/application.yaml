@@ -28,3 +28,7 @@ bot:
 
 admin:
   id: ${ADMIN_ID}
+
+scheduling:
+  delay: ${SCHEDULING_DELAY:60000}
+  enabled: false

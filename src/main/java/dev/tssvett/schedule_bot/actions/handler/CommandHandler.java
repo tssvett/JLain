@@ -1,6 +1,7 @@
 package dev.tssvett.schedule_bot.actions.handler;
 
 import dev.tssvett.schedule_bot.actions.command.impl.HelpCommand;
+import dev.tssvett.schedule_bot.actions.command.impl.InfoCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.PictureCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.RegisterCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.ScheduleCommand;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 
 import static dev.tssvett.schedule_bot.constants.CommandConstants.GADIT;
 import static dev.tssvett.schedule_bot.constants.CommandConstants.HELP;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.INFO;
 import static dev.tssvett.schedule_bot.constants.CommandConstants.PICTURE;
 import static dev.tssvett.schedule_bot.constants.CommandConstants.REGISTER;
 import static dev.tssvett.schedule_bot.constants.CommandConstants.SCHEDULE;
@@ -35,6 +37,7 @@ public class CommandHandler {
     private final RegisterCommand registerCommand;
     private final ToChatCommand toChatCommand;
     private final UnknownCommand unknownCommand;
+    private final InfoCommand infoCommand;
 
 
     public SendMessage handleCommands(Update update) {
@@ -51,6 +54,7 @@ public class CommandHandler {
                 case PICTURE -> pictureCommand.execute(userId, chatId);
                 case REGISTER -> registerCommand.execute(userId, chatId);
                 case GADIT -> toChatCommand.execute(userId, chatId);
+                case INFO -> infoCommand.execute(userId, chatId);
                 default -> unknownCommand.execute(userId, chatId);
             };
         }
