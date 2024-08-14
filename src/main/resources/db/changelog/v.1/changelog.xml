@@ -9,4 +9,5 @@
     </changeSet>
 
     <include file="create-table-bot_user.xml" relativeToChangelogFile="true"/>
+    <include file="create-table-notification.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
