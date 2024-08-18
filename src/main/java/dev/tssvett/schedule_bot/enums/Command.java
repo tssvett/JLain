@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.HELP_DESCRIPTION;
 import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.INFO_DESCRIPTION;
+import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.NOTIFICATION_DESCRIPTION;op
 import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.PICTURE_DESCRIPTION;
 import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.REGISTER_DESCRIPTION;
 import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.SCHEDULE_DESCRIPTION;
@@ -18,7 +19,8 @@ public enum Command {
     SCHEDULE(CommandConstants.SCHEDULE, SCHEDULE_DESCRIPTION),
     REGISTER(CommandConstants.REGISTER, REGISTER_DESCRIPTION),
     GADIT(CommandConstants.GADIT, "null"),
-    INFO(CommandConstants.INFO, INFO_DESCRIPTION);
+    INFO(CommandConstants.INFO, INFO_DESCRIPTION),
+    NOTIFICATION(CommandConstants.NOTIFICATION, NOTIFICATION_DESCRIPTION);
 
     private final String commandName;
     private final String description;

@@ -15,7 +15,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 public class DirectMessageRequiredAspect {
 
     @Around(value = "@annotation(dev.tssvett.schedule_bot.annotation.DirectMessageRequired) && args(userId, chatId)")
-    public Object checkRegistration(ProceedingJoinPoint joinPoint, Long userId, Long chatId) throws Throwable {
+    public Object checkDirectMessage(ProceedingJoinPoint joinPoint, Long userId, Long chatId) throws Throwable {
         log.info("Check isDirectMessage for userId: {} and chatId: {}", userId, chatId);
         return isDirectMessage(userId, chatId) ? joinPoint.proceed() : createNotDirectMessage(chatId);
     }

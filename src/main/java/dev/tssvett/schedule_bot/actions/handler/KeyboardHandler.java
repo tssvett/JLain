@@ -4,6 +4,7 @@ import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetail
 import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.CourseKeyboardCallback;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.FacultyKeyboardCallback;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.GroupKeyboardCallback;
+import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.NotificationKeyboardCallback;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.ReRegistrateCallback;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ public class KeyboardHandler {
     private final CourseKeyboardCallback courseKeyboardCallback;
     private final GroupKeyboardCallback groupKeyboardCallback;
     private final ReRegistrateCallback reRegistrateCallback;
+    private final NotificationKeyboardCallback notificationKeyboardCallback;
 
 
     public SendMessage handleKeyboardAction(Update update) {
@@ -27,6 +29,7 @@ public class KeyboardHandler {
             case COURSE_CHOOSE -> courseKeyboardCallback.callback(update);
             case GROUP_CHOOSE -> groupKeyboardCallback.callback(update);
             case REREGISTRATE -> reRegistrateCallback.callback(update);
+            case NOTIFICATION -> notificationKeyboardCallback.callback(update);
         };
     }
 }
