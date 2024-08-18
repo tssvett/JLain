@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import static dev.tssvett.schedule_bot.constants.MessageConstants.createInfoMessageFromParams;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
