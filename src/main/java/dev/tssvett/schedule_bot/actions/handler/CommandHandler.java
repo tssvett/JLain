@@ -43,6 +43,7 @@ public class CommandHandler {
     private final NotificationCommand notificationCommand;
 
 
+
     public SendMessage handleCommands(Update update) {
         String command = update.getMessage().getText().split(" ")[0];
         Long userId = update.getMessage().getFrom().getId();
