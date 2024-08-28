@@ -31,9 +31,7 @@ import static dev.tssvett.schedule_bot.enums.Action.COURSE_CHOOSE;
 import static dev.tssvett.schedule_bot.enums.Action.FACULTY_CHOOSE;
 import static dev.tssvett.schedule_bot.enums.Action.GROUP_CHOOSE;
 import static dev.tssvett.schedule_bot.enums.Action.REREGISTRATE;
-import static dev.tssvett.schedule_bot.enums.RegistrationState.FACULTY_CHOOSING;
-import static dev.tssvett.schedule_bot.enums.RegistrationState.START_REGISTER;
-import static dev.tssvett.schedule_bot.enums.RegistrationState.SUCCESSFUL_REGISTRATION;
+import static dev.tssvett.schedule_bot.enums.RegistrationState.*;
 
 @Slf4j
 @Service
@@ -213,16 +211,18 @@ public class RegistrationService {
                 .enabled(true)
                 .build();
 
-        BotUser botUser = BotUser.builder()
+        BotUser newUser = BotUser.builder()
                 .userId(userId)
                 .chatId(chatId)
-                .registrationState(RegistrationState.START)
+                .registrationState(START)
                 .notification(notification)
                 .build();
 
-        notification.setBotUser(botUser);
 
-        userRepository.save(botUser);
+        //устанавливаем связи
+        notification.setBotUser(newUser);
+
+        userRepository.save(newUser);
         notificationRepository.save(notification);
     }
 
