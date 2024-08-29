@@ -18,11 +18,11 @@ public class ScheduleStringFormatter {
     private static final String MILITARY_EMOJI = "🟠"; // Оранжевый круг для военных занятий
     private static final String DEFAULT_EMOJI = "🔴"; // Красный круг для очных занятий
 
-    public String format(List<Lesson> lessons) {
+    public String formatWeek(List<Lesson> weekLessons) {
         StringBuilder sb = new StringBuilder();
 
         // Группируем уроки по дням
-        Map<String, List<Lesson>> lessonsByDay = groupLessonsByDay(lessons);
+        Map<String, List<Lesson>> lessonsByDay = groupLessonsByDay(weekLessons);
 
         // Определяем порядок дней недели
         List<String> daysOfWeek = List.of("понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье");
@@ -37,6 +37,20 @@ public class ScheduleStringFormatter {
         return sb.toString();
     }
 
+    public String formatDay(List<Lesson> weekLessons, String weekDayName) {
+        StringBuilder sb = new StringBuilder();
+
+        // Группируем уроки по дням
+        Map<String, List<Lesson>> lessonsByDay = groupLessonsByDay(weekLessons);
+
+        List<Lesson> dayLessons = lessonsByDay.get(weekDayName);
+        if (dayLessons != null && !dayLessons.isEmpty()) {
+            appendDaySchedule(sb, weekDayName, dayLessons);
+        }
+
+        return sb.toString();
+    }
+
     private Map<String, List<Lesson>> groupLessonsByDay(List<Lesson> lessons) {
         return lessons.stream()
                 .filter(Lesson::isExist) // Исключаем пары, которых нет
@@ -44,7 +58,7 @@ public class ScheduleStringFormatter {
     }
 
     private void appendDaySchedule(StringBuilder sb, String day, List<Lesson> dayLessons) {
-        String dateNumber = dayLessons.get(0).getDateNumber(); // Получаем дату для вывода
+        String dateNumber = dayLessons.getFirst().getDateNumber(); // Получаем дату для вывода
         sb.append("🔹 ").append(capitalizeFirstLetter(day)).append(" (").append(dateNumber).append("):\n");
 
         for (Lesson lesson : dayLessons) {

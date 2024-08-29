@@ -61,8 +61,6 @@ public class SchoolWeekParser {
     private List<Lesson> parseAll(Elements schoolWeek, List<String> lessonTimes, List<String> dates) {
         List<Lesson> lessons = new LinkedList<>();
         Elements remainingElements = removeFirstNElements(schoolWeek, 7);
-        log.info(String.valueOf(remainingElements.size()));
-        log.info(String.valueOf(lessonTimes.size()));
         for (int i = 0; i < remainingElements.size(); i++) {
             Lesson lesson = Lesson.builder()
                     .name(remainingElements.get(i).select(".schedule__discipline").text())
