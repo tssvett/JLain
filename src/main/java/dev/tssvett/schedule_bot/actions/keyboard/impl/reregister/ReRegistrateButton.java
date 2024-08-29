@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.actions.keyboard.callback.impl;
 
-import dev.tssvett.schedule_bot.actions.keyboard.callback.KeyboardCallback;
+import dev.tssvett.schedule_bot.actions.keyboard.KeyboardButtonCallback;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
 import dev.tssvett.schedule_bot.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ReRegistrateCallback implements KeyboardCallback {
+public class ReRegistrateButtonCallback implements KeyboardButtonCallback {
     private final RegistrationService registrationService;
 
     @Override

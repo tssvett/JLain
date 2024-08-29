@@ -1,6 +1,6 @@
-package dev.tssvett.schedule_bot.actions.keyboard.callback.impl;
+package dev.tssvett.schedule_bot.actions.keyboard.impl.notification;
 
-import dev.tssvett.schedule_bot.actions.keyboard.callback.KeyboardCallback;
+import dev.tssvett.schedule_bot.actions.keyboard.KeyboardButtonCallback;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
 import dev.tssvett.schedule_bot.entity.Notification;
 import dev.tssvett.schedule_bot.repository.NotificationRepository;
@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class NotificationKeyboardCallback implements KeyboardCallback {
+public class NotificationKeyboardButtonCallback implements KeyboardButtonCallback {
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
 

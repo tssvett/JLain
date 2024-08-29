@@ -1,10 +1,9 @@
-package dev.tssvett.schedule_bot.actions.keyboard.callback.impl;
+package dev.tssvett.schedule_bot.actions.keyboard.impl.faculty;
 
-import dev.tssvett.schedule_bot.actions.keyboard.callback.KeyboardCallback;
+import dev.tssvett.schedule_bot.actions.keyboard.KeyboardButtonCallback;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
 import dev.tssvett.schedule_bot.entity.Faculty;
 import dev.tssvett.schedule_bot.repository.FacultyRepository;
-import dev.tssvett.schedule_bot.schedule.parser.FacultyParser;
 import dev.tssvett.schedule_bot.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FacultyKeyboardCallback implements KeyboardCallback {
+public class FacultyKeyboardButtonCallback implements KeyboardButtonCallback {
     private final FacultyRepository facultyRepository;
     private final RegistrationService registrationService;
 
