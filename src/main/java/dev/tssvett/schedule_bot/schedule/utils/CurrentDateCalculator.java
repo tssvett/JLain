@@ -23,4 +23,11 @@ public class CurrentDateCalculator {
         log.info("Current day name: {}", dayName);
         return dayName;
     }
+
+    public String calculateTomorrowDayName() {
+        LocalDate now = LocalDate.now().plusDays(1);
+        String dayName = now.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("ru")).toLowerCase();
+        log.info("Current day name: {}", dayName);
+        return dayName;
+    }
 }

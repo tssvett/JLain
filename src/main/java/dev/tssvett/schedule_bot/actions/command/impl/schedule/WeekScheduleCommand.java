@@ -1,4 +1,5 @@
-package dev.tssvett.schedule_bot.actions.command.impl;
+package dev.tssvett.schedule_bot.actions.command.impl.schedule;
+
 
 import dev.tssvett.schedule_bot.actions.command.Command;
 import dev.tssvett.schedule_bot.annotation.RegistrationRequired;
@@ -12,13 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ScheduleCommand implements Command {
+public class WeekScheduleCommand implements Command {
     private final SchoolWeekParser schoolWeekParser;
     private final UserService userService;
     private final ScheduleStringFormatter scheduleStringFormatter;
@@ -38,3 +38,4 @@ public class ScheduleCommand implements Command {
                 .build();
     }
 }
+

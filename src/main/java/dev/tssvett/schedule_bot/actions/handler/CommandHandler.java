@@ -5,10 +5,12 @@ import dev.tssvett.schedule_bot.actions.command.impl.InfoCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.NotificationCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.PictureCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.RegisterCommand;
-import dev.tssvett.schedule_bot.actions.command.impl.ScheduleCommand;
+import dev.tssvett.schedule_bot.actions.command.impl.schedule.TodayScheduleCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.StartCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.ToChatCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.UnknownCommand;
+import dev.tssvett.schedule_bot.actions.command.impl.schedule.TomorrowScheduleCommand;
+import dev.tssvett.schedule_bot.actions.command.impl.schedule.WeekScheduleCommand;
 import dev.tssvett.schedule_bot.constants.MessageConstants;
 import dev.tssvett.schedule_bot.enums.Command;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Arrays;
 
-import static dev.tssvett.schedule_bot.constants.CommandConstants.GADIT;
-import static dev.tssvett.schedule_bot.constants.CommandConstants.HELP;
-import static dev.tssvett.schedule_bot.constants.CommandConstants.INFO;
-import static dev.tssvett.schedule_bot.constants.CommandConstants.NOTIFICATION;
-import static dev.tssvett.schedule_bot.constants.CommandConstants.PICTURE;
-import static dev.tssvett.schedule_bot.constants.CommandConstants.REGISTER;
-import static dev.tssvett.schedule_bot.constants.CommandConstants.SCHEDULE;
-import static dev.tssvett.schedule_bot.constants.CommandConstants.START;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.*;
 
 @Slf4j
 @Component
@@ -34,7 +29,9 @@ import static dev.tssvett.schedule_bot.constants.CommandConstants.START;
 public class CommandHandler {
     private final StartCommand startCommand;
     private final HelpCommand helpCommand;
-    private final ScheduleCommand scheduleCommand;
+    private final TodayScheduleCommand todayScheduleCommand;
+    private final TomorrowScheduleCommand tomorrowScheduleCommand;
+    private final WeekScheduleCommand weekScheduleCommand;
     private final PictureCommand pictureCommand;
     private final RegisterCommand registerCommand;
     private final ToChatCommand toChatCommand;
@@ -54,7 +51,9 @@ public class CommandHandler {
             return switch (getBaseCommand(command)) {
                 case START -> startCommand.execute(userId, chatId);
                 case HELP -> helpCommand.execute(userId, chatId);
-                case SCHEDULE -> scheduleCommand.execute(userId, chatId);
+                case TODAY -> todayScheduleCommand.execute(userId, chatId);
+                case TOMORROW -> tomorrowScheduleCommand.execute(userId, chatId);
+                case WEEK -> weekScheduleCommand.execute(userId, chatId);
                 case PICTURE -> pictureCommand.execute(userId, chatId);
                 case REGISTER -> registerCommand.execute(userId, chatId);
                 case GADIT -> toChatCommand.execute(userId, chatId);

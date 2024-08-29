@@ -39,6 +39,9 @@ public class ScheduleStringFormatter {
 
     public String formatDay(List<Lesson> weekLessons, String weekDayName) {
         StringBuilder sb = new StringBuilder();
+        if (weekDayName.equals("воскресенье")) {
+            weekDayName = "понедельник";
+        }
 
         // Группируем уроки по дням
         Map<String, List<Lesson>> lessonsByDay = groupLessonsByDay(weekLessons);
