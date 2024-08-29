@@ -3,21 +3,17 @@ package dev.tssvett.schedule_bot.enums;
 import dev.tssvett.schedule_bot.constants.CommandConstants;
 import lombok.Getter;
 
-import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.HELP_DESCRIPTION;
-import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.INFO_DESCRIPTION;
-import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.NOTIFICATION_DESCRIPTION;
-import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.PICTURE_DESCRIPTION;
-import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.REGISTER_DESCRIPTION;
-import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.SCHEDULE_DESCRIPTION;
-import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.START_DESCRIPTION;
+import static dev.tssvett.schedule_bot.constants.CommandDescriptionConstants.*;
 
 @Getter
 public enum Command {
+    TODAY(CommandConstants.TODAY, TODAY_DESCRIPTION),
+    TOMMORROW(CommandConstants.TOMORROW, TOMORROW_DESCRIPTION),
+    WEEK(CommandConstants.WEEK, WEEK_DESCRIPTION),
+    REGISTER(CommandConstants.REGISTER, REGISTER_DESCRIPTION),
     START(CommandConstants.START, START_DESCRIPTION),
     HELP(CommandConstants.HELP, HELP_DESCRIPTION),
     PICTURE(CommandConstants.PICTURE, PICTURE_DESCRIPTION),
-    SCHEDULE(CommandConstants.SCHEDULE, SCHEDULE_DESCRIPTION),
-    REGISTER(CommandConstants.REGISTER, REGISTER_DESCRIPTION),
     GADIT(CommandConstants.GADIT, "null"),
     INFO(CommandConstants.INFO, INFO_DESCRIPTION),
     NOTIFICATION(CommandConstants.NOTIFICATION, NOTIFICATION_DESCRIPTION);

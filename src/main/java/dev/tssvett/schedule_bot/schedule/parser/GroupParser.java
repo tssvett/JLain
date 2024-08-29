@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.schedule.parser;
 
 import dev.tssvett.schedule_bot.exception.ConnectionException;
 import dev.tssvett.schedule_bot.exception.ParseException;
-import dev.tssvett.schedule_bot.schedule.group.Group;
+import dev.tssvett.schedule_bot.entity.Group;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,17 +17,16 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @Component
-public class GroupParser implements Parser<Group> {
+public class GroupParser{
 
-    private static final String URL = String.format("https://ssau.ru/rasp/faculty/%d?course=%d", 492430598, 3);
+    private static final String URL = "https://ssau.ru/rasp/faculty/%d?course=%d";
     private static final String USER_AGENT = "Mozilla/5.0";
     private static final String GROUP_SELECTOR = "body > div.container.timetable > div > div > div > a";
 
-    @Override
-    public List<Group> parse() {
+    public List<Group> parse(Long facultyId, Integer course) {
         Document document = null;
         try {
-            document = Jsoup.connect(URL).userAgent(USER_AGENT).get();
+            document = Jsoup.connect(String.format(URL, facultyId, course)).userAgent(USER_AGENT).get();
         } catch (IOException e) {
             throw new ConnectionException(e);
         }
@@ -41,7 +40,7 @@ public class GroupParser implements Parser<Group> {
             String rawHref = rawGroup.attr("href");
             String rawName = rawGroup.select("a.btn-text.group-catalog__group span").first().text();
             Group group = Group.builder()
-                    .id(parseGroupId(rawHref))
+                    .groupId(parseGroupId(rawHref))
                     .name(rawName)
                     .build();
             groups.add(group);
@@ -49,11 +48,11 @@ public class GroupParser implements Parser<Group> {
         return groups;
     }
 
-    private String parseGroupId(String href) {
+    private Long parseGroupId(String href) {
         Pattern pattern = Pattern.compile("\\d+");
         Matcher matcher = pattern.matcher(href);
         if (matcher.find()) {
-            return matcher.group();
+            return Long.parseLong(matcher.group());
         } else {
             throw new ParseException("Ошибка при айди группы");
         }

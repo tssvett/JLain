@@ -1,7 +1,6 @@
-package dev.tssvett.schedule_bot.actions.keyboard.impl;
+package dev.tssvett.schedule_bot.actions.keyboard.impl.notification;
 
 import dev.tssvett.schedule_bot.actions.keyboard.Keyboard;
-import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
 import dev.tssvett.schedule_bot.enums.Action;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,28 +14,19 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class NotificationKeyboard implements Keyboard {
+public class NotificationKeyboard extends Keyboard {
     private static final Integer NOTIFICATION_ROW_SIZE = 2;
 
     @Override
-    public InlineKeyboardMarkup createInlineKeyboard(Action action) {
+    public InlineKeyboardMarkup createInlineKeyboard(Action action, Long userId) {
         List<String> actions = List.of("Включить", "Отключить");
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         for (int i = 0; i < actions.size(); i += NOTIFICATION_ROW_SIZE) {
             List<InlineKeyboardButton> keyboardButtonRow = new ArrayList<>();
             for (int j = 0; j < NOTIFICATION_ROW_SIZE && (i + j) < actions.size(); j++) {
-                InlineKeyboardButton keyboardButton = new InlineKeyboardButton();
-                keyboardButton.setText(actions.get(i + j));
-                //Настройка коллбейка для кнопки
-                //Решено использовать название команды, которая вызвала клавиатуру
-                CallbackDetails callbackDetails = CallbackDetails.builder()
-                        .action(action)
-                        //УСТАНОВКА строки как текста коллбека
-                        .callbackText(actions.get(i + j))
-                        .build();
-                keyboardButton.setCallbackData(callbackDetails.toString());
-                keyboardButtonRow.add(keyboardButton);
+                String callbackInformation = actions.get(i + j);
+                keyboardButtonRow.add(createButton(callbackInformation, callbackInformation, action));
             }
             if (!keyboardButtonRow.isEmpty()) {
                 rows.add(keyboardButtonRow);
