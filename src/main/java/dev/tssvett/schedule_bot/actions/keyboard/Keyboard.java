@@ -2,6 +2,7 @@ package dev.tssvett.schedule_bot.actions.keyboard;
 
 import dev.tssvett.schedule_bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.enums.Action;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 

@@ -3,42 +3,50 @@ package dev.tssvett.schedule_bot.actions.keyboard.impl.group;
 
 import dev.tssvett.schedule_bot.actions.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.actions.keyboard.impl.details.CallbackDetails;
+import dev.tssvett.schedule_bot.constants.MessageConstants;
+import dev.tssvett.schedule_bot.entity.BotUser;
 import dev.tssvett.schedule_bot.entity.Group;
-import dev.tssvett.schedule_bot.repository.GroupRepository;
-import dev.tssvett.schedule_bot.service.RegistrationService;
+import dev.tssvett.schedule_bot.exception.NotValidRegistrationStateException;
+import dev.tssvett.schedule_bot.service.GroupService;
+import dev.tssvett.schedule_bot.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.List;
+import static dev.tssvett.schedule_bot.constants.MessageConstants.GROUP_CLICK_WITH_ERROR_STATE;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class GroupKeyboardButton implements KeyboardButton {
-    private final GroupRepository groupRepository;
-    private final RegistrationService registrationService;
+    private final GroupService groupService;
+    private final UserService userService;
 
     @Override
     public SendMessage click(Update update) {
-        CallbackDetails callbackDetails = CallbackDetails.fromString(update.getCallbackQuery().getData());
+        Long groupId = Long.parseLong(CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation());
         Long userId = update.getCallbackQuery().getFrom().getId();
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
-        Group group = findGroupById(Long.parseLong(callbackDetails.getCallbackInformation()));
+        Group group = groupService.findGroupById(groupId);
 
-        return registrationService.chooseGroupStepCallback(userId, chatId, group);
+        return chooseGroupSendMessage(userId, chatId, group);
     }
 
-    private Group findGroupById(Long id) {
-        List<Group> groupList = groupRepository.findAll();
-        for (Group group : groupList) {
-            if (id.equals(group.getGroupId())) {
-                return group;
-            }
+    public SendMessage chooseGroupSendMessage(Long userId, Long chatId, Group group) {
+        try {
+            BotUser userWithChosenGroup = userService.chooseGroup(userId, group.getName());
+            return SendMessage.builder()
+                    .chatId(chatId)
+                    .text(MessageConstants.SUCCESSFULLY_REGISTERED_MESSAGE)
+                    .build();
+        } catch (NotValidRegistrationStateException e) {
+            log.warn("User {} try to choose group {} but it's already chosen", userId, group.getName());
+            return SendMessage.builder()
+                    .chatId(chatId)
+                    .text(GROUP_CLICK_WITH_ERROR_STATE)
+                    .build();
         }
-        return null;
     }
-
 }

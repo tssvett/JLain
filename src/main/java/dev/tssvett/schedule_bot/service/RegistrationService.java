@@ -41,7 +41,6 @@ public class RegistrationService {
     private final NotificationRepository notificationRepository;
     private final ReRegistrateKeyboard reRegistrateKeyboard;
     private final FacultyKeyboard facultyKeyboard;
-    private final CourseKeyboard courseKeyboard;
     private final GroupKeyboard groupKeyboard;
 
     @Transactional
@@ -79,124 +78,6 @@ public class RegistrationService {
             userRepository.save(botUser);
 
             return chooseFacultySendMessage(userId, chatId);
-        }
-    }
-
-    public SendMessage chooseFacultyStepCallback(Long userId, Long chatId, Faculty faculty) {
-        BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
-        try {
-            if (!botUser.getRegistrationState().equals(RegistrationState.FACULTY_CHOOSING)) {
-                throw new NotValidRegistrationStateException(String.format("User click on %s faculty with wrong state %s",
-                        faculty.getName(), botUser.getRegistrationState()));
-            } else {
-                log.info("User {} choose faculty {}. Save {} into database", userId, faculty.getName(), faculty.getName());
-                botUser.setFacultyName(faculty.getName());
-                botUser.setRegistrationState(RegistrationState.COURSE_CHOOSING);
-                userRepository.save(botUser);
-
-                return SendMessage.builder()
-                        .chatId(chatId)
-                        .text(MessageConstants.REGISTER_CHOOSE_COURSE_MESSAGE)
-                        .replyMarkup(courseKeyboard.createInlineKeyboard(COURSE_CHOOSE, userId))
-                        .build();
-            }
-        } catch (NotValidRegistrationStateException e) {
-            log.warn(e.getMessage());
-
-            return SendMessage.builder()
-                    .chatId(chatId)
-                    .text(FACULTY_CLICK_WITH_ERROR_STATE)
-                    .build();
-        }
-    }
-
-    public SendMessage chooseCourseStepCallback(Long userId, Long chatId, Integer courseNumber) {
-        BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
-
-        try {
-            if (!botUser.getRegistrationState().equals(RegistrationState.COURSE_CHOOSING)) {
-                throw new NotValidRegistrationStateException(String.format("User click on %s course with wrong state %s",
-                        courseNumber, botUser.getRegistrationState()));
-            } else {
-                log.info("User {} choose course {}. Save {} course into database", userId, courseNumber, courseNumber);
-                botUser.setCourse(courseNumber.toString());
-                botUser.setRegistrationState(RegistrationState.GROUP_CHOOSING);
-                userRepository.save(botUser);
-
-                return SendMessage.builder()
-                        .chatId(chatId)
-                        .text(MessageConstants.REGISTER_CHOOSE_GROUP_SUCCESSFULLY_MESSAGE)
-                        .replyMarkup(groupKeyboard.createInlineKeyboard(GROUP_CHOOSE, userId))
-                        .build();
-            }
-        } catch (NotValidRegistrationStateException e) {
-            log.warn(e.getMessage());
-
-            return SendMessage.builder()
-                    .chatId(chatId)
-                    .text(COURSE_CLICK_WITH_ERROR_STATE)
-                    .build();
-        }
-    }
-
-    public SendMessage chooseGroupStepCallback(Long userId, Long chatId, Group group) {
-        BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
-        try {
-            if (!botUser.getRegistrationState().equals(RegistrationState.GROUP_CHOOSING)) {
-                throw new NotValidRegistrationStateException(String.format("User click on %s group with wrong state %s",
-                        group.getName(), botUser.getRegistrationState()));
-            } else {
-                log.info("User {} choose group {}. Save {} into database", userId, group.getName(), group.getName());
-                botUser.setGroupName(group.getName());
-                botUser.setRegistrationState(SUCCESSFUL_REGISTRATION);
-                userRepository.save(botUser);
-
-                return SendMessage.builder()
-                        .chatId(chatId)
-                        .text(MessageConstants.SUCCESSFULLY_REGISTERED_MESSAGE)
-                        .build();
-            }
-        } catch (NotValidRegistrationStateException e) {
-            log.warn(e.getMessage());
-
-            return SendMessage.builder()
-                    .chatId(chatId)
-                    .text(GROUP_CLICK_WITH_ERROR_STATE)
-                    .build();
-        }
-    }
-
-    public SendMessage reRegistrationStepCallback(Long userId, Long chatId, String answer) {
-        BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
-        try {
-            if (!botUser.getRegistrationState().equals(SUCCESSFUL_REGISTRATION)) {
-                throw new NotValidRegistrationStateException(String.format("User click on %s re-registration with wrong state %s",
-                        answer, botUser.getRegistrationState()));
-            } else {
-                log.info("User {} choose answer {} to re-registration.", userId, answer);
-                if (answer.equals(YES)) {
-                    botUser.setRegistrationState(FACULTY_CHOOSING);
-                    userRepository.save(botUser);
-
-                    return SendMessage.builder()
-                            .chatId(chatId)
-                            .text(REGISTER_FACULTY_CHOOSING_MESSAGE)
-                            .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId))
-                            .build();
-                } else {
-                    return SendMessage.builder()
-                            .chatId(chatId)
-                            .text(NO_RE_REGISTRATION_ANSWER)
-                            .build();
-                }
-            }
-        } catch (NotValidRegistrationStateException e) {
-            log.warn(e.getMessage());
-
-            return SendMessage.builder()
-                    .chatId(chatId)
-                    .text(REGISTRATION_CLICK_WITH_ERROR_STATE)
-                    .build();
         }
     }
 

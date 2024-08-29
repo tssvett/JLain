@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.service;
+package dev.tssvett.schedule_bot.scheduling;
 
 import dev.tssvett.schedule_bot.bot.TelegramBot;
 import dev.tssvett.schedule_bot.entity.Notification;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @EnableScheduling
 @ConditionalOnProperty(name = "scheduling.notification.enabled", havingValue = "true")
-public class NotificationService {
+public class SchedulingNotification {
 
     private final TelegramBot telegramBot;
     private final NotificationRepository notificationRepository;
