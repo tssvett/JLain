@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @EnableScheduling
-@ConditionalOnProperty(name = "scheduling.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "scheduling.notification.enabled", havingValue = "true")
 public class NotificationService {
 
     private final TelegramBot telegramBot;

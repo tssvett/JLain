@@ -30,5 +30,12 @@ admin:
   id: ${ADMIN_ID}
 
 scheduling:
-  delay: ${SCHEDULING_DELAY:60000}
-  enabled: false
+  notification:
+    delay: ${SCHEDULING_DELAY:60000}
+    enabled: false
+  group:
+    delay: ${SCHEDULING_DELAY:86400000}
+    enabled: false
+  faculty:
+    delay: ${SCHEDULING_DELAY:86400000}
+    enabled: true

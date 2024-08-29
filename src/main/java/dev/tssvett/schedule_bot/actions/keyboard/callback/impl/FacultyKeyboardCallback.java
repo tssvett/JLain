@@ -2,7 +2,8 @@ package dev.tssvett.schedule_bot.actions.keyboard.callback.impl;
 
 import dev.tssvett.schedule_bot.actions.keyboard.callback.KeyboardCallback;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
-import dev.tssvett.schedule_bot.schedule.faculty.Faculty;
+import dev.tssvett.schedule_bot.entity.Faculty;
+import dev.tssvett.schedule_bot.repository.FacultyRepository;
 import dev.tssvett.schedule_bot.schedule.parser.FacultyParser;
 import dev.tssvett.schedule_bot.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
@@ -17,30 +18,23 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class FacultyKeyboardCallback implements KeyboardCallback {
-    private final FacultyParser facultyParser;
+    private final FacultyRepository facultyRepository;
     private final RegistrationService registrationService;
 
     @Override
     public SendMessage callback(Update update) {
         CallbackDetails callbackDetails = CallbackDetails.fromString(update.getCallbackQuery().getData());
-        Faculty faculty = findFacultyById(callbackDetails.getCallbackText());
+        Faculty faculty = findFacultyById(Long.parseLong(callbackDetails.getCallbackText()));
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
         Long userId = update.getCallbackQuery().getFrom().getId();
 
         return registrationService.chooseFacultyStepCallback(userId, chatId, faculty);
     }
 
-
-    /*
-    Это нужно будет переписать когда появится таблица с расписаниями для факультетов
-    Все факультеты нужно будет парсить раз в n часов(минут?) и сохранять в бд
-    Уже из бд брать все факультеты и класить в список
-    Из списка по id находить нужный нам элемент
-     */
-    private Faculty findFacultyById(String id) {
-        List<Faculty> facultyList = facultyParser.parse();
+    private Faculty findFacultyById(Long id) {
+        List<Faculty> facultyList = facultyRepository.findAll();
         for (Faculty faculty : facultyList) {
-            if (id.equals(faculty.getId())) {
+            if (id.equals(faculty.getFacultyId())) {
                 return faculty;
             }
         }

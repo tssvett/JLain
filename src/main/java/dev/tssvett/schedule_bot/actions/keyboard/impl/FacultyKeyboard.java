@@ -3,7 +3,7 @@ package dev.tssvett.schedule_bot.actions.keyboard.impl;
 import dev.tssvett.schedule_bot.actions.keyboard.Keyboard;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
 import dev.tssvett.schedule_bot.enums.Action;
-import dev.tssvett.schedule_bot.schedule.faculty.Faculty;
+import dev.tssvett.schedule_bot.entity.Faculty;
 import dev.tssvett.schedule_bot.schedule.parser.FacultyParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class FacultyKeyboard implements Keyboard {
                 CallbackDetails callbackDetails = CallbackDetails.builder()
                         .action(action)
                         //УСТАНОВКА ID факультета как текста коллбека
-                        .callbackText(faculty.getId())
+                        .callbackText(String.valueOf(faculty.getFacultyId()))
                         .build();
                 keyboardButton.setCallbackData(callbackDetails.toString());
                 keyboardButtonRow.add(keyboardButton);

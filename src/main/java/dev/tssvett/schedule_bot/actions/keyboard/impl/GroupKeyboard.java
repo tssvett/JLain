@@ -2,9 +2,12 @@ package dev.tssvett.schedule_bot.actions.keyboard.impl;
 
 import dev.tssvett.schedule_bot.actions.keyboard.Keyboard;
 import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
+import dev.tssvett.schedule_bot.entity.BotUser;
 import dev.tssvett.schedule_bot.enums.Action;
-import dev.tssvett.schedule_bot.schedule.group.Group;
-import dev.tssvett.schedule_bot.schedule.parser.GroupParser;
+import dev.tssvett.schedule_bot.entity.Group;
+import dev.tssvett.schedule_bot.repository.FacultyRepository;
+import dev.tssvett.schedule_bot.repository.GroupRepository;
+import dev.tssvett.schedule_bot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,17 +16,29 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GroupKeyboard implements Keyboard {
-    private final GroupParser groupParser;
+public class GroupKeyboard  {
+    private final GroupRepository groupRepository;
+    private final UserRepository userRepository;
     private static final Integer GROUP_KEYS_IN_ROW = 3;
 
-    @Override
-    public InlineKeyboardMarkup createInlineKeyboard(Action action) {
-        List<Group> groups = groupParser.parse();
+    public InlineKeyboardMarkup createInlineKeyboard(Action action, Long userId) {
+        BotUser user = userRepository.findById(userId).orElse(null);
+        Long courseNumber = Long.parseLong(user.getCourse());
+        List<Group> groups = groupRepository.findAll();
+
+        //Фильтруем группы по курсу
+        groups = groups.stream()
+                .filter(group -> Objects.equals(group.getCourse(), courseNumber))
+                .toList();
+        //Фильтруем группы по факультету
+        groups = groups.stream()
+                .filter(group -> group.getFaculty().getName().equals(user.getFacultyName()))
+                .toList();
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         for (int i = 0; i < groups.size(); i += GROUP_KEYS_IN_ROW) {
@@ -38,7 +53,7 @@ public class GroupKeyboard implements Keyboard {
                 CallbackDetails callbackDetails = CallbackDetails.builder()
                         .action(action)
                         //УСТАНОВКА ID факультета как текста коллбека
-                        .callbackText(group.getId())
+                        .callbackText(String.valueOf(group.getGroupId()))
                         .build();
                 keyboardButton.setCallbackData(callbackDetails.toString());
                 keyboardButtonRow.add(keyboardButton);

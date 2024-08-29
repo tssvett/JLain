@@ -1,11 +1,21 @@
-package dev.tssvett.schedule_bot.schedule.faculty;
+package dev.tssvett.schedule_bot.entity;
 
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
+import java.util.Set;
+
+@Entity
+@Table(name = "faculty")
 @Builder
+@Getter
+@Setter
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Faculty {
+    @Id
+    private Long facultyId;
     private String name;
-    private String id;
+    @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Group> groups;
 }

@@ -1,11 +1,22 @@
-package dev.tssvett.schedule_bot.schedule.group;
+package dev.tssvett.schedule_bot.entity;
 
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
+@Entity
+@Table(name = "\"group\"")
 @Builder
+@Getter
+@Setter
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Group {
+    @Id
+    private Long groupId;
     private String name;
-    private String id;
+    private Long course;
+
+    @ManyToOne
+    @JoinColumn(name = "faculty_id", nullable = false)
+    private Faculty faculty;
 }

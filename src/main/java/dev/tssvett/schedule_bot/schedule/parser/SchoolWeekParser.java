@@ -17,29 +17,24 @@ import java.util.stream.IntStream;
 
 @Slf4j
 @Component
-public class SchoolWeekParser implements Parser<Lesson> {
-
-    private static final Long GROUP_ID = 1282752754L;
-    private static final Long WEEK = 3L;
-    private static final String URL = String.format("https://ssau.ru/rasp?groupId=%d&selectedWeek=%d", GROUP_ID, WEEK);
+public class SchoolWeekParser {
+    private static final String URL = "https://ssau.ru/rasp?groupId=%d&selectedWeek=%d";
     private static final String USER_AGENT = "Mozilla/5.0";
     private static final String SCHOOL_WEEK_SELECTOR = ".schedule__item";
     private static final String TIME_SELECTOR = ".schedule__time";
 
-    @Override
-    public List<Lesson> parse() {
-        Document document = fetchDocument();
+    public List<Lesson> parse(Long groupId, Integer week) {
+        Document document = fetchDocument(groupId, week);
         Elements rawSchoolWeek = document.select(SCHOOL_WEEK_SELECTOR);
         List<String> lessonTimes = parseLessonTimes(document);
         List<String> lessonDates = parseLessonDates(document);
         List<Lesson> lessons = parseAll(rawSchoolWeek, lessonTimes, lessonDates);
-        log.info(sortLessonsByDay(lessons, lessonDates).toString());
         return sortLessonsByDay(lessons, lessonDates);
     }
 
-    private Document fetchDocument() {
+    private Document fetchDocument(Long groupId, Integer week) {
         try {
-            return Jsoup.connect(URL).userAgent(USER_AGENT).get();
+            return Jsoup.connect(String.format(URL, groupId, week)).userAgent(USER_AGENT).get();
         } catch (IOException e) {
             throw new ConnectionException(e);
         }
@@ -66,7 +61,8 @@ public class SchoolWeekParser implements Parser<Lesson> {
     private List<Lesson> parseAll(Elements schoolWeek, List<String> lessonTimes, List<String> dates) {
         List<Lesson> lessons = new LinkedList<>();
         Elements remainingElements = removeFirstNElements(schoolWeek, 7);
-
+        log.info(String.valueOf(remainingElements.size()));
+        log.info(String.valueOf(lessonTimes.size()));
         for (int i = 0; i < remainingElements.size(); i++) {
             Lesson lesson = Lesson.builder()
                     .name(remainingElements.get(i).select(".schedule__discipline").text())
@@ -74,7 +70,7 @@ public class SchoolWeekParser implements Parser<Lesson> {
                     .place(remainingElements.get(i).select(".schedule__place").text())
                     .teacher(remainingElements.get(i).select(".schedule__teacher").text())
                     .subgroup(remainingElements.get(i).select(".schedule__groups").text())
-                    .time(lessonTimes.get(i / lessonTimes.size()))
+                    .time(lessonTimes.get(i / dates.size()))
                     .dateDay(dates.get(i % dates.size()).split(" ")[0]) // Используем даты
                     .dateNumber(dates.get(i % dates.size()).split(" ")[1])
                     .build();

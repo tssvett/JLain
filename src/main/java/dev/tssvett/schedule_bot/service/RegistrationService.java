@@ -12,8 +12,8 @@ import dev.tssvett.schedule_bot.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.exception.UserNotExistsException;
 import dev.tssvett.schedule_bot.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.repository.UserRepository;
-import dev.tssvett.schedule_bot.schedule.faculty.Faculty;
-import dev.tssvett.schedule_bot.schedule.group.Group;
+import dev.tssvett.schedule_bot.entity.Faculty;
+import dev.tssvett.schedule_bot.entity.Group;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -126,7 +126,7 @@ public class RegistrationService {
                 return SendMessage.builder()
                         .chatId(chatId)
                         .text(MessageConstants.REGISTER_CHOOSE_GROUP_SUCCESSFULLY_MESSAGE)
-                        .replyMarkup(groupKeyboard.createInlineKeyboard(GROUP_CHOOSE))
+                        .replyMarkup(groupKeyboard.createInlineKeyboard(GROUP_CHOOSE, userId))
                         .build();
             }
         } catch (NotValidRegistrationStateException e) {
@@ -202,29 +202,33 @@ public class RegistrationService {
 
     @Transactional
     public void startCommandCallback(Long userId, Long chatId) {
-        if (userRepository.findById(userId).isPresent()) {
-            return;
-        }
-        log.info("User {} use /start command. Save new user to database.", userId);
+        BotUser botUser = userRepository.findById(userId).orElseGet(() -> {
+            log.info("User {} is a new user!. Add them to database", userId);
 
-        Notification notification = Notification.builder()
-                .enabled(true)
-                .build();
+            // Создаем нового пользователя
+            BotUser newUser = BotUser.builder()
+                    .userId(userId)
+                    .chatId(chatId)
+                    .registrationState(START_REGISTER)
+                    .build();
 
-        BotUser newUser = BotUser.builder()
-                .userId(userId)
-                .chatId(chatId)
-                .registrationState(START)
-                .notification(notification)
-                .build();
+            // Сохраняем newUser
+            userRepository.save(newUser);
 
+            // Создаем новый объект Notification и устанавливаем связь
+            Notification notification = Notification.builder()
+                    .enabled(true)
+                    .botUser(newUser) // Устанавливаем связь с newUser
+                    .build();
 
-        //устанавливаем связи
-        notification.setBotUser(newUser);
+            // Сохраняем notification
+            notificationRepository.save(notification);
 
-        userRepository.save(newUser);
-        notificationRepository.save(notification);
+            return newUser;
+        });
+        log.info("User {} registration state: {}", userId, botUser.getRegistrationState());
     }
+
 
     private SendMessage reRegistrationSendMessage(Long chatId) {
         return SendMessage.builder()

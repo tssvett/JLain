@@ -5,7 +5,6 @@ import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetail
 import dev.tssvett.schedule_bot.entity.Notification;
 import dev.tssvett.schedule_bot.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.repository.UserRepository;
-import dev.tssvett.schedule_bot.schedule.group.Group;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
