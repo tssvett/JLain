@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.schedule.parser;
 
 import dev.tssvett.schedule_bot.exception.ConnectionException;
 import dev.tssvett.schedule_bot.exception.ParseException;
-import dev.tssvett.schedule_bot.schedule.faculty.Faculty;
+import dev.tssvett.schedule_bot.entity.Faculty;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,7 +43,7 @@ public class FacultyParser implements Parser<Faculty> {
             String rawHref = rawFaculty.attr("href");
             String rawName = rawFaculty.select("a.h3-text").get(0).text();
             Faculty faculty = Faculty.builder()
-                    .id(parseFacultyId(rawHref))
+                    .facultyId(Long.parseLong(parseFacultyId(rawHref)))
                     .name(rawName)
                     .build();
             faculties.add(faculty);

@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.schedule;
+package dev.tssvett.schedule_bot.schedule.lesson;
 
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +14,8 @@ public class Lesson {
     private String time;
     private String dateDay;
     private String dateNumber;
+
+    public boolean isExist() {
+        return name != null && !name.isEmpty();
+    }
 }
