@@ -1,9 +1,9 @@
 package dev.tssvett.schedule_bot.service;
 
-import dev.tssvett.schedule_bot.actions.keyboard.impl.CourseKeyboard;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.FacultyKeyboard;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.GroupKeyboard;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.ReRegistrateKeyboard;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.course.CourseKeyboard;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.faculty.FacultyKeyboard;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.group.GroupKeyboard;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.reregister.ReRegistrateKeyboard;
 import dev.tssvett.schedule_bot.constants.MessageConstants;
 import dev.tssvett.schedule_bot.entity.BotUser;
 import dev.tssvett.schedule_bot.entity.Notification;
@@ -72,7 +72,7 @@ public class RegistrationService {
         if (isSuccessfullyRegistered(botUser)) {
             log.info("User {} is successfully registered. Asking for re-registration.", userId);
 
-            return reRegistrationSendMessage(chatId);
+            return reRegistrationSendMessage(chatId, userId);
         } else {
             log.info("User {} is not registered with SUCCESSFUL_REGISTRATION. Starting registration process.", userId);
             botUser.setRegistrationState(FACULTY_CHOOSING);
@@ -97,7 +97,7 @@ public class RegistrationService {
                 return SendMessage.builder()
                         .chatId(chatId)
                         .text(MessageConstants.REGISTER_CHOOSE_COURSE_MESSAGE)
-                        .replyMarkup(courseKeyboard.createInlineKeyboard(COURSE_CHOOSE))
+                        .replyMarkup(courseKeyboard.createInlineKeyboard(COURSE_CHOOSE, userId))
                         .build();
             }
         } catch (NotValidRegistrationStateException e) {
@@ -181,7 +181,7 @@ public class RegistrationService {
                     return SendMessage.builder()
                             .chatId(chatId)
                             .text(REGISTER_FACULTY_CHOOSING_MESSAGE)
-                            .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE))
+                            .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId))
                             .build();
                 } else {
                     return SendMessage.builder()
@@ -230,10 +230,10 @@ public class RegistrationService {
     }
 
 
-    private SendMessage reRegistrationSendMessage(Long chatId) {
+    private SendMessage reRegistrationSendMessage(Long chatId, Long userId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .replyMarkup(reRegistrateKeyboard.createInlineKeyboard(REREGISTRATE))
+                .replyMarkup(reRegistrateKeyboard.createInlineKeyboard(REREGISTRATE, userId))
                 .text(MessageConstants.ALREADY_REGISTERED_MESSAGE)
                 .build();
     }
@@ -243,7 +243,7 @@ public class RegistrationService {
 
         return SendMessage.builder()
                 .chatId(chatId)
-                .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE))
+                .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId))
                 .text(REGISTER_FACULTY_CHOOSING_MESSAGE)
                 .build();
     }

@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.actions.command.impl;
 
 import dev.tssvett.schedule_bot.actions.command.Command;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.NotificationKeyboard;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.notification.NotificationKeyboard;
 import dev.tssvett.schedule_bot.annotation.DirectMessageRequired;
 import dev.tssvett.schedule_bot.annotation.RegistrationRequired;
 import dev.tssvett.schedule_bot.enums.Action;
@@ -23,7 +23,7 @@ public class NotificationCommand implements Command {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text("\uD83D\uDD14 Настройте свои уведомления \uD83D\uDD14")
-                .replyMarkup(notificationKeyboard.createInlineKeyboard(Action.NOTIFICATION))
+                .replyMarkup(notificationKeyboard.createInlineKeyboard(Action.NOTIFICATION, userId))
                 .build();
     }
 

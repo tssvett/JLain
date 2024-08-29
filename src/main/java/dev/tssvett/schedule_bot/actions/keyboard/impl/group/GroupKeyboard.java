@@ -1,11 +1,9 @@
-package dev.tssvett.schedule_bot.actions.keyboard.impl;
+package dev.tssvett.schedule_bot.actions.keyboard.impl.group;
 
 import dev.tssvett.schedule_bot.actions.keyboard.Keyboard;
-import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
 import dev.tssvett.schedule_bot.entity.BotUser;
-import dev.tssvett.schedule_bot.enums.Action;
 import dev.tssvett.schedule_bot.entity.Group;
-import dev.tssvett.schedule_bot.repository.FacultyRepository;
+import dev.tssvett.schedule_bot.enums.Action;
 import dev.tssvett.schedule_bot.repository.GroupRepository;
 import dev.tssvett.schedule_bot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +19,7 @@ import java.util.Objects;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GroupKeyboard  {
+public class GroupKeyboard extends Keyboard {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private static final Integer GROUP_KEYS_IN_ROW = 3;
@@ -31,12 +29,9 @@ public class GroupKeyboard  {
         Long courseNumber = Long.parseLong(user.getCourse());
         List<Group> groups = groupRepository.findAll();
 
-        //Фильтруем группы по курсу
+        //Фильтруем группы по курсу и факультету
         groups = groups.stream()
                 .filter(group -> Objects.equals(group.getCourse(), courseNumber))
-                .toList();
-        //Фильтруем группы по факультету
-        groups = groups.stream()
                 .filter(group -> group.getFaculty().getName().equals(user.getFacultyName()))
                 .toList();
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
@@ -45,18 +40,8 @@ public class GroupKeyboard  {
             List<InlineKeyboardButton> keyboardButtonRow = new ArrayList<>();
             for (int j = 0; j < GROUP_KEYS_IN_ROW && (i + j) < groups.size(); j++) {
                 Group group = groups.get(i + j);
-                InlineKeyboardButton keyboardButton = new InlineKeyboardButton();
-                keyboardButton.setText(group.getName());
-                //Настройка коллбейка для кнопки
-                //Решено использовать название команды, которая вызвала клавиатуру
-                //И айди факультета
-                CallbackDetails callbackDetails = CallbackDetails.builder()
-                        .action(action)
-                        //УСТАНОВКА ID факультета как текста коллбека
-                        .callbackText(String.valueOf(group.getGroupId()))
-                        .build();
-                keyboardButton.setCallbackData(callbackDetails.toString());
-                keyboardButtonRow.add(keyboardButton);
+                String callbackInformation = String.valueOf(group.getGroupId());
+                keyboardButtonRow.add(createButton(group.getName(), callbackInformation, action));
             }
             if (!keyboardButtonRow.isEmpty()) {
                 rows.add(keyboardButtonRow);

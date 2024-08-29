@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.actions.keyboard.callback.details;
+package dev.tssvett.schedule_bot.actions.keyboard.impl.details;
 
 import dev.tssvett.schedule_bot.enums.Action;
 import lombok.Builder;
@@ -11,22 +11,21 @@ import java.util.List;
 @Builder
 public class CallbackDetails {
     private Action action;
-    private String callbackText;
+    private String callbackInformation;
 
     @Override
     public String toString() {
-        return action + " " + callbackText;
+        return action + " " + callbackInformation;
     }
 
     public static CallbackDetails fromString(String str) {
         List<String> parts = Arrays.stream(str.split(" ", 2)).toList();
-        System.out.println(parts);
         Action action = Action.valueOf(parts.get(0));
         String callbackText = parts.get(1);
 
         return CallbackDetails.builder()
                 .action(action)
-                .callbackText(callbackText)
+                .callbackInformation(callbackText)
                 .build();
     }
 }

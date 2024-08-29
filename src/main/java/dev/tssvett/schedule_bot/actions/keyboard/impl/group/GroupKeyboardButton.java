@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.actions.keyboard.impl.group;
 
 
-import dev.tssvett.schedule_bot.actions.keyboard.KeyboardButtonCallback;
-import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
+import dev.tssvett.schedule_bot.actions.keyboard.KeyboardButton;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.entity.Group;
 import dev.tssvett.schedule_bot.repository.GroupRepository;
 import dev.tssvett.schedule_bot.service.RegistrationService;
@@ -17,16 +17,16 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GroupKeyboardButtonCallback implements KeyboardButtonCallback {
+public class GroupKeyboardButton implements KeyboardButton {
     private final GroupRepository groupRepository;
     private final RegistrationService registrationService;
 
     @Override
-    public SendMessage callback(Update update) {
+    public SendMessage click(Update update) {
         CallbackDetails callbackDetails = CallbackDetails.fromString(update.getCallbackQuery().getData());
         Long userId = update.getCallbackQuery().getFrom().getId();
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
-        Group group = findGroupById(Long.parseLong(callbackDetails.getCallbackText()));
+        Group group = findGroupById(Long.parseLong(callbackDetails.getCallbackInformation()));
 
         return registrationService.chooseGroupStepCallback(userId, chatId, group);
     }

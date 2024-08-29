@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.actions.keyboard.impl.notification;
 
-import dev.tssvett.schedule_bot.actions.keyboard.KeyboardButtonCallback;
-import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
+import dev.tssvett.schedule_bot.actions.keyboard.KeyboardButton;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.entity.Notification;
 import dev.tssvett.schedule_bot.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.repository.UserRepository;
@@ -14,24 +14,23 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class NotificationKeyboardButtonCallback implements KeyboardButtonCallback {
+public class NotificationKeyboardButton implements KeyboardButton {
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
 
     @Override
-    public SendMessage callback(Update update) {
+    public SendMessage click(Update update) {
         CallbackDetails callbackDetails = CallbackDetails.fromString(update.getCallbackQuery().getData());
         Long userId = update.getCallbackQuery().getFrom().getId();
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
-        if (callbackDetails.getCallbackText().equals("Включить")) {
+        if (callbackDetails.getCallbackInformation().equals("Включить")) {
             userRepository.findById(userId).ifPresent(user -> {
                 Notification notification = user.getNotification();
                 notification.setEnabled(true);
                 notificationRepository.save(notification);
                 userRepository.save(user);
             });
-        }
-        else {
+        } else {
             userRepository.findById(userId).ifPresent(user -> {
                 Notification notification = user.getNotification();
                 notification.setEnabled(false);

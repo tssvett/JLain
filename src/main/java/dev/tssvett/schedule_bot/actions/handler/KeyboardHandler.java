@@ -1,11 +1,11 @@
 package dev.tssvett.schedule_bot.actions.handler;
 
-import dev.tssvett.schedule_bot.actions.keyboard.callback.details.CallbackDetails;
-import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.CourseKeyboardCallback;
-import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.FacultyKeyboardCallback;
-import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.GroupKeyboardCallback;
-import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.NotificationKeyboardCallback;
-import dev.tssvett.schedule_bot.actions.keyboard.callback.impl.ReRegistrateCallback;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.details.CallbackDetails;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.course.CourseKeyboardButton;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.faculty.FacultyKeyboardButton;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.group.GroupKeyboardButton;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.notification.NotificationKeyboardButton;
+import dev.tssvett.schedule_bot.actions.keyboard.impl.reregister.ReRegistrateButton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,20 +16,20 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 @RequiredArgsConstructor
 public class KeyboardHandler {
-    private final FacultyKeyboardCallback facultyKeyboardCallback;
-    private final CourseKeyboardCallback courseKeyboardCallback;
-    private final GroupKeyboardCallback groupKeyboardCallback;
-    private final ReRegistrateCallback reRegistrateCallback;
-    private final NotificationKeyboardCallback notificationKeyboardCallback;
+    private final FacultyKeyboardButton facultyKeyboardCallback;
+    private final CourseKeyboardButton courseKeyboardCallback;
+    private final GroupKeyboardButton groupKeyboardCallback;
+    private final ReRegistrateButton reRegistrateCallback;
+    private final NotificationKeyboardButton notificationKeyboardCallback;
 
 
     public SendMessage handleKeyboardAction(Update update) {
         return switch (CallbackDetails.fromString(update.getCallbackQuery().getData()).getAction()) {
-            case FACULTY_CHOOSE -> facultyKeyboardCallback.callback(update);
-            case COURSE_CHOOSE -> courseKeyboardCallback.callback(update);
-            case GROUP_CHOOSE -> groupKeyboardCallback.callback(update);
-            case REREGISTRATE -> reRegistrateCallback.callback(update);
-            case NOTIFICATION -> notificationKeyboardCallback.callback(update);
+            case FACULTY_CHOOSE -> facultyKeyboardCallback.click(update);
+            case COURSE_CHOOSE -> courseKeyboardCallback.click(update);
+            case GROUP_CHOOSE -> groupKeyboardCallback.click(update);
+            case REREGISTRATE -> reRegistrateCallback.click(update);
+            case NOTIFICATION -> notificationKeyboardCallback.click(update);
         };
     }
 }
