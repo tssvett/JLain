@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.schedule.parser;
 
 import dev.tssvett.schedule_bot.exception.ConnectionException;
-import dev.tssvett.schedule_bot.schedule.Lesson;
+import dev.tssvett.schedule_bot.schedule.lesson.Lesson;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

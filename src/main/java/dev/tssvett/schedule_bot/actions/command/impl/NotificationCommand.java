@@ -15,6 +15,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @RequiredArgsConstructor
 public class NotificationCommand implements Command {
     private final NotificationKeyboard notificationKeyboard;
+
     @Override
     @DirectMessageRequired
     @RegistrationRequired
@@ -26,5 +27,4 @@ public class NotificationCommand implements Command {
                 .replyMarkup(notificationKeyboard.createInlineKeyboard(Action.NOTIFICATION, userId))
                 .build();
     }
-
 }

@@ -3,25 +3,25 @@ package dev.tssvett.schedule_bot.service;
 import dev.tssvett.schedule_bot.entity.BotUser;
 import dev.tssvett.schedule_bot.entity.Notification;
 import dev.tssvett.schedule_bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.exception.GroupNotExistException;
 import dev.tssvett.schedule_bot.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.exception.UserNotExistsException;
+import dev.tssvett.schedule_bot.repository.GroupRepository;
 import dev.tssvett.schedule_bot.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import static dev.tssvett.schedule_bot.constants.MessageConstants.NO_RE_REGISTRATION_ANSWER;
 import static dev.tssvett.schedule_bot.constants.MessageConstants.YES;
-import static dev.tssvett.schedule_bot.enums.RegistrationState.FACULTY_CHOOSING;
-import static dev.tssvett.schedule_bot.enums.RegistrationState.SUCCESSFUL_REGISTRATION;
+import static dev.tssvett.schedule_bot.enums.RegistrationState.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
     private final NotificationRepository notificationRepository;
 
 
@@ -97,5 +97,67 @@ public class UserService {
                 return false;
             }
         }
+    }
+
+    public BotUser createUserIfNotExists(Long userId, Long chatId) {
+        return userRepository.findById(userId).orElseGet(() -> {
+            log.info("User {} is not in database. Add them to database", userId);
+            Notification notification = Notification.builder()
+                    .enabled(true)
+                    .build();
+
+            BotUser newUser = BotUser.builder()
+                    .userId(userId)
+                    .chatId(chatId)
+                    .registrationState(START_REGISTER)
+                    .notification(notification)
+                    .build();
+
+            //устанавливаем связи
+            notification.setBotUser(newUser);
+
+            userRepository.save(newUser);
+            notificationRepository.save(notification);
+
+            return newUser;
+        });
+    }
+
+    public BotUser createUserIfNotExistForStartCommand(Long userId, Long chatId) {
+        return userRepository.findById(userId).orElseGet(() -> {
+            log.info("User {} is a new user!. Add them to database", userId);
+
+            // Создаем нового пользователя
+            BotUser newUser = BotUser.builder()
+                    .userId(userId)
+                    .chatId(chatId)
+                    .registrationState(START_REGISTER)
+                    .build();
+
+            // Сохраняем newUser
+            userRepository.save(newUser);
+
+            // Создаем новый объект Notification и устанавливаем связь
+            Notification notification = Notification.builder()
+                    .enabled(true)
+                    .botUser(newUser) // Устанавливаем связь с newUser
+                    .build();
+
+            // Сохраняем notification
+            notificationRepository.save(notification);
+
+            return newUser;
+        });
+    }
+
+    public BotUser changeUserRegistrationState(Long userId, RegistrationState state) {
+        log.info("User {} registration state changed to {}", userId, state);
+        BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
+        botUser.setRegistrationState(state);
+        return userRepository.save(botUser);
+    }
+
+    public Long getUserGroupIdByGroupName(String groupName) {
+        return groupRepository.findByName(groupName).orElseThrow(() -> new GroupNotExistException("No group with name: " + groupName)).getGroupId();
     }
 }

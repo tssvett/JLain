@@ -2,7 +2,6 @@ package dev.tssvett.schedule_bot.actions.keyboard.impl.notification;
 
 import dev.tssvett.schedule_bot.actions.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.actions.keyboard.impl.details.CallbackDetails;
-import dev.tssvett.schedule_bot.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

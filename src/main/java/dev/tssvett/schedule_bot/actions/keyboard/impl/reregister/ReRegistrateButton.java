@@ -46,7 +46,7 @@ public class ReRegistrateButton implements KeyboardButton {
                         .build();
             }
         } catch (NotValidRegistrationStateException e) {
-            log.warn(e.getMessage());
+            log.warn("User {} try to choose ReRegistration but it's wrong state", userId);
             return SendMessage.builder()
                     .chatId(chatId)
                     .text(REGISTRATION_CLICK_WITH_ERROR_STATE)
