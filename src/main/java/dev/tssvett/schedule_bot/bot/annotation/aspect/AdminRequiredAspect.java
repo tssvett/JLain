@@ -1,7 +1,7 @@
-package dev.tssvett.schedule_bot.annotation.aspect;
+package dev.tssvett.schedule_bot.bot.annotation.aspect;
 
-import dev.tssvett.schedule_bot.properties.AdminProperties;
-import dev.tssvett.schedule_bot.repository.UserRepository;
+import dev.tssvett.schedule_bot.bot.properties.AdminProperties;
+import dev.tssvett.schedule_bot.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

@@ -1,11 +1,11 @@
-package dev.tssvett.schedule_bot.scheduling;
+package dev.tssvett.schedule_bot.parsing;
 
-import dev.tssvett.schedule_bot.entity.Faculty;
-import dev.tssvett.schedule_bot.entity.Group;
-import dev.tssvett.schedule_bot.schedule.parser.FacultyParser;
-import dev.tssvett.schedule_bot.schedule.parser.GroupParser;
-import dev.tssvett.schedule_bot.service.FacultyService;
-import dev.tssvett.schedule_bot.service.GroupService;
+import dev.tssvett.schedule_bot.backend.entity.Faculty;
+import dev.tssvett.schedule_bot.backend.entity.Group;
+import dev.tssvett.schedule_bot.parsing.parser.FacultyParser;
+import dev.tssvett.schedule_bot.parsing.parser.GroupParser;
+import dev.tssvett.schedule_bot.backend.service.FacultyService;
+import dev.tssvett.schedule_bot.backend.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

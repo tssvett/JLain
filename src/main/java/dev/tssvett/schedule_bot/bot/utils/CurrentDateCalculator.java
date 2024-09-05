@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.utils;
+package dev.tssvett.schedule_bot.bot.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

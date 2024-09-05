@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.annotation.aspect;
+package dev.tssvett.schedule_bot.bot.annotation.aspect;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

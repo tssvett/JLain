@@ -1,8 +1,8 @@
-package dev.tssvett.schedule_bot.service;
+package dev.tssvett.schedule_bot.backend.service;
 
-import dev.tssvett.schedule_bot.entity.Group;
-import dev.tssvett.schedule_bot.exception.GroupNotExistException;
-import dev.tssvett.schedule_bot.repository.GroupRepository;
+import dev.tssvett.schedule_bot.backend.entity.Group;
+import dev.tssvett.schedule_bot.backend.exception.GroupNotExistException;
+import dev.tssvett.schedule_bot.backend.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

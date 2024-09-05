@@ -1,10 +1,10 @@
-package dev.tssvett.schedule_bot.actions.command.impl;
+package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
-import dev.tssvett.schedule_bot.actions.command.Command;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.notification.NotificationKeyboard;
-import dev.tssvett.schedule_bot.annotation.DirectMessageRequired;
-import dev.tssvett.schedule_bot.annotation.RegistrationRequired;
-import dev.tssvett.schedule_bot.enums.Action;
+import dev.tssvett.schedule_bot.bot.actions.command.Command;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.notification.NotificationKeyboard;
+import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
+import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
+import dev.tssvett.schedule_bot.bot.enums.Action;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

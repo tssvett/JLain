@@ -1,8 +1,8 @@
-package dev.tssvett.schedule_bot.service;
+package dev.tssvett.schedule_bot.backend.service;
 
-import dev.tssvett.schedule_bot.entity.Faculty;
-import dev.tssvett.schedule_bot.exception.FacultyNotExistException;
-import dev.tssvett.schedule_bot.repository.FacultyRepository;
+import dev.tssvett.schedule_bot.backend.entity.Faculty;
+import dev.tssvett.schedule_bot.backend.exception.FacultyNotExistException;
+import dev.tssvett.schedule_bot.backend.repository.FacultyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

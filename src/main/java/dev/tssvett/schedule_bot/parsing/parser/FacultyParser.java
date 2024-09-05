@@ -1,8 +1,8 @@
-package dev.tssvett.schedule_bot.schedule.parser;
+package dev.tssvett.schedule_bot.parsing.parser;
 
-import dev.tssvett.schedule_bot.exception.ConnectionException;
-import dev.tssvett.schedule_bot.exception.ParseException;
-import dev.tssvett.schedule_bot.entity.Faculty;
+import dev.tssvett.schedule_bot.backend.exception.ConnectionException;
+import dev.tssvett.schedule_bot.backend.exception.ParseException;
+import dev.tssvett.schedule_bot.backend.entity.Faculty;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

@@ -1,19 +1,24 @@
-package dev.tssvett.schedule_bot.service;
+package dev.tssvett.schedule_bot.backend.service;
 
-import dev.tssvett.schedule_bot.entity.BotUser;
-import dev.tssvett.schedule_bot.entity.Notification;
+import dev.tssvett.schedule_bot.backend.entity.BotUser;
+import dev.tssvett.schedule_bot.backend.entity.Faculty;
+import dev.tssvett.schedule_bot.backend.entity.Group;
+import dev.tssvett.schedule_bot.backend.entity.Notification;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
-import dev.tssvett.schedule_bot.exception.GroupNotExistException;
-import dev.tssvett.schedule_bot.exception.NotValidRegistrationStateException;
-import dev.tssvett.schedule_bot.exception.UserNotExistsException;
-import dev.tssvett.schedule_bot.repository.GroupRepository;
-import dev.tssvett.schedule_bot.repository.NotificationRepository;
-import dev.tssvett.schedule_bot.repository.UserRepository;
+import dev.tssvett.schedule_bot.backend.exception.GroupNotExistException;
+import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
+import dev.tssvett.schedule_bot.backend.exception.UserNotExistsException;
+import dev.tssvett.schedule_bot.backend.repository.GroupRepository;
+import dev.tssvett.schedule_bot.backend.repository.NotificationRepository;
+import dev.tssvett.schedule_bot.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import static dev.tssvett.schedule_bot.bot.constants.MessageConstants.YES;
+import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.FACULTY_CHOOSING;
+import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.START_REGISTER;
+import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.SUCCESSFUL_REGISTRATION;
 
 @Slf4j
 @Service
@@ -30,12 +35,15 @@ public class UserService {
 
     public BotUser chooseFaculty(Long userId, String facultyName) {
         BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
-        if (!botUser.getRegistrationState().equals(RegistrationState.FACULTY_CHOOSING)) {
+        if (!botUser.getRegistrationState().equals(FACULTY_CHOOSING)) {
             throw new NotValidRegistrationStateException(String.format("User click on %s faculty with wrong state %s",
                     facultyName, botUser.getRegistrationState()));
         } else {
             log.info("User {} choose faculty {}. Save {} into database", userId, facultyName, facultyName);
-            botUser.setFacultyName(facultyName);
+            //
+            botUser.setFaculty(Faculty.builder()
+                    .name(facultyName)
+                    .build());
             botUser.setRegistrationState(RegistrationState.COURSE_CHOOSING);
 
             return userRepository.save(botUser);
@@ -49,7 +57,7 @@ public class UserService {
                     course, botUser.getRegistrationState()));
         } else {
             log.info("User {} choose course {}. Save {} course into database", userId, course, course);
-            botUser.setCourse(course);
+            botUser.setCourse(Long.parseLong(course));
             botUser.setRegistrationState(RegistrationState.GROUP_CHOOSING);
 
             return userRepository.save(botUser);
@@ -63,7 +71,9 @@ public class UserService {
                     groupName, botUser.getRegistrationState()));
         } else {
             log.info("User {} choose group {}. Save {} into database", userId, groupName, groupName);
-            botUser.setGroupName(groupName);
+            botUser.setGroup(Group.builder()
+                    .name(groupName)
+                    .build());
             botUser.setRegistrationState(SUCCESSFUL_REGISTRATION);
 
             return userRepository.save(botUser);

@@ -1,6 +1,6 @@
-package dev.tssvett.schedule_bot.constants;
+package dev.tssvett.schedule_bot.bot.constants;
 
-import dev.tssvett.schedule_bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 
 public class MessageConstants {
     public static final String START_COMMAND = "\uD83D\uDC4B Приветствую тебя в новом мире планирования! \uD83D\uDC4B\n" +
@@ -72,7 +72,7 @@ public class MessageConstants {
     }
 
 
-    public static String createInfoMessageFromParams(Long userId, Long chatId, String facultyName, String groupName, String course,
+    public static String createInfoMessageFromParams(Long userId, Long chatId, String facultyName, String groupName, Long course,
                                                      RegistrationState registrationState, Boolean enabled) {
 
         return "ℹ️ **Информация о пользователе:**\n\n" +

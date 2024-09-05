@@ -1,11 +1,11 @@
-package dev.tssvett.schedule_bot.actions.handler;
+package dev.tssvett.schedule_bot.bot.actions.handler;
 
-import dev.tssvett.schedule_bot.actions.keyboard.impl.details.CallbackDetails;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.course.CourseKeyboardButton;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.faculty.FacultyKeyboardButton;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.group.GroupKeyboardButton;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.notification.NotificationKeyboardButton;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.reregister.ReRegistrateButton;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.course.CourseKeyboardButton;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.faculty.FacultyKeyboardButton;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.group.GroupKeyboardButton;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.notification.NotificationKeyboardButton;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.reregister.ReRegistrateButton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

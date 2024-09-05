@@ -1,11 +1,11 @@
-package dev.tssvett.schedule_bot.actions.command.impl;
+package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
-import dev.tssvett.schedule_bot.actions.command.Command;
-import dev.tssvett.schedule_bot.annotation.NoneRequired;
-import dev.tssvett.schedule_bot.constants.MessageConstants;
-import dev.tssvett.schedule_bot.entity.BotUser;
-import dev.tssvett.schedule_bot.enums.RegistrationState;
-import dev.tssvett.schedule_bot.repository.UserRepository;
+import dev.tssvett.schedule_bot.bot.actions.command.Command;
+import dev.tssvett.schedule_bot.bot.annotation.NoneRequired;
+import dev.tssvett.schedule_bot.bot.constants.MessageConstants;
+import dev.tssvett.schedule_bot.backend.entity.BotUser;
+import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -33,9 +33,9 @@ public class InfoCommand implements Command {
             return MessageConstants.crateNotFoundUserMessage(userId);
         }
 
-        String facultyName = botUser.getFacultyName();
-        String groupName = botUser.getGroupName();
-        String course = botUser.getCourse();
+        String facultyName = botUser.getFaculty().getName();
+        String groupName = botUser.getGroup().getName();
+        Long course = botUser.getCourse();
         RegistrationState registrationState = botUser.getRegistrationState();
         Boolean enabled = botUser.getNotification().getEnabled();
 

@@ -1,10 +1,10 @@
-package dev.tssvett.schedule_bot.actions.command.impl;
+package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
-import dev.tssvett.schedule_bot.actions.command.Command;
-import dev.tssvett.schedule_bot.annotation.NoneRequired;
-import dev.tssvett.schedule_bot.constants.MessageConstants;
-import dev.tssvett.schedule_bot.entity.BotUser;
-import dev.tssvett.schedule_bot.service.UserService;
+import dev.tssvett.schedule_bot.bot.actions.command.Command;
+import dev.tssvett.schedule_bot.bot.annotation.NoneRequired;
+import dev.tssvett.schedule_bot.bot.constants.MessageConstants;
+import dev.tssvett.schedule_bot.backend.entity.BotUser;
+import dev.tssvett.schedule_bot.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

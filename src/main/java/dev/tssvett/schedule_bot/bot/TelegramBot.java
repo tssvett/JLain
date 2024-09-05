@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot;
 
-import dev.tssvett.schedule_bot.actions.provider.CallbackProvider;
-import dev.tssvett.schedule_bot.properties.BotProperties;
+import dev.tssvett.schedule_bot.bot.actions.provider.CallbackProvider;
+import dev.tssvett.schedule_bot.bot.properties.BotProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.properties;
+package dev.tssvett.schedule_bot.scheduling.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

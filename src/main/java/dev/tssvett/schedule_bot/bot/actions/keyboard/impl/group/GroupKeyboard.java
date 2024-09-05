@@ -1,11 +1,11 @@
-package dev.tssvett.schedule_bot.actions.keyboard.impl.group;
+package dev.tssvett.schedule_bot.bot.actions.keyboard.impl.group;
 
-import dev.tssvett.schedule_bot.actions.keyboard.Keyboard;
-import dev.tssvett.schedule_bot.entity.BotUser;
-import dev.tssvett.schedule_bot.entity.Group;
-import dev.tssvett.schedule_bot.enums.Action;
-import dev.tssvett.schedule_bot.repository.GroupRepository;
-import dev.tssvett.schedule_bot.repository.UserRepository;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.Keyboard;
+import dev.tssvett.schedule_bot.backend.entity.BotUser;
+import dev.tssvett.schedule_bot.backend.entity.Group;
+import dev.tssvett.schedule_bot.bot.enums.Action;
+import dev.tssvett.schedule_bot.backend.repository.GroupRepository;
+import dev.tssvett.schedule_bot.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,13 +26,13 @@ public class GroupKeyboard extends Keyboard {
 
     public InlineKeyboardMarkup createInlineKeyboard(Action action, Long userId) {
         BotUser user = userRepository.findById(userId).orElse(null);
-        Long courseNumber = Long.parseLong(user.getCourse());
+        Long courseNumber = user.getCourse();
         List<Group> groups = groupRepository.findAll();
 
         //Фильтруем группы по курсу и факультету
         groups = groups.stream()
                 .filter(group -> Objects.equals(group.getCourse(), courseNumber))
-                .filter(group -> group.getFaculty().getName().equals(user.getFacultyName()))
+                .filter(group -> group.getFaculty().getName().equals(user.getFaculty().getName()))
                 .toList();
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();

@@ -1,6 +1,6 @@
-package dev.tssvett.schedule_bot.actions.keyboard.impl.details;
+package dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details;
 
-import dev.tssvett.schedule_bot.enums.Action;
+import dev.tssvett.schedule_bot.bot.enums.Action;
 import lombok.Builder;
 import lombok.Data;
 

@@ -29,5 +29,11 @@
                                  referencedTableName="faculty"
                                  referencedColumnNames="faculty_id"
                                  constraintName="fk_group_faculty"/>
+        <addForeignKeyConstraint
+            baseTableName="group"
+            baseColumnNames="user_id"
+            referencedTableName="bot_user"
+            referencedColumnNames="user_id"
+            constraintName="fk_group_user"/>
     </changeSet>
 </databaseChangeLog>

@@ -1,6 +1,6 @@
-package dev.tssvett.schedule_bot.config;
+package dev.tssvett.schedule_bot.bot.config;
 
-import dev.tssvett.schedule_bot.actions.handler.MenuHandler;
+import dev.tssvett.schedule_bot.bot.actions.handler.MenuHandler;
 import dev.tssvett.schedule_bot.bot.TelegramBot;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

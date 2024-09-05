@@ -1,7 +1,7 @@
-package dev.tssvett.schedule_bot.actions.provider;
+package dev.tssvett.schedule_bot.bot.actions.provider;
 
-import dev.tssvett.schedule_bot.actions.handler.CommandHandler;
-import dev.tssvett.schedule_bot.actions.handler.KeyboardHandler;
+import dev.tssvett.schedule_bot.bot.actions.handler.CommandHandler;
+import dev.tssvett.schedule_bot.bot.actions.handler.KeyboardHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

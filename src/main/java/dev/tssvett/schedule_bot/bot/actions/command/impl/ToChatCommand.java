@@ -1,8 +1,8 @@
-package dev.tssvett.schedule_bot.actions.command.impl;
+package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
-import dev.tssvett.schedule_bot.actions.command.Command;
-import dev.tssvett.schedule_bot.annotation.AdminRequired;
-import dev.tssvett.schedule_bot.annotation.RegistrationRequired;
+import dev.tssvett.schedule_bot.bot.actions.command.Command;
+import dev.tssvett.schedule_bot.bot.annotation.AdminRequired;
+import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

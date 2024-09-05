@@ -18,5 +18,11 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+        <addForeignKeyConstraint
+                baseTableName="faculty"
+                baseColumnNames="user_id"
+                referencedTableName="bot_user"
+                referencedColumnNames="user_id"
+                constraintName="fk_faculty_user"/>
     </changeSet>
 </databaseChangeLog>

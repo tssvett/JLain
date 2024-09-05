@@ -1,18 +1,20 @@
-package dev.tssvett.schedule_bot.actions.keyboard.impl.reregister;
+package dev.tssvett.schedule_bot.bot.actions.keyboard.impl.reregister;
 
-import dev.tssvett.schedule_bot.actions.keyboard.KeyboardButton;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.details.CallbackDetails;
-import dev.tssvett.schedule_bot.actions.keyboard.impl.faculty.FacultyKeyboard;
-import dev.tssvett.schedule_bot.exception.NotValidRegistrationStateException;
-import dev.tssvett.schedule_bot.service.UserService;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.KeyboardButton;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.faculty.FacultyKeyboard;
+import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
+import dev.tssvett.schedule_bot.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static dev.tssvett.schedule_bot.constants.MessageConstants.*;
-import static dev.tssvett.schedule_bot.enums.Action.FACULTY_CHOOSE;
+import static dev.tssvett.schedule_bot.bot.constants.MessageConstants.NO_RE_REGISTRATION_ANSWER;
+import static dev.tssvett.schedule_bot.bot.constants.MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE;
+import static dev.tssvett.schedule_bot.bot.constants.MessageConstants.REGISTRATION_CLICK_WITH_ERROR_STATE;
+import static dev.tssvett.schedule_bot.bot.enums.Action.FACULTY_CHOOSE;
 
 @Slf4j
 @Component

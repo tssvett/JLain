@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.schedule.parser;
+package dev.tssvett.schedule_bot.parsing.parser;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.annotation;
+package dev.tssvett.schedule_bot.bot.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,6 +1,7 @@
-package dev.tssvett.schedule_bot.entity;
+package dev.tssvett.schedule_bot.backend.entity;
 
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -22,14 +23,23 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BotUser {
     @Id
-    Long userId;
-    Long chatId;
-    String facultyName;
-    String groupName;
-    String course;
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "chat_id")
+    private Long chatId;
+
+    @Column(name = "course")
+    private Long course;
 
     @Enumerated(EnumType.STRING)
-    RegistrationState registrationState;
+    private RegistrationState registrationState;
+
+    @OneToOne(mappedBy = "botUser")
+    private Faculty faculty;
+
+    @OneToOne(mappedBy = "botUser")
+    private Group group;
 
     @OneToOne(mappedBy = "botUser")
     private Notification notification;

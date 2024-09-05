@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.entity;
+package dev.tssvett.schedule_bot.backend.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

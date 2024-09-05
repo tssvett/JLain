@@ -27,7 +27,7 @@
                 <constraints nullable="true"/>"
             </column>
 
-            <column name="course" type="VARCHAR">
+            <column name="course" type="BIGINT">
                 <constraints nullable="true"/>
             </column>
 

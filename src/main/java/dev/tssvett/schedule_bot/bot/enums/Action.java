@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.enums;
+package dev.tssvett.schedule_bot.bot.enums;
 
 import lombok.Getter;
 

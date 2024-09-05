@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.actions.command;
+package dev.tssvett.schedule_bot.bot.actions.command;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 

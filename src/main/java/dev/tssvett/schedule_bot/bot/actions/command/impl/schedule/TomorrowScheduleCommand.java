@@ -1,13 +1,13 @@
-package dev.tssvett.schedule_bot.actions.command.impl.schedule;
+package dev.tssvett.schedule_bot.bot.actions.command.impl.schedule;
 
 
-import dev.tssvett.schedule_bot.actions.command.Command;
-import dev.tssvett.schedule_bot.annotation.RegistrationRequired;
-import dev.tssvett.schedule_bot.schedule.formatter.ScheduleStringFormatter;
-import dev.tssvett.schedule_bot.schedule.lesson.Lesson;
-import dev.tssvett.schedule_bot.schedule.parser.SchoolWeekParser;
-import dev.tssvett.schedule_bot.schedule.utils.CurrentDateCalculator;
-import dev.tssvett.schedule_bot.service.UserService;
+import dev.tssvett.schedule_bot.bot.actions.command.Command;
+import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
+import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
+import dev.tssvett.schedule_bot.backend.entity.Lesson;
+import dev.tssvett.schedule_bot.parsing.parser.SchoolWeekParser;
+import dev.tssvett.schedule_bot.bot.utils.CurrentDateCalculator;
+import dev.tssvett.schedule_bot.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class TomorrowScheduleCommand implements Command {
     @RegistrationRequired
     public SendMessage execute(Long userId, Long chatId) {
         log.info("Received " + this.getClass().getSimpleName() + " from userId: {}", userId);
-        String groupName = userService.findUserById(userId).getGroupName();
+        String groupName = userService.findUserById(userId).getGroup().getName();
         Long groupId = userService.getUserGroupIdByGroupName(groupName);
         List<Lesson> lessonsInWeek = schoolWeekParser.parse(groupId, currentDateCalculator.calculateWeekNumber());
         String formattedLessons = scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateTomorrowDayName());
