@@ -4,13 +4,15 @@ import dev.tssvett.schedule_bot.backend.entity.BotUser;
 import dev.tssvett.schedule_bot.backend.entity.Faculty;
 import dev.tssvett.schedule_bot.backend.entity.Group;
 import dev.tssvett.schedule_bot.backend.entity.Notification;
-import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.backend.exception.FacultyNotExistException;
 import dev.tssvett.schedule_bot.backend.exception.GroupNotExistException;
 import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.exception.UserNotExistsException;
+import dev.tssvett.schedule_bot.backend.repository.FacultyRepository;
 import dev.tssvett.schedule_bot.backend.repository.GroupRepository;
 import dev.tssvett.schedule_bot.backend.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.backend.repository.UserRepository;
+import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.SUCCESSFUL_RE
 public class UserService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final FacultyRepository facultyRepository;
     private final NotificationRepository notificationRepository;
 
 
@@ -40,24 +43,22 @@ public class UserService {
                     facultyName, botUser.getRegistrationState()));
         } else {
             log.info("User {} choose faculty {}. Save {} into database", userId, facultyName, facultyName);
-            //
-            botUser.setFaculty(Faculty.builder()
-                    .name(facultyName)
-                    .build());
+            Faculty faculty = facultyRepository.findByName(facultyName).orElseThrow(() -> new FacultyNotExistException(String.format("No faculty with name %s", facultyName)));
+            botUser.setFaculty(faculty);
             botUser.setRegistrationState(RegistrationState.COURSE_CHOOSING);
 
             return userRepository.save(botUser);
         }
     }
 
-    public BotUser chooseCourse(Long userId, String course) {
+    public BotUser chooseCourse(Long userId, Long course) {
         BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
         if (!botUser.getRegistrationState().equals(RegistrationState.COURSE_CHOOSING)) {
             throw new NotValidRegistrationStateException(String.format("User click on %s course with wrong state %s",
                     course, botUser.getRegistrationState()));
         } else {
             log.info("User {} choose course {}. Save {} course into database", userId, course, course);
-            botUser.setCourse(Long.parseLong(course));
+            botUser.setCourse(course);
             botUser.setRegistrationState(RegistrationState.GROUP_CHOOSING);
 
             return userRepository.save(botUser);
@@ -71,9 +72,8 @@ public class UserService {
                     groupName, botUser.getRegistrationState()));
         } else {
             log.info("User {} choose group {}. Save {} into database", userId, groupName, groupName);
-            botUser.setGroup(Group.builder()
-                    .name(groupName)
-                    .build());
+            Group group = groupRepository.findByName(groupName).orElseThrow(() -> new GroupNotExistException(String.format("No group with name %s", groupName)));
+            botUser.setGroup(group);
             botUser.setRegistrationState(SUCCESSFUL_REGISTRATION);
 
             return userRepository.save(botUser);
@@ -122,38 +122,8 @@ public class UserService {
                     .notification(notification)
                     .build();
 
-            //устанавливаем связи
             notification.setBotUser(newUser);
-
             userRepository.save(newUser);
-            notificationRepository.save(notification);
-
-            return newUser;
-        });
-    }
-
-    public BotUser createUserIfNotExistForStartCommand(Long userId, Long chatId) {
-        return userRepository.findById(userId).orElseGet(() -> {
-            log.info("User {} is a new user!. Add them to database", userId);
-
-            // Создаем нового пользователя
-            BotUser newUser = BotUser.builder()
-                    .userId(userId)
-                    .chatId(chatId)
-                    .registrationState(START_REGISTER)
-                    .build();
-
-            // Сохраняем newUser
-            userRepository.save(newUser);
-
-            // Создаем новый объект Notification и устанавливаем связь
-            Notification notification = Notification.builder()
-                    .enabled(true)
-                    .botUser(newUser) // Устанавливаем связь с newUser
-                    .build();
-
-            // Сохраняем notification
-            notificationRepository.save(notification);
 
             return newUser;
         });

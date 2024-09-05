@@ -1,11 +1,15 @@
 package dev.tssvett.schedule_bot.backend.entity;
 
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -35,12 +39,14 @@ public class BotUser {
     @Enumerated(EnumType.STRING)
     private RegistrationState registrationState;
 
-    @OneToOne(mappedBy = "botUser")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
-    @OneToOne(mappedBy = "botUser")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
     private Group group;
 
-    @OneToOne(mappedBy = "botUser")
+    @OneToOne(mappedBy = "botUser", cascade = CascadeType.ALL)
     private Notification notification;
 }

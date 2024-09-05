@@ -20,7 +20,7 @@ public class StartCommand implements Command {
     @NoneRequired
     public SendMessage execute(Long userId, Long chatId) {
         log.info("Received " + this.getClass().getSimpleName() + " from userId: {}", userId);
-        BotUser botUser = userService.createUserIfNotExistForStartCommand(userId, chatId);
+        BotUser botUser = userService.createUserIfNotExists(userId, chatId);
         log.info("User {} registration state: {}", userId, botUser.getRegistrationState());
         return SendMessage.builder()
                 .chatId(chatId)

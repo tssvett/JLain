@@ -8,8 +8,9 @@
         <tagDatabase tag="v.1.0"/>
     </changeSet>
 
-    <include file="create-table-bot_user.xml" relativeToChangelogFile="true"/>
-    <include file="create-table-notification.xml" relativeToChangelogFile="true"/>
     <include file="create-table-faculty.xml" relativeToChangelogFile="true"/>
     <include file="create-table-group.xml" relativeToChangelogFile="true"/>
+    <include file="create-table-bot_user.xml" relativeToChangelogFile="true"/>
+    <include file="create-table-notification.xml" relativeToChangelogFile="true"/>
+    <include file="create-table-lesson.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

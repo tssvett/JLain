@@ -36,7 +36,6 @@ public class Faculty {
     @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Group> groups;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
-    private BotUser botUser;
+    @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<BotUser> botUsers;
 }

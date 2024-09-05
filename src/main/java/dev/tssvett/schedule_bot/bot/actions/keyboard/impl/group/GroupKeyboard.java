@@ -9,6 +9,7 @@ import dev.tssvett.schedule_bot.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -24,6 +25,7 @@ public class GroupKeyboard extends Keyboard {
     private final UserRepository userRepository;
     private static final Integer GROUP_KEYS_IN_ROW = 3;
 
+    @Transactional
     public InlineKeyboardMarkup createInlineKeyboard(Action action, Long userId) {
         BotUser user = userRepository.findById(userId).orElse(null);
         Long courseNumber = user.getCourse();
