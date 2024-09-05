@@ -5,10 +5,10 @@ import dev.tssvett.schedule_bot.actions.command.impl.InfoCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.NotificationCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.PictureCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.RegisterCommand;
-import dev.tssvett.schedule_bot.actions.command.impl.schedule.TodayScheduleCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.StartCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.ToChatCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.UnknownCommand;
+import dev.tssvett.schedule_bot.actions.command.impl.schedule.TodayScheduleCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.schedule.TomorrowScheduleCommand;
 import dev.tssvett.schedule_bot.actions.command.impl.schedule.WeekScheduleCommand;
 import dev.tssvett.schedule_bot.constants.MessageConstants;
@@ -21,7 +21,16 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Arrays;
 
-import static dev.tssvett.schedule_bot.constants.CommandConstants.*;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.GADIT;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.HELP;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.INFO;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.NOTIFICATION;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.PICTURE;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.REGISTER;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.START;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.TODAY;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.TOMORROW;
+import static dev.tssvett.schedule_bot.constants.CommandConstants.WEEK;
 
 @Slf4j
 @Component
@@ -38,8 +47,6 @@ public class CommandHandler {
     private final UnknownCommand unknownCommand;
     private final InfoCommand infoCommand;
     private final NotificationCommand notificationCommand;
-
-
 
     public SendMessage handleCommands(Update update) {
         String command = update.getMessage().getText().split(" ")[0];

@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.service;
 
 import dev.tssvett.schedule_bot.entity.BotUser;
 import dev.tssvett.schedule_bot.entity.Notification;
-import dev.tssvett.schedule_bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import dev.tssvett.schedule_bot.exception.GroupNotExistException;
 import dev.tssvett.schedule_bot.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.exception.UserNotExistsException;
@@ -13,8 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static dev.tssvett.schedule_bot.constants.MessageConstants.YES;
-import static dev.tssvett.schedule_bot.enums.RegistrationState.*;
+import static dev.tssvett.schedule_bot.bot.constants.MessageConstants.YES;
 
 @Slf4j
 @Service

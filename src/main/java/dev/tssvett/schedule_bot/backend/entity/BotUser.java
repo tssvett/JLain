@@ -1,7 +1,6 @@
 package dev.tssvett.schedule_bot.entity;
 
-import dev.tssvett.schedule_bot.enums.RegistrationState;
-import jakarta.persistence.CascadeType;
+import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

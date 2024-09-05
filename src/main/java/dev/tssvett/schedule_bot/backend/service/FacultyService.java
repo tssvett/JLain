@@ -22,4 +22,8 @@ public class FacultyService {
     public List<Faculty> findAllFaculties() {
         return facultyRepository.findAll();
     }
+
+    public void saveFaculties(List<Faculty> faculties) {
+        facultyRepository.saveAll(faculties);
+    }
 }

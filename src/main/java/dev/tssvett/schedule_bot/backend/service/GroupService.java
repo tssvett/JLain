@@ -22,4 +22,12 @@ public class GroupService {
     public List<Group> findAllGroups() {
         return groupRepository.findAll();
     }
+
+    public void saveGroup(Group group) {
+        groupRepository.save(group);
+    }
+
+    public void saveGroups(List<Group> groups) {
+        groupRepository.saveAll(groups);
+    }
 }
