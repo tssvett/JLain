@@ -20,7 +20,7 @@ public class NotificationCommand implements Command {
     @DirectMessageRequired
     @RegistrationRequired
     public SendMessage execute(Long userId, Long chatId) {
-        log.info("Received " + this.getClass().getSimpleName() + " from userId: {}", userId);
+        log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
         return SendMessage.builder()
                 .chatId(chatId)
                 .text("\uD83D\uDD14 Настройте свои уведомления \uD83D\uDD14")

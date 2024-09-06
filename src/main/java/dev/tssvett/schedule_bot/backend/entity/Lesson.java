@@ -22,34 +22,33 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Lesson {
-
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private String type;
 
-    @Column(name = "place")
+    @Column(name = "place", nullable = false)
     private String place;
 
-    @Column(name = "teacher")
+    @Column(name = "teacher", nullable = false)
     private String teacher;
 
-    @Column(name = "subgroup")
+    @Column(name = "subgroup", nullable = false)
     private String subgroup;
 
-    @Column(name = "time")
+    @Column(name = "time", nullable = false)
     private String time;
 
-    @Column(name = "date_day")
+    @Column(name = "date_day", nullable = false)
     private String dateDay;
 
-    @Column(name = "date_number")
+    @Column(name = "date_number", nullable = false)
     private String dateNumber;
 
     public boolean isExist() {

@@ -1,13 +1,14 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl.schedule;
 
 
+import dev.tssvett.schedule_bot.backend.entity.BotUser;
+import dev.tssvett.schedule_bot.backend.entity.Lesson;
+import dev.tssvett.schedule_bot.backend.service.UserService;
 import dev.tssvett.schedule_bot.bot.actions.command.Command;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
-import dev.tssvett.schedule_bot.backend.entity.Lesson;
-import dev.tssvett.schedule_bot.parsing.parser.SchoolWeekParser;
 import dev.tssvett.schedule_bot.bot.utils.CurrentDateCalculator;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.parsing.SchoolWeekParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -29,14 +30,13 @@ public class TomorrowScheduleCommand implements Command {
     @RegistrationRequired
     @Transactional
     public SendMessage execute(Long userId, Long chatId) {
-        log.info("Received " + this.getClass().getSimpleName() + " from userId: {}", userId);
-        String groupName = userService.findUserById(userId).getGroup().getName();
-        Long groupId = userService.getUserGroupIdByGroupName(groupName);
-        List<Lesson> lessonsInWeek = schoolWeekParser.parse(groupId, currentDateCalculator.calculateWeekNumber());
-        String formattedLessons = scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateTomorrowDayName());
+        log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
+        BotUser botUser = userService.findUserById(userId);
+        List<Lesson> lessonsInWeek = schoolWeekParser.parse(botUser.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
+        String formattedMessageToSend = scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateTomorrowDayName());
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(formattedLessons)
+                .text(formattedMessageToSend)
                 .build();
     }
 }

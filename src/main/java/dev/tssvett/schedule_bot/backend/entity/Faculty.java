@@ -25,12 +25,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Faculty {
-
     @Id
-    @Column(name = "faculty_id")
+    @Column(name = "faculty_id", nullable = false)
     private Long facultyId;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

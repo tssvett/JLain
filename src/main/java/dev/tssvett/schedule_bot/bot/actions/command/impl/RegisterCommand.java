@@ -1,12 +1,12 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
+import dev.tssvett.schedule_bot.backend.entity.BotUser;
+import dev.tssvett.schedule_bot.backend.service.UserService;
 import dev.tssvett.schedule_bot.bot.actions.command.Command;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.faculty.FacultyKeyboard;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.reregister.ReRegistrateKeyboard;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
 import dev.tssvett.schedule_bot.bot.constants.MessageConstants;
-import dev.tssvett.schedule_bot.backend.entity.BotUser;
-import dev.tssvett.schedule_bot.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class RegisterCommand implements Command {
     @Override
     @DirectMessageRequired
     public SendMessage execute(Long userId, Long chatId) {
-        log.info("Received " + this.getClass().getSimpleName() + " from userId: {}", userId);
+        log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
         return sendRegisterCommandMessage(userId, chatId);
     }
 

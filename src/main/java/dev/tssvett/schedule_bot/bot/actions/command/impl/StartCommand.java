@@ -1,10 +1,9 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
+import dev.tssvett.schedule_bot.backend.service.UserService;
 import dev.tssvett.schedule_bot.bot.actions.command.Command;
 import dev.tssvett.schedule_bot.bot.annotation.NoneRequired;
 import dev.tssvett.schedule_bot.bot.constants.MessageConstants;
-import dev.tssvett.schedule_bot.backend.entity.BotUser;
-import dev.tssvett.schedule_bot.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,9 +18,8 @@ public class StartCommand implements Command {
     @Override
     @NoneRequired
     public SendMessage execute(Long userId, Long chatId) {
-        log.info("Received " + this.getClass().getSimpleName() + " from userId: {}", userId);
-        BotUser botUser = userService.createUserIfNotExists(userId, chatId);
-        log.info("User {} registration state: {}", userId, botUser.getRegistrationState());
+        log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
+        userService.createUserIfNotExists(userId, chatId);
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageConstants.START_COMMAND)

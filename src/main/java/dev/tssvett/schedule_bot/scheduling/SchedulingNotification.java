@@ -7,7 +7,7 @@ import dev.tssvett.schedule_bot.backend.service.UserService;
 import dev.tssvett.schedule_bot.bot.TelegramBot;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
 import dev.tssvett.schedule_bot.bot.utils.CurrentDateCalculator;
-import dev.tssvett.schedule_bot.parsing.parser.SchoolWeekParser;
+import dev.tssvett.schedule_bot.parsing.SchoolWeekParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

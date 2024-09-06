@@ -24,19 +24,19 @@
                 <constraints nullable="false"/>
             </column>
             <column name="teacher" type="VARCHAR">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="subgroup" type="VARCHAR">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="time" type="VARCHAR">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="date_day" type="VARCHAR">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="date_number" type="VARCHAR">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>

@@ -27,16 +27,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BotUser {
     @Id
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "chat_id")
+    @Column(name = "chat_id", nullable = false)
     private Long chatId;
 
     @Column(name = "course")
     private Long course;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "registration_state", nullable = false)
     private RegistrationState registrationState;
 
     @ManyToOne(fetch = FetchType.LAZY)

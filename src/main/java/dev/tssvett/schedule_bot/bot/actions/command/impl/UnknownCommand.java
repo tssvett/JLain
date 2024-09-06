@@ -13,7 +13,7 @@ public class UnknownCommand implements Command {
     @Override
     @NoneRequired
     public SendMessage execute(Long userId, Long chatId) {
-        log.info("Received " + this.getClass().getSimpleName() + " from userId: {}", userId);
+        log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageConstants.UNAVAILABLE_COMMAND)

@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.parsing.parser;
+package dev.tssvett.schedule_bot.parsing;
 
 import dev.tssvett.schedule_bot.backend.exception.ConnectionException;
 import dev.tssvett.schedule_bot.backend.exception.ParseException;
