@@ -22,7 +22,6 @@ public class KeyboardHandler {
     private final ReRegistrateButton reRegistrateCallback;
     private final NotificationKeyboardButton notificationKeyboardCallback;
 
-
     public SendMessage handleKeyboardAction(Update update) {
         return switch (CallbackDetails.fromString(update.getCallbackQuery().getData()).getAction()) {
             case FACULTY_CHOOSE -> facultyKeyboardCallback.click(update);

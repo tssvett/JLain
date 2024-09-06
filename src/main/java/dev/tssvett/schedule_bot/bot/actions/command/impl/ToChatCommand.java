@@ -18,7 +18,7 @@ public class ToChatCommand implements Command {
         log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
         return SendMessage.builder()
                 .chatId("-4191336905")
-                .text("лютое гадство")
+                .text("che oni tam na c++ delayt?")
                 .build();
     }
 }

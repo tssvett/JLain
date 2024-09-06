@@ -4,8 +4,6 @@ import dev.tssvett.schedule_bot.backend.entity.BotUser;
 import dev.tssvett.schedule_bot.backend.entity.Faculty;
 import dev.tssvett.schedule_bot.backend.entity.Group;
 import dev.tssvett.schedule_bot.backend.entity.Notification;
-import dev.tssvett.schedule_bot.backend.exception.FacultyNotExistException;
-import dev.tssvett.schedule_bot.backend.exception.GroupNotExistException;
 import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.exception.UserNotExistsException;
 import dev.tssvett.schedule_bot.backend.repository.FacultyRepository;
@@ -31,19 +29,17 @@ public class UserService {
     private final FacultyRepository facultyRepository;
     private final NotificationRepository notificationRepository;
 
-
     public BotUser findUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
     }
 
-    public BotUser chooseFaculty(Long userId, String facultyName) {
-        BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
+    public BotUser chooseFaculty(Long userId, Faculty faculty) {
+        BotUser botUser = this.findUserById(userId);
         if (!botUser.getRegistrationState().equals(FACULTY_CHOOSING)) {
             throw new NotValidRegistrationStateException(String.format("User click on %s faculty with wrong state %s",
-                    facultyName, botUser.getRegistrationState()));
+                    faculty.getName(), botUser.getRegistrationState()));
         } else {
-            log.info("User {} choose faculty {}. Save {} into database", userId, facultyName, facultyName);
-            Faculty faculty = facultyRepository.findByName(facultyName).orElseThrow(() -> new FacultyNotExistException(String.format("No faculty with name %s", facultyName)));
+            log.info("User {} choose faculty {}. Save it to database", userId, faculty.getName());
             botUser.setFaculty(faculty);
             botUser.setRegistrationState(RegistrationState.COURSE_CHOOSING);
 
@@ -52,7 +48,7 @@ public class UserService {
     }
 
     public BotUser chooseCourse(Long userId, Long course) {
-        BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
+        BotUser botUser = this.findUserById(userId);
         if (!botUser.getRegistrationState().equals(RegistrationState.COURSE_CHOOSING)) {
             throw new NotValidRegistrationStateException(String.format("User click on %s course with wrong state %s",
                     course, botUser.getRegistrationState()));
@@ -65,14 +61,13 @@ public class UserService {
         }
     }
 
-    public BotUser chooseGroup(Long userId, String groupName) {
+    public BotUser chooseGroup(Long userId, Group group) {
         BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
         if (!botUser.getRegistrationState().equals(RegistrationState.GROUP_CHOOSING)) {
             throw new NotValidRegistrationStateException(String.format("User click on %s group with wrong state %s",
-                    groupName, botUser.getRegistrationState()));
+                    group.getName(), botUser.getRegistrationState()));
         } else {
-            log.info("User {} choose group {}. Save {} into database", userId, groupName, groupName);
-            Group group = groupRepository.findByName(groupName).orElseThrow(() -> new GroupNotExistException(String.format("No group with name %s", groupName)));
+            log.info("User {} choose group {}. Save it to database", userId, group.getName());
             botUser.setGroup(group);
             botUser.setRegistrationState(SUCCESSFUL_REGISTRATION);
 
@@ -130,13 +125,10 @@ public class UserService {
     }
 
     public BotUser changeUserRegistrationState(Long userId, RegistrationState state) {
-        log.info("User {} registration state changed to {}", userId, state);
-        BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
+        BotUser botUser = this.findUserById(userId);
         botUser.setRegistrationState(state);
-        return userRepository.save(botUser);
-    }
-
-    public Long getUserGroupIdByGroupName(String groupName) {
-        return groupRepository.findByName(groupName).orElseThrow(() -> new GroupNotExistException("No group with name: " + groupName)).getGroupId();
+        BotUser savedUser = userRepository.save(botUser);
+        log.info("User {} registration state changed to {}", savedUser.getUserId(), savedUser.getRegistrationState());
+        return savedUser;
     }
 }

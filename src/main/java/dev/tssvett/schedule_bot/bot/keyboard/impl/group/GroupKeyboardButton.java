@@ -36,7 +36,7 @@ public class GroupKeyboardButton implements KeyboardButton {
 
     public SendMessage chooseGroupSendMessage(Long userId, Long chatId, Group group) {
         try {
-            BotUser userWithChosenGroup = userService.chooseGroup(userId, group.getName());
+            BotUser userWithChosenGroup = userService.chooseGroup(userId, group);
             return SendMessage.builder()
                     .chatId(chatId)
                     .text(MessageConstants.SUCCESSFULLY_REGISTERED_MESSAGE)

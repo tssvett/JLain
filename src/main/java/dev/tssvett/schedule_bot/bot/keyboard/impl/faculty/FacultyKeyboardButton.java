@@ -38,7 +38,7 @@ public class FacultyKeyboardButton implements KeyboardButton {
 
     public SendMessage createFacultyChooseMessage(Long userId, Long chatId, Faculty faculty) {
         try {
-            BotUser userWithChosenFaculty = userService.chooseFaculty(userId, faculty.getName());
+            BotUser userWithChosenFaculty = userService.chooseFaculty(userId, faculty);
             log.info("User {} successfully choose faculty {}", userId, faculty.getName());
             return SendMessage.builder()
                     .chatId(chatId)
