@@ -4,7 +4,7 @@ package dev.tssvett.schedule_bot.bot.actions.command.impl.schedule;
 import dev.tssvett.schedule_bot.backend.entity.BotUser;
 import dev.tssvett.schedule_bot.backend.entity.Lesson;
 import dev.tssvett.schedule_bot.backend.service.UserService;
-import dev.tssvett.schedule_bot.bot.actions.command.Command;
+import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
 import dev.tssvett.schedule_bot.bot.utils.CurrentDateCalculator;
@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WeekScheduleCommand implements Command {
+public class WeekScheduleBotCommand implements BotCommand {
     private final SchoolWeekParser schoolWeekParser;
     private final UserService userService;
     private final ScheduleStringFormatter scheduleStringFormatter;

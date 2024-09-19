@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
-import dev.tssvett.schedule_bot.bot.actions.command.Command;
+import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.notification.NotificationKeyboard;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class NotificationCommand implements Command {
+public class NotificationBotCommand implements BotCommand {
     private final NotificationKeyboard notificationKeyboard;
 
     @Override

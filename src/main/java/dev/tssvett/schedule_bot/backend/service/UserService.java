@@ -14,6 +14,7 @@ import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static dev.tssvett.schedule_bot.bot.constants.MessageConstants.YES;
 import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.FACULTY_CHOOSING;
@@ -29,6 +30,7 @@ public class UserService {
     private final FacultyRepository facultyRepository;
     private final NotificationRepository notificationRepository;
 
+    @Transactional
     public BotUser findUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
     }
@@ -130,5 +132,13 @@ public class UserService {
         BotUser savedUser = userRepository.save(botUser);
         log.info("User {} registration state changed to {}", savedUser.getUserId(), savedUser.getRegistrationState());
         return savedUser;
+    }
+
+    public Boolean isExist(Long userId) {
+        return userRepository.findById(userId).isPresent();
+    }
+
+    public Boolean isRegistered(Long userId) {
+        return userRepository.findById(userId).map(botUser -> botUser.getRegistrationState().equals(SUCCESSFUL_REGISTRATION)).orElse(false);
     }
 }

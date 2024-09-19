@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
 import dev.tssvett.schedule_bot.backend.entity.BotUser;
 import dev.tssvett.schedule_bot.backend.service.UserService;
-import dev.tssvett.schedule_bot.bot.actions.command.Command;
+import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.faculty.FacultyKeyboard;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.reregister.ReRegistrateKeyboard;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
@@ -21,7 +21,7 @@ import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.SUCCESSFUL_RE
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RegisterCommand implements Command {
+public class RegisterBotCommand implements BotCommand {
     private final UserService userService;
     private final ReRegistrateKeyboard reRegistrateKeyboard;
     private final FacultyKeyboard facultyKeyboard;

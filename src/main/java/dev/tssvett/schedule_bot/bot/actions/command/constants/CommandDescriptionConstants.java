@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.bot.constants;
+package dev.tssvett.schedule_bot.bot.actions.command.constants;
 
 public class CommandDescriptionConstants {
     public static final String START_DESCRIPTION = "Начало работы";
