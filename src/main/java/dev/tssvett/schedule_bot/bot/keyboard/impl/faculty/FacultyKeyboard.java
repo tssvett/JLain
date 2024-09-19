@@ -1,9 +1,9 @@
-package dev.tssvett.schedule_bot.bot.actions.keyboard.impl.faculty;
+package dev.tssvett.schedule_bot.bot.keyboard.impl.faculty;
 
-import dev.tssvett.schedule_bot.bot.actions.keyboard.Keyboard;
 import dev.tssvett.schedule_bot.backend.entity.Faculty;
-import dev.tssvett.schedule_bot.bot.enums.Action;
 import dev.tssvett.schedule_bot.backend.service.FacultyService;
+import dev.tssvett.schedule_bot.bot.enums.Action;
+import dev.tssvett.schedule_bot.bot.keyboard.Keyboard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

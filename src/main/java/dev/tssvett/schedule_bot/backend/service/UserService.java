@@ -6,8 +6,6 @@ import dev.tssvett.schedule_bot.backend.entity.Group;
 import dev.tssvett.schedule_bot.backend.entity.Notification;
 import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.exception.UserNotExistsException;
-import dev.tssvett.schedule_bot.backend.repository.FacultyRepository;
-import dev.tssvett.schedule_bot.backend.repository.GroupRepository;
 import dev.tssvett.schedule_bot.backend.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.backend.repository.UserRepository;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
@@ -26,8 +24,6 @@ import static dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants.YE
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
-    private final FacultyRepository facultyRepository;
     private final NotificationRepository notificationRepository;
 
     @Transactional
@@ -36,7 +32,7 @@ public class UserService {
     }
 
     public BotUser chooseFaculty(Long userId, Faculty faculty) {
-        BotUser botUser = this.findUserById(userId);
+        BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
         if (!botUser.getRegistrationState().equals(FACULTY_CHOOSING)) {
             throw new NotValidRegistrationStateException(String.format("User click on %s faculty with wrong state %s",
                     faculty.getName(), botUser.getRegistrationState()));
@@ -50,7 +46,7 @@ public class UserService {
     }
 
     public BotUser chooseCourse(Long userId, Long course) {
-        BotUser botUser = this.findUserById(userId);
+        BotUser botUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistsException("No user with id: " + userId));
         if (!botUser.getRegistrationState().equals(RegistrationState.COURSE_CHOOSING)) {
             throw new NotValidRegistrationStateException(String.format("User click on %s course with wrong state %s",
                     course, botUser.getRegistrationState()));
@@ -126,12 +122,10 @@ public class UserService {
         });
     }
 
-    public BotUser changeUserRegistrationState(Long userId, RegistrationState state) {
-        BotUser botUser = this.findUserById(userId);
+    public void changeUserRegistrationState(BotUser botUser, RegistrationState state) {
         botUser.setRegistrationState(state);
         BotUser savedUser = userRepository.save(botUser);
         log.info("User {} registration state changed to {}", savedUser.getUserId(), savedUser.getRegistrationState());
-        return savedUser;
     }
 
     public Boolean isExist(Long userId) {

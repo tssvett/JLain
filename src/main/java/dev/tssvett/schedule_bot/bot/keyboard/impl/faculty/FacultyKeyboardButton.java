@@ -5,10 +5,10 @@ import dev.tssvett.schedule_bot.backend.entity.Faculty;
 import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.FacultyService;
 import dev.tssvett.schedule_bot.backend.service.UserService;
-import dev.tssvett.schedule_bot.bot.actions.keyboard.KeyboardButton;
-import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.course.CourseKeyboard;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
+import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
+import dev.tssvett.schedule_bot.bot.keyboard.impl.course.CourseKeyboard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,8 @@ public class FacultyKeyboardButton implements KeyboardButton {
     public SendMessage createFacultyChooseMessage(Long userId, Long chatId, Faculty faculty) {
         try {
             BotUser userWithChosenFaculty = userService.chooseFaculty(userId, faculty);
-            log.info("User {} successfully choose faculty {}", userId, faculty.getName());
+            log.info("User {} successfully choose faculty {}", userWithChosenFaculty.getUserId(), faculty.getName());
+
             return SendMessage.builder()
                     .chatId(chatId)
                     .text(MessageConstants.REGISTER_CHOOSE_COURSE_MESSAGE)
@@ -46,6 +47,7 @@ public class FacultyKeyboardButton implements KeyboardButton {
                     .build();
         } catch (NotValidRegistrationStateException e) {
             log.warn("User {} try to choose faculty {} but it's already chosen", userId, faculty.getName());
+
             return SendMessage.builder()
                     .chatId(chatId)
                     .text(MessageConstants.FACULTY_CLICK_WITH_ERROR_STATE)

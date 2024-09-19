@@ -5,9 +5,9 @@ import dev.tssvett.schedule_bot.backend.entity.Group;
 import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.GroupService;
 import dev.tssvett.schedule_bot.backend.service.UserService;
-import dev.tssvett.schedule_bot.bot.actions.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
+import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -34,13 +34,15 @@ public class GroupKeyboardButton implements KeyboardButton {
 
     public SendMessage chooseGroupSendMessage(Long userId, Long chatId, Group group) {
         try {
-            BotUser userWithChosenGroup = userService.chooseGroup(userId, group);
+            userService.chooseGroup(userId, group);
+
             return SendMessage.builder()
                     .chatId(chatId)
                     .text(MessageConstants.SUCCESSFULLY_REGISTERED_MESSAGE)
                     .build();
         } catch (NotValidRegistrationStateException e) {
             log.warn("User {} try to choose group {} but it's already chosen", userId, group.getName());
+
             return SendMessage.builder()
                     .chatId(chatId)
                     .text(MessageConstants.GROUP_CLICK_WITH_ERROR_STATE)

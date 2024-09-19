@@ -36,10 +36,20 @@ public class SchedulingNotification {
     @Scheduled(fixedDelayString = "${scheduling.notification.delay}")
     public void sendScheduleNotificationsToUsers() {
         log.info("Staring sending notifications to users");
+        /*TODO: 1) сделать специальный запрос в бд, который будет вытаскивать только те уведомления, которые включены
+                2) Выводить количество юзеров которым идет рассылка
+        */
         List<Notification> notifications = notificationService.findAllNotifications();
+
         notifications.forEach(notification -> {
             if (notificationService.isNotificationEnabledAndUserRegistered(notification)) {
                 log.info("Sending notification to user: {}", notification.getBotUser().getUserId());
+                /*
+                 TODO: добавить боту возможность множественной рассылки
+                    Сейчас бот ловит только SendMessage, а List<SendMessage> не видит
+                    Нужно изменить SendMessage на BotApiMethod<?>
+                    Тогда отсюда можно будет убрать telegramBot, и возвращать просто List<BotApiMethod<?>>
+                 */
                 telegramBot.sendMessage(createMessageToSend(notification.getBotUser().getUserId()));
             }
         });
@@ -50,6 +60,7 @@ public class SchedulingNotification {
         BotUser botUser = userService.findUserById(userId);
         List<Lesson> lessonsInWeek = schoolWeekParser.parse(botUser.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
         String formattedLessons = "Уведомление! Расписание на сегодня\n\n" + scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateTomorrowDayName());
+
         return SendMessage.builder()
                 .chatId(userId)
                 .text(formattedLessons)

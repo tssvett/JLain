@@ -24,10 +24,12 @@ public class BotInitializerConfig {
     @EventListener({ContextRefreshedEvent.class})
     public void init() throws TelegramApiException {
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-        log.info("Initializing bot...");
+        log.info("Initializing bot");
         try {
             botsApi.registerBot(telegramBot);
+            log.info("Bot initialized successfully");
         } catch (TelegramApiException e) {
+            log.error("Error with bot initialization: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -37,6 +39,7 @@ public class BotInitializerConfig {
         log.info("Initializing bot menu...");
         try {
             telegramBot.execute(new SetMyCommands(menuHandler.getBotCommandList(), new BotCommandScopeDefault(), null));
+            log.info("Bot menu initialized successfully");
         } catch (TelegramApiException e) {
             log.error(e.getMessage());
         }

@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.bot.annotation.postbeanprocessor;
+package dev.tssvett.schedule_bot.bot.annotation.postprocessor;
 
 import dev.tssvett.schedule_bot.backend.exception.PostBeanProcessorException;
 import dev.tssvett.schedule_bot.backend.service.UserService;
@@ -32,17 +32,20 @@ public class RegistrationRequiredPostProcessor implements BeanPostProcessor {
                 return createProxy(bean);
             }
         }
+
         return bean;
     }
 
     private Object createProxy(Object bean) {
+        Class<?> beanClass = bean.getClass();
+
         if (!isInterface(bean)) {
             return bean;
         }
 
         return Proxy.newProxyInstance(
-                bean.getClass().getClassLoader(),
-                bean.getClass().getInterfaces(),
+                beanClass.getClassLoader(),
+                beanClass.getInterfaces(),
                 (proxy, method, args) -> isExecuteMethod(method) ? handleExecuteMethod(bean, method, args) : method.invoke(bean, args)
         );
     }

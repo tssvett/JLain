@@ -68,7 +68,7 @@ public class MessageConstants {
     public static final String NO = "Нет";
 
     public static final String SETUP_NOTIFICATION = "\uD83D\uDD14 Настройте свои уведомления \uD83D\uDD14";
-
+    public static final String NOT_ADMIN_MESSAGE = "Вы не администратор. Не трогай.....";
 
     public static String crateNotFoundUserMessage(Long userId) {
         return "🚫 Пользователь с ID " + userId + " не найден.";

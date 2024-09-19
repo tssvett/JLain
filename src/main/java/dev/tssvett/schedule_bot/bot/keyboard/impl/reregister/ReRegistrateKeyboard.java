@@ -1,7 +1,7 @@
-package dev.tssvett.schedule_bot.bot.actions.keyboard.impl.reregister;
+package dev.tssvett.schedule_bot.bot.keyboard.impl.reregister;
 
-import dev.tssvett.schedule_bot.bot.actions.keyboard.Keyboard;
 import dev.tssvett.schedule_bot.bot.enums.Action;
+import dev.tssvett.schedule_bot.bot.keyboard.Keyboard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

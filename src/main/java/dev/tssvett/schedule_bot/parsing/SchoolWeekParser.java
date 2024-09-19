@@ -29,6 +29,7 @@ public class SchoolWeekParser {
         List<String> lessonTimes = parseLessonTimes(document);
         List<String> lessonDates = parseLessonDates(document);
         List<Lesson> lessons = parseAll(rawSchoolWeek, lessonTimes, lessonDates);
+
         return sortLessonsByDay(lessons, lessonDates);
     }
 

@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.bot.annotation.postbeanprocessor;
+package dev.tssvett.schedule_bot.bot.annotation.postprocessor;
 
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import java.lang.reflect.Proxy;
 
 @Slf4j
 @Component
-public class DirectMessageRequiredPostBeanProcessor implements BeanPostProcessor {
+public class DirectMessageRequiredPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -21,15 +21,17 @@ public class DirectMessageRequiredPostBeanProcessor implements BeanPostProcessor
                 return createProxy(bean);
             }
         }
+
         return bean;
     }
 
     private Object createProxy(Object bean) {
+        Class<?> beanClass = bean.getClass();
+
         if (!isInterface(bean)) {
             return bean;
         }
 
-        Class<?> beanClass = bean.getClass();
         return Proxy.newProxyInstance(
                 beanClass.getClassLoader(),
                 beanClass.getInterfaces(),
@@ -39,8 +41,8 @@ public class DirectMessageRequiredPostBeanProcessor implements BeanPostProcessor
     private SendMessage handleExecuteMethod(Object bean, Method method, Object[] args) throws Throwable {
         Long userId = (Long) args[0];
         Long chatId = (Long) args[1];
-
         log.info("Check isDirectMessage with postBeanProcessor for userId: {} and chatId: {}", userId, chatId);
+
         return isDirectMessage(userId, chatId) ? (SendMessage) method.invoke(bean, args) : createNotDirectMessage(chatId);
     }
 

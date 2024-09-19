@@ -15,12 +15,14 @@ public class CurrentDateCalculator {
         LocalDate now = LocalDate.now();
         LocalDate semesterStart = LocalDate.of(2024, 9, 2);
         log.info("Current Week number: {}", (int) (now.toEpochDay() - semesterStart.toEpochDay()) / 7 + 1);
+
         return (int) (now.toEpochDay() - semesterStart.toEpochDay()) / 7 + 1;
     }
     public String calculateCurrentDayName() {
         LocalDate now = LocalDate.now();
         String dayName = now.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("ru")).toLowerCase();
         log.info("Current day name: {}", dayName);
+
         return dayName;
     }
 
@@ -28,6 +30,7 @@ public class CurrentDateCalculator {
         LocalDate now = LocalDate.now().plusDays(1);
         String dayName = now.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("ru")).toLowerCase();
         log.info("Current day name: {}", dayName);
+
         return dayName;
     }
 }

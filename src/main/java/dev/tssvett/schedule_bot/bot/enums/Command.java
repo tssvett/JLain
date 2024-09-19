@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.bot.enums;
 
-import dev.tssvett.schedule_bot.bot.constants.CommandConstants;
+import dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants;
 import lombok.Getter;
 
 import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandDescriptionConstants.HELP_DESCRIPTION;
@@ -17,7 +17,7 @@ import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandDesc
 @Getter
 public enum Command {
     TODAY(CommandConstants.TODAY, TODAY_DESCRIPTION),
-    TOMMORROW(CommandConstants.TOMORROW, TOMORROW_DESCRIPTION),
+    TOMORROW(CommandConstants.TOMORROW, TOMORROW_DESCRIPTION),
     WEEK(CommandConstants.WEEK, WEEK_DESCRIPTION),
     REGISTER(CommandConstants.REGISTER, REGISTER_DESCRIPTION),
     START(CommandConstants.START, START_DESCRIPTION),

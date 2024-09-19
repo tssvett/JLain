@@ -1,7 +1,6 @@
-package dev.tssvett.schedule_bot.bot.annotation.postbeanprocessor;
+package dev.tssvett.schedule_bot.bot.annotation.postprocessor;
 
 import dev.tssvett.schedule_bot.backend.exception.PostBeanProcessorException;
-import dev.tssvett.schedule_bot.backend.service.UserService;
 import dev.tssvett.schedule_bot.bot.annotation.AdminRequired;
 import dev.tssvett.schedule_bot.bot.properties.AdminProperties;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +13,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import static dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants.NOT_ADMIN_MESSAGE;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AdminRequiredPostBeanProcessor implements BeanPostProcessor {
-    private final UserService userService;
+public class AdminRequiredPostProcessor implements BeanPostProcessor {
     private final AdminProperties adminProperties;
 
     @Override
@@ -28,6 +28,7 @@ public class AdminRequiredPostBeanProcessor implements BeanPostProcessor {
                 return createProxy(bean);
             }
         }
+
         return bean;
     }
 
@@ -35,7 +36,7 @@ public class AdminRequiredPostBeanProcessor implements BeanPostProcessor {
         Class<?> beanClass = bean.getClass();
 
         if (!isInterface(bean)) {
-            return bean; // Возвращаем оригинальный объект, если нет интерфейсов
+            return bean;
         }
 
         return Proxy.newProxyInstance(
@@ -44,7 +45,7 @@ public class AdminRequiredPostBeanProcessor implements BeanPostProcessor {
                 (proxy, method, args) -> isExecuteMethod(method) ? handleExecuteMethod(bean, method, args) : method.invoke(bean, args));
     }
 
-    private SendMessage handleExecuteMethod(Object bean, Method method, Object[] args) throws Throwable {
+    private SendMessage handleExecuteMethod(Object bean, Method method, Object[] args) {
         Long userId = castToLong(args[0]);
         Long chatId = castToLong(args[1]);
         log.info("Check registration with postBeanProcessor for userId: {} and chatId: {}", userId, chatId);
@@ -66,7 +67,7 @@ public class AdminRequiredPostBeanProcessor implements BeanPostProcessor {
     private SendMessage sendNotAdminMessage(Long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text("Вы не администратор. Не трогай.....")
+                .text(NOT_ADMIN_MESSAGE)
                 .build();
     }
 
@@ -75,11 +76,10 @@ public class AdminRequiredPostBeanProcessor implements BeanPostProcessor {
     }
 
     private boolean isInterface(Object bean) {
-        return bean.getClass().getInterfaces().length > 0; // Проверяем наличие интерфейсов у бина
+        return bean.getClass().getInterfaces().length > 0;
     }
 
     private boolean isAdmin(Long userId) {
         return adminProperties.getId().equals(userId);
     }
-
 }

@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.parsing;
 
+import dev.tssvett.schedule_bot.backend.entity.Faculty;
 import dev.tssvett.schedule_bot.backend.exception.ConnectionException;
 import dev.tssvett.schedule_bot.backend.exception.ParseException;
-import dev.tssvett.schedule_bot.backend.entity.Faculty;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,6 +34,7 @@ public class FacultyParser implements Parser<Faculty> {
             throw new ConnectionException(e);
         }
         Elements rawFaculties = document.select(FACULTIES_SELECTOR);
+
         return parseAll(rawFaculties);
     }
 

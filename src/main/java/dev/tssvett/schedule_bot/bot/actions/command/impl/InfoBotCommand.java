@@ -22,8 +22,8 @@ public class InfoBotCommand implements BotCommand {
     @Transactional
     @RegistrationRequired
     public SendMessage execute(Long userId, Long chatId) {
-        log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
         BotUser botUser = userService.findUserById(userId);
+
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageConstants.createInfoMessageFromParams(BotUserInfoDto.builder()
@@ -34,8 +34,7 @@ public class InfoBotCommand implements BotCommand {
                         .course(botUser.getCourse())
                         .registrationState(botUser.getRegistrationState())
                         .notification(botUser.getNotification())
-                        .build())
-                )
+                        .build()))
                 .build();
     }
 }

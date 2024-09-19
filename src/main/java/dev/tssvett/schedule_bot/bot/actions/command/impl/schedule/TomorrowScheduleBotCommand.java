@@ -30,10 +30,10 @@ public class TomorrowScheduleBotCommand implements BotCommand {
     @RegistrationRequired
     @Transactional
     public SendMessage execute(Long userId, Long chatId) {
-        log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
         BotUser botUser = userService.findUserById(userId);
         List<Lesson> lessonsInWeek = schoolWeekParser.parse(botUser.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
         String formattedMessageToSend = scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateTomorrowDayName());
+
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(formattedMessageToSend)

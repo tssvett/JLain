@@ -3,10 +3,10 @@ package dev.tssvett.schedule_bot.bot.actions.command.impl;
 import dev.tssvett.schedule_bot.backend.entity.BotUser;
 import dev.tssvett.schedule_bot.backend.service.UserService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
-import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.faculty.FacultyKeyboard;
-import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.reregister.ReRegistrateKeyboard;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
+import dev.tssvett.schedule_bot.bot.keyboard.impl.faculty.FacultyKeyboard;
+import dev.tssvett.schedule_bot.bot.keyboard.impl.reregister.ReRegistrateKeyboard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,6 @@ public class RegisterBotCommand implements BotCommand {
     @Override
     @DirectMessageRequired
     public SendMessage execute(Long userId, Long chatId) {
-        log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
         return sendRegisterCommandMessage(userId, chatId);
     }
 
@@ -36,6 +35,7 @@ public class RegisterBotCommand implements BotCommand {
         BotUser user = userService.createUserIfNotExists(userId, chatId);
         if (isSuccessfullyRegistered(user)) {
             log.info("User {} is successfully registered. Asking for re-registration.", userId);
+
             return SendMessage.builder()
                     .chatId(chatId)
                     .replyMarkup(reRegistrateKeyboard.createInlineKeyboard(REREGISTRATE, userId))
@@ -43,7 +43,8 @@ public class RegisterBotCommand implements BotCommand {
                     .build();
         } else {
             log.info("User {} is not registered with SUCCESSFUL_REGISTRATION. Starting registration process.", userId);
-            userService.changeUserRegistrationState(userId, FACULTY_CHOOSING);
+            userService.changeUserRegistrationState(user, FACULTY_CHOOSING);
+
             return SendMessage.builder()
                     .chatId(chatId)
                     .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId))
@@ -54,6 +55,7 @@ public class RegisterBotCommand implements BotCommand {
 
     private boolean isSuccessfullyRegistered(BotUser botUser) {
         log.info("Current registration state: {} ", botUser.getRegistrationState().toString());
+
         return botUser.getRegistrationState().equals(SUCCESSFUL_REGISTRATION);
     }
 }

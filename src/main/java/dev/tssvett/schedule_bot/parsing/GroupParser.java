@@ -31,6 +31,7 @@ public class GroupParser{
             throw new ConnectionException(e);
         }
         Elements rawFaculties = document.select(GROUP_SELECTOR);
+
         return parseAll(rawFaculties);
     }
 
@@ -45,6 +46,7 @@ public class GroupParser{
                     .build();
             groups.add(group);
         }
+
         return groups;
     }
 

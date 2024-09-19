@@ -73,7 +73,8 @@ public class ScheduleStringFormatter {
 
     private String formatLesson(Lesson lesson) {
         String emoji = getEmojiForLesson(lesson);
-        String formattedLesson = String.format(
+
+        return String.format(
                 "%s %s\n" + // Смайлик и название пары
                         "Тип: %s\n" +
                         "Место: %s\n" +
@@ -84,8 +85,6 @@ public class ScheduleStringFormatter {
                 lesson.getPlace(),
                 lesson.getTime()
         );
-
-        return formattedLesson;
     }
 
     private String getEmojiForLesson(Lesson lesson) {

@@ -1,7 +1,7 @@
-package dev.tssvett.schedule_bot.bot.actions.keyboard.impl.course;
+package dev.tssvett.schedule_bot.bot.keyboard.impl.course;
 
-import dev.tssvett.schedule_bot.bot.actions.keyboard.Keyboard;
 import dev.tssvett.schedule_bot.bot.enums.Action;
+import dev.tssvett.schedule_bot.bot.keyboard.Keyboard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor

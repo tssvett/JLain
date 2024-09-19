@@ -11,15 +11,16 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Arrays;
 
-import static dev.tssvett.schedule_bot.bot.constants.CommandConstants.HELP;
-import static dev.tssvett.schedule_bot.bot.constants.CommandConstants.INFO;
-import static dev.tssvett.schedule_bot.bot.constants.CommandConstants.NOTIFICATION;
-import static dev.tssvett.schedule_bot.bot.constants.CommandConstants.PICTURE;
-import static dev.tssvett.schedule_bot.bot.constants.CommandConstants.REGISTER;
-import static dev.tssvett.schedule_bot.bot.constants.CommandConstants.START;
-import static dev.tssvett.schedule_bot.bot.constants.CommandConstants.TODAY;
-import static dev.tssvett.schedule_bot.bot.constants.CommandConstants.TOMORROW;
-import static dev.tssvett.schedule_bot.bot.constants.CommandConstants.WEEK;
+import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.HELP;
+import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.INFO;
+import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.NOTIFICATION;
+import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.PICTURE;
+import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.REGISTER;
+import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.START;
+import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.TODAY;
+import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.TOMORROW;
+import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.WEEK;
+
 
 @Slf4j
 @Component
@@ -41,8 +42,9 @@ public class CommandHandler {
         Long userId = update.getMessage().getFrom().getId();
         Long chatId = update.getMessage().getChatId();
         if (!messageIsAvailableCommand(command)) {
-            return new SendMessage(String.valueOf(update.getMessage().getChatId()), MessageConstants.UNAVAILABLE_COMMAND);
+            return new SendMessage(String.valueOf(chatId), MessageConstants.UNAVAILABLE_COMMAND);
         } else {
+            log.info("Received [{}] from user [{}]", command, userId);
             return switch (getBaseCommand(command)) {
                 case START -> startBotCommand.execute(userId, chatId);
                 case HELP -> helpBotCommand.execute(userId, chatId);

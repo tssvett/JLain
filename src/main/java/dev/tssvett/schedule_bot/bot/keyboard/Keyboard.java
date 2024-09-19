@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.bot.actions.keyboard;
+package dev.tssvett.schedule_bot.bot.keyboard;
 
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.bot.enums.Action;
@@ -23,6 +23,7 @@ public abstract class Keyboard {
                 .build();
         //Передаем коллбекную информацию нажатой кнопке
         setCallbackInformation(callbackInformation, action, keyboardButton);
+
         return keyboardButton;
     }
 }

@@ -18,8 +18,8 @@ public class StartBotCommand implements BotCommand {
     @Override
     @NoneRequired
     public SendMessage execute(Long userId, Long chatId) {
-        log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
         userService.createUserIfNotExists(userId, chatId);
+
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageConstants.START_COMMAND)

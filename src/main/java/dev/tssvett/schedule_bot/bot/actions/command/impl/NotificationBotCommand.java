@@ -1,11 +1,11 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
-import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.notification.NotificationKeyboard;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import dev.tssvett.schedule_bot.bot.enums.Action;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
+import dev.tssvett.schedule_bot.bot.keyboard.impl.notification.NotificationKeyboard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,6 @@ public class NotificationBotCommand implements BotCommand {
     @DirectMessageRequired
     @RegistrationRequired
     public SendMessage execute(Long userId, Long chatId) {
-        log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageConstants.SETUP_NOTIFICATION)

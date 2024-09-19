@@ -13,7 +13,6 @@ public class UnknownBotCommand implements BotCommand {
     @Override
     @NoneRequired
     public SendMessage execute(Long userId, Long chatId) {
-        log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageConstants.UNAVAILABLE_COMMAND)
