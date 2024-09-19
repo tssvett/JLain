@@ -16,10 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static dev.tssvett.schedule_bot.bot.constants.MessageConstants.YES;
 import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.FACULTY_CHOOSING;
 import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.START_REGISTER;
 import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.SUCCESSFUL_REGISTRATION;
+import static dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants.YES;
 
 @Slf4j
 @Service

@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.bot.actions.handler;
 
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
-import dev.tssvett.schedule_bot.bot.constants.MessageConstants;
 import dev.tssvett.schedule_bot.bot.enums.Command;
+import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

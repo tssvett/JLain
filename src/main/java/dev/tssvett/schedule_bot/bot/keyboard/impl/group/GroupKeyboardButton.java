@@ -1,21 +1,19 @@
-package dev.tssvett.schedule_bot.bot.actions.keyboard.impl.group;
+package dev.tssvett.schedule_bot.bot.keyboard.impl.group;
 
-
-import dev.tssvett.schedule_bot.bot.actions.keyboard.KeyboardButton;
-import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
-import dev.tssvett.schedule_bot.bot.constants.MessageConstants;
 import dev.tssvett.schedule_bot.backend.entity.BotUser;
 import dev.tssvett.schedule_bot.backend.entity.Group;
 import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.GroupService;
 import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.KeyboardButton;
+import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
+import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static dev.tssvett.schedule_bot.bot.constants.MessageConstants.GROUP_CLICK_WITH_ERROR_STATE;
 
 @Slf4j
 @Component
@@ -45,7 +43,7 @@ public class GroupKeyboardButton implements KeyboardButton {
             log.warn("User {} try to choose group {} but it's already chosen", userId, group.getName());
             return SendMessage.builder()
                     .chatId(chatId)
-                    .text(GROUP_CLICK_WITH_ERROR_STATE)
+                    .text(MessageConstants.GROUP_CLICK_WITH_ERROR_STATE)
                     .build();
         }
     }

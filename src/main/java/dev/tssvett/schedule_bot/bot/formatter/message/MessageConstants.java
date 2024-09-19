@@ -1,5 +1,6 @@
-package dev.tssvett.schedule_bot.bot.constants;
+package dev.tssvett.schedule_bot.bot.formatter.message;
 
+import dev.tssvett.schedule_bot.backend.dto.BotUserInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 
 public class MessageConstants {
@@ -66,23 +67,26 @@ public class MessageConstants {
     public static final String YES = "Да";
     public static final String NO = "Нет";
 
+    public static final String SETUP_NOTIFICATION = "\uD83D\uDD14 Настройте свои уведомления \uD83D\uDD14";
+
 
     public static String crateNotFoundUserMessage(Long userId) {
         return "🚫 Пользователь с ID " + userId + " не найден.";
     }
 
 
-    public static String createInfoMessageFromParams(Long userId, Long chatId, String facultyName, String groupName, Long course,
-                                                     RegistrationState registrationState, Boolean enabled) {
+    public static String createInfoMessageFromParams(BotUserInfoDto botUserInfoDto) {
 
         return "ℹ️ **Информация о пользователе:**\n\n" +
-                "👤 **ID пользователя:** " + userId + "\n\n" +
-                "💬 **ID чата:** " + chatId + "\n\n" +
-                "🏫 **Факультет:** " + facultyName + "\n\n" +
-                "📚 **Курс:** " + course + "\n\n" +
-                "👥 **Группа:** " + groupName + "\n\n" +
+                "👤 **ID пользователя:** " + botUserInfoDto.getUserId() + "\n\n" +
+                "💬 **ID чата:** " + botUserInfoDto.getChatId() + "\n\n" +
+                "🏫 **Факультет:** " + botUserInfoDto.getFaculty().getName() + "\n\n" +
+                "📚 **Курс:** " + botUserInfoDto.getCourse() + "\n\n" +
+                "👥 **Группа:** " + botUserInfoDto.getGroup().getName() + "\n\n" +
                 "📝 **Статус регистрации:** " +
-                (registrationState.equals(RegistrationState.SUCCESSFUL_REGISTRATION) ? "✅ Успешно пройдена" : "❌ Не завершена") + "\n\n" +
-                "🔔 **Уведомления:** " + (enabled ? "✅ Включены" : "❌ Выключены");
+                (botUserInfoDto.getRegistrationState().equals(RegistrationState.SUCCESSFUL_REGISTRATION) ? "✅ Успешно пройдена" : "❌ Не завершена") + "\n\n" +
+                "🔔 **Уведомления:** " + (botUserInfoDto.getNotification().getEnabled() ? "✅ Включены" : "❌ Выключены");
     }
+
+
 }

@@ -6,13 +6,12 @@ import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.faculty.FacultyKeyboard;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.reregister.ReRegistrateKeyboard;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
-import dev.tssvett.schedule_bot.bot.constants.MessageConstants;
+import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import static dev.tssvett.schedule_bot.bot.constants.MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE;
 import static dev.tssvett.schedule_bot.bot.enums.Action.FACULTY_CHOOSE;
 import static dev.tssvett.schedule_bot.bot.enums.Action.REREGISTRATE;
 import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.FACULTY_CHOOSING;
@@ -48,7 +47,7 @@ public class RegisterBotCommand implements BotCommand {
             return SendMessage.builder()
                     .chatId(chatId)
                     .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId))
-                    .text(REGISTER_FACULTY_CHOOSING_MESSAGE)
+                    .text(MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE)
                     .build();
         }
     }

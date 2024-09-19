@@ -5,6 +5,7 @@ import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.notification.Notificat
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import dev.tssvett.schedule_bot.bot.enums.Action;
+import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class NotificationBotCommand implements BotCommand {
         log.info("Received {} from userId: {}", this.getClass().getSimpleName(), userId);
         return SendMessage.builder()
                 .chatId(chatId)
-                .text("\uD83D\uDD14 Настройте свои уведомления \uD83D\uDD14")
+                .text(MessageConstants.SETUP_NOTIFICATION)
                 .replyMarkup(notificationKeyboard.createInlineKeyboard(Action.NOTIFICATION, userId))
                 .build();
     }
