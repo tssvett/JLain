@@ -19,15 +19,15 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="faculty_name" type="VARCHAR">
+            <column name="faculty_id" type="BIGINT">
                 <constraints nullable="true"/>
             </column>
 
-            <column name="group_name" type="VARCHAR">
+            <column name="group_id" type="BIGINT">
                 <constraints nullable="true"/>"
             </column>
 
-            <column name="course" type="VARCHAR">
+            <column name="course" type="BIGINT">
                 <constraints nullable="true"/>
             </column>
 
@@ -35,6 +35,20 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="bot_user"
+                baseColumnNames="faculty_id"
+                referencedTableName="faculty"
+                referencedColumnNames="faculty_id"
+                constraintName="fk_bot_user_faculty"/>
+
+        <addForeignKeyConstraint
+                baseTableName="bot_user"
+                baseColumnNames="group_id"
+                referencedTableName="group"
+                referencedColumnNames="group_id"
+                constraintName="fk_bot_user_group"/>
     </changeSet>
 
 </databaseChangeLog>

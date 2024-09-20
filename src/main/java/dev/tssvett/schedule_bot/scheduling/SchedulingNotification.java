@@ -1,20 +1,21 @@
 package dev.tssvett.schedule_bot.scheduling;
 
+import dev.tssvett.schedule_bot.backend.entity.BotUser;
+import dev.tssvett.schedule_bot.backend.entity.Lesson;
+import dev.tssvett.schedule_bot.backend.entity.Notification;
+import dev.tssvett.schedule_bot.backend.service.NotificationService;
+import dev.tssvett.schedule_bot.backend.service.UserService;
 import dev.tssvett.schedule_bot.bot.TelegramBot;
-import dev.tssvett.schedule_bot.entity.Notification;
-import dev.tssvett.schedule_bot.enums.RegistrationState;
-import dev.tssvett.schedule_bot.repository.NotificationRepository;
-import dev.tssvett.schedule_bot.schedule.formatter.ScheduleStringFormatter;
-import dev.tssvett.schedule_bot.schedule.lesson.Lesson;
-import dev.tssvett.schedule_bot.schedule.parser.SchoolWeekParser;
-import dev.tssvett.schedule_bot.schedule.utils.CurrentDateCalculator;
-import dev.tssvett.schedule_bot.service.UserService;
+import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
+import dev.tssvett.schedule_bot.bot.utils.CurrentDateCalculator;
+import dev.tssvett.schedule_bot.parsing.SchoolWeekParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.util.List;
@@ -25,9 +26,8 @@ import java.util.List;
 @EnableScheduling
 @ConditionalOnProperty(name = "scheduling.notification.enabled", havingValue = "true")
 public class SchedulingNotification {
-
     private final TelegramBot telegramBot;
-    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
     private final SchoolWeekParser schoolWeekParser;
     private final UserService userService;
     private final ScheduleStringFormatter scheduleStringFormatter;
@@ -35,28 +35,35 @@ public class SchedulingNotification {
 
     @Scheduled(fixedDelayString = "${scheduling.notification.delay}")
     public void sendScheduleNotificationsToUsers() {
-        List<Notification> notifications = notificationRepository.findAll();
+        log.info("Staring sending notifications to users");
+        /*TODO: 1) сделать специальный запрос в бд, который будет вытаскивать только те уведомления, которые включены
+                2) Выводить количество юзеров которым идет рассылка
+        */
+        List<Notification> notifications = notificationService.findAllNotifications();
+
         notifications.forEach(notification -> {
-            if (isNotificationEnabledAndUserRegistered(notification)) {
+            if (notificationService.isNotificationEnabledAndUserRegistered(notification)) {
                 log.info("Sending notification to user: {}", notification.getBotUser().getUserId());
+                /*
+                 TODO: добавить боту возможность множественной рассылки
+                    Сейчас бот ловит только SendMessage, а List<SendMessage> не видит
+                    Нужно изменить SendMessage на BotApiMethod<?>
+                    Тогда отсюда можно будет убрать telegramBot, и возвращать просто List<BotApiMethod<?>>
+                 */
                 telegramBot.sendMessage(createMessageToSend(notification.getBotUser().getUserId()));
             }
         });
     }
 
+    @Transactional
     private SendMessage createMessageToSend(Long userId) {
-        String groupName = userService.findUserById(userId).getGroupName();
-        Long groupId = userService.getUserGroupIdByGroupName(groupName);
-        List<Lesson> lessonsInWeek = schoolWeekParser.parse(groupId, currentDateCalculator.calculateWeekNumber());
+        BotUser botUser = userService.findUserById(userId);
+        List<Lesson> lessonsInWeek = schoolWeekParser.parse(botUser.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
         String formattedLessons = "Уведомление! Расписание на сегодня\n\n" + scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateTomorrowDayName());
+
         return SendMessage.builder()
                 .chatId(userId)
                 .text(formattedLessons)
                 .build();
-    }
-
-    private Boolean isNotificationEnabledAndUserRegistered(Notification notification) {
-        return notification.getEnabled() && notification.getBotUser().getRegistrationState()
-                .equals(RegistrationState.SUCCESSFUL_REGISTRATION);
     }
 }
