@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
-import dev.tssvett.schedule_bot.backend.entity.BotUser;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.entity.Student;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
@@ -21,7 +21,7 @@ import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.SUCCESSFUL_RE
 @Component
 @RequiredArgsConstructor
 public class RegisterBotCommand implements BotCommand {
-    private final UserService userService;
+    private final StudentService studentService;
     private final ReRegistrateKeyboard reRegistrateKeyboard;
     private final FacultyKeyboard facultyKeyboard;
 
@@ -32,7 +32,7 @@ public class RegisterBotCommand implements BotCommand {
     }
 
     private SendMessage sendRegisterCommandMessage(Long userId, Long chatId) {
-        BotUser user = userService.createUserIfNotExists(userId, chatId);
+        Student user = studentService.createUserIfNotExists(userId, chatId);
         if (isSuccessfullyRegistered(user)) {
             log.info("User {} is successfully registered. Asking for re-registration.", userId);
 
@@ -43,7 +43,7 @@ public class RegisterBotCommand implements BotCommand {
                     .build();
         } else {
             log.info("User {} is not registered with SUCCESSFUL_REGISTRATION. Starting registration process.", userId);
-            userService.changeUserRegistrationState(user, FACULTY_CHOOSING);
+            studentService.changeUserRegistrationState(user, FACULTY_CHOOSING);
 
             return SendMessage.builder()
                     .chatId(chatId)
@@ -53,9 +53,9 @@ public class RegisterBotCommand implements BotCommand {
         }
     }
 
-    private boolean isSuccessfullyRegistered(BotUser botUser) {
-        log.info("Current registration state: {} ", botUser.getRegistrationState().toString());
+    private boolean isSuccessfullyRegistered(Student student) {
+        log.info("Current registration state: {} ", student.getRegistrationState().toString());
 
-        return botUser.getRegistrationState().equals(SUCCESSFUL_REGISTRATION);
+        return student.getRegistrationState().equals(SUCCESSFUL_REGISTRATION);
     }
 }

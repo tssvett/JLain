@@ -20,7 +20,7 @@ public class NotificationService {
     }
 
     public Boolean isNotificationEnabledAndUserRegistered(Notification notification) {
-        return notification.getEnabled() && notification.getBotUser().getRegistrationState()
+        return notification.getEnabled() && notification.getStudent().getRegistrationState()
                 .equals(RegistrationState.SUCCESSFUL_REGISTRATION);
     }
 }

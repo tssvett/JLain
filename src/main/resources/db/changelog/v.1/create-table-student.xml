@@ -6,11 +6,11 @@
 
     <preConditions onFail="WARN">
         <not>
-            <tableExists tableName="bot_user"/>
+            <tableExists tableName="student"/>
         </not>
     </preConditions>
-    <changeSet id="create-table-bot_user" author="tssvett">
-        <createTable tableName="bot_user">
+    <changeSet id="create-table-student" author="tssvett">
+        <createTable tableName="student">
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -37,18 +37,18 @@
         </createTable>
 
         <addForeignKeyConstraint
-                baseTableName="bot_user"
+                baseTableName="student"
                 baseColumnNames="faculty_id"
                 referencedTableName="faculty"
                 referencedColumnNames="faculty_id"
-                constraintName="fk_bot_user_faculty"/>
+                constraintName="fk_student_faculty"/>
 
         <addForeignKeyConstraint
-                baseTableName="bot_user"
+                baseTableName="student"
                 baseColumnNames="group_id"
                 referencedTableName="group"
                 referencedColumnNames="group_id"
-                constraintName="fk_bot_user_group"/>
+                constraintName="fk_student_group"/>
     </changeSet>
 
 </databaseChangeLog>

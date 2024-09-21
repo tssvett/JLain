@@ -1,10 +1,10 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.faculty;
 
-import dev.tssvett.schedule_bot.backend.entity.BotUser;
+import dev.tssvett.schedule_bot.backend.entity.Student;
 import dev.tssvett.schedule_bot.backend.entity.Faculty;
 import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.FacultyService;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
@@ -22,7 +22,7 @@ import static dev.tssvett.schedule_bot.bot.enums.Action.COURSE_CHOOSE;
 @RequiredArgsConstructor
 public class FacultyKeyboardButton implements KeyboardButton {
     private final FacultyService facultyService;
-    private final UserService userService;
+    private final StudentService studentService;
     private final CourseKeyboard courseKeyboard;
 
     @Override
@@ -37,7 +37,7 @@ public class FacultyKeyboardButton implements KeyboardButton {
 
     public SendMessage createFacultyChooseMessage(Long userId, Long chatId, Faculty faculty) {
         try {
-            BotUser userWithChosenFaculty = userService.chooseFaculty(userId, faculty);
+            Student userWithChosenFaculty = studentService.chooseFaculty(userId, faculty);
             log.info("User {} successfully choose faculty {}", userWithChosenFaculty.getUserId(), faculty.getName());
 
             return SendMessage.builder()

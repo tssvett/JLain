@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.course;
 
-import dev.tssvett.schedule_bot.backend.entity.BotUser;
+import dev.tssvett.schedule_bot.backend.entity.Student;
 import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
@@ -19,7 +19,7 @@ import static dev.tssvett.schedule_bot.bot.enums.Action.GROUP_CHOOSE;
 @Component
 @RequiredArgsConstructor
 public class CourseKeyboardButton implements KeyboardButton {
-    private final UserService userService;
+    private final StudentService studentService;
     private final GroupKeyboard groupKeyboard;
 
     @Override
@@ -34,7 +34,7 @@ public class CourseKeyboardButton implements KeyboardButton {
 
     public SendMessage createCourseChooseMessage(Long userId, Long chatId, Long course) {
         try {
-            BotUser user = userService.chooseCourse(userId, course);
+            Student user = studentService.chooseCourse(userId, course);
             log.info("User {} successfully choose course {}", user.getUserId(), course);
 
             return SendMessage.builder()

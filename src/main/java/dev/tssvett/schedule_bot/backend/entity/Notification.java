@@ -32,5 +32,5 @@ public class Notification {
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
-    private BotUser botUser;
+    private Student student;
 }

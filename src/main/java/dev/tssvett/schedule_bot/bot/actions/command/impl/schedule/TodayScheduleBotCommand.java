@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl.schedule;
 
-import dev.tssvett.schedule_bot.backend.entity.BotUser;
+import dev.tssvett.schedule_bot.backend.entity.Student;
 import dev.tssvett.schedule_bot.backend.entity.Lesson;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TodayScheduleBotCommand implements BotCommand {
     private final SchoolWeekParser schoolWeekParser;
-    private final UserService userService;
+    private final StudentService studentService;
     private final ScheduleStringFormatter scheduleStringFormatter;
     private final CurrentDateCalculator currentDateCalculator;
 
@@ -29,8 +29,8 @@ public class TodayScheduleBotCommand implements BotCommand {
     @RegistrationRequired
     @Transactional
     public SendMessage execute(Long userId, Long chatId) {
-        BotUser botUser = userService.findUserById(userId);
-        List<Lesson> lessonsInWeek = schoolWeekParser.parse(botUser.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
+        Student student = studentService.findUserById(userId);
+        List<Lesson> lessonsInWeek = schoolWeekParser.parse(student.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
         String formattedLessons = scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateCurrentDayName());
 
         return SendMessage.builder()

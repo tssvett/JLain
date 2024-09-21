@@ -19,13 +19,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "bot_user")
+@Table(name = "student")
 @Builder
 @Getter
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class BotUser {
+public class Student {
     @Id
     @Column(name = "user_id", nullable = false)
     private Long userId;
@@ -48,6 +48,6 @@ public class BotUser {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @OneToOne(mappedBy = "botUser", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
     private Notification notification;
 }

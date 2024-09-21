@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.notification;
 
-import dev.tssvett.schedule_bot.backend.entity.BotUser;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.entity.Student;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 @RequiredArgsConstructor
 public class NotificationKeyboardButton implements KeyboardButton {
-    private final UserService userService;
+    private final StudentService studentService;
 
     @Override
     public SendMessage click(Update update) {
@@ -28,7 +28,7 @@ public class NotificationKeyboardButton implements KeyboardButton {
 
     public SendMessage createNotificationSendMessage(Long userId, Long chatId, String notificationStatus) {
         boolean enableNotification = notificationStatus.equals("Включить");
-        BotUser user = userService.chooseNotification(userId, enableNotification);
+        Student user = studentService.chooseNotification(userId, enableNotification);
         log.info("User {} successfully choose notification {}", user.getUserId(), enableNotification);
 
         return SendMessage.builder()

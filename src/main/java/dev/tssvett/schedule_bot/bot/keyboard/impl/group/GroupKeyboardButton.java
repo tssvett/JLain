@@ -1,10 +1,9 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.group;
 
-import dev.tssvett.schedule_bot.backend.entity.BotUser;
 import dev.tssvett.schedule_bot.backend.entity.Group;
 import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.GroupService;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
@@ -20,7 +19,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @RequiredArgsConstructor
 public class GroupKeyboardButton implements KeyboardButton {
     private final GroupService groupService;
-    private final UserService userService;
+    private final StudentService studentService;
 
     @Override
     public SendMessage click(Update update) {
@@ -34,7 +33,7 @@ public class GroupKeyboardButton implements KeyboardButton {
 
     public SendMessage chooseGroupSendMessage(Long userId, Long chatId, Group group) {
         try {
-            userService.chooseGroup(userId, group);
+            studentService.chooseGroup(userId, group);
 
             return SendMessage.builder()
                     .chatId(chatId)

@@ -40,5 +40,5 @@ public class Group {
     private Faculty faculty;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<BotUser> botUser;
+    private Set<Student> students;
 }

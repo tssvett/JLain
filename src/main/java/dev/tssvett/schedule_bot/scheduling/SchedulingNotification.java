@@ -1,10 +1,10 @@
 package dev.tssvett.schedule_bot.scheduling;
 
-import dev.tssvett.schedule_bot.backend.entity.BotUser;
+import dev.tssvett.schedule_bot.backend.entity.Student;
 import dev.tssvett.schedule_bot.backend.entity.Lesson;
 import dev.tssvett.schedule_bot.backend.entity.Notification;
 import dev.tssvett.schedule_bot.backend.service.NotificationService;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.TelegramBot;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
 import dev.tssvett.schedule_bot.bot.utils.CurrentDateCalculator;
@@ -29,7 +29,7 @@ public class SchedulingNotification {
     private final TelegramBot telegramBot;
     private final NotificationService notificationService;
     private final SchoolWeekParser schoolWeekParser;
-    private final UserService userService;
+    private final StudentService studentService;
     private final ScheduleStringFormatter scheduleStringFormatter;
     private final CurrentDateCalculator currentDateCalculator;
 
@@ -43,22 +43,22 @@ public class SchedulingNotification {
 
         notifications.forEach(notification -> {
             if (notificationService.isNotificationEnabledAndUserRegistered(notification)) {
-                log.info("Sending notification to user: {}", notification.getBotUser().getUserId());
+                log.info("Sending notification to user: {}", notification.getStudent().getUserId());
                 /*
                  TODO: добавить боту возможность множественной рассылки
                     Сейчас бот ловит только SendMessage, а List<SendMessage> не видит
                     Нужно изменить SendMessage на BotApiMethod<?>
                     Тогда отсюда можно будет убрать telegramBot, и возвращать просто List<BotApiMethod<?>>
                  */
-                telegramBot.sendMessage(createMessageToSend(notification.getBotUser().getUserId()));
+                telegramBot.sendMessage(createMessageToSend(notification.getStudent().getUserId()));
             }
         });
     }
 
     @Transactional
     private SendMessage createMessageToSend(Long userId) {
-        BotUser botUser = userService.findUserById(userId);
-        List<Lesson> lessonsInWeek = schoolWeekParser.parse(botUser.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
+        Student student = studentService.findUserById(userId);
+        List<Lesson> lessonsInWeek = schoolWeekParser.parse(student.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
         String formattedLessons = "Уведомление! Расписание на сегодня\n\n" + scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateTomorrowDayName());
 
         return SendMessage.builder()

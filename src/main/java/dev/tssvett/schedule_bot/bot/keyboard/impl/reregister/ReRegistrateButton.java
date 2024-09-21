@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.reregister;
 
 import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
@@ -18,7 +18,7 @@ import static dev.tssvett.schedule_bot.bot.enums.Action.FACULTY_CHOOSE;
 @Component
 @RequiredArgsConstructor
 public class ReRegistrateButton implements KeyboardButton {
-    private final UserService userService;
+    private final StudentService studentService;
     private final FacultyKeyboard facultyKeyboard;
 
     @Override
@@ -33,7 +33,7 @@ public class ReRegistrateButton implements KeyboardButton {
 
     public SendMessage chooseReRegistrationSendMessage(Long userId, Long chatId, String answer) {
         try {
-            if (userService.chooseReRegistration(userId, answer)) {
+            if (studentService.chooseReRegistration(userId, answer)) {
                 return SendMessage.builder()
                         .chatId(chatId)
                         .text(MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE)
