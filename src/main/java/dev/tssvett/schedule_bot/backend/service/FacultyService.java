@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.backend.service;
 
 import dev.tssvett.schedule_bot.backend.entity.Faculty;
-import dev.tssvett.schedule_bot.backend.exception.FacultyNotExistException;
+import dev.tssvett.schedule_bot.backend.exception.database.FacultyNotExistException;
 import dev.tssvett.schedule_bot.backend.repository.FacultyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

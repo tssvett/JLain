@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.parsing;
 
-import dev.tssvett.schedule_bot.backend.exception.ConnectionException;
+import dev.tssvett.schedule_bot.backend.exception.parse.ParserSourceConnectionException;
 import dev.tssvett.schedule_bot.backend.entity.Lesson;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -37,7 +37,7 @@ public class SchoolWeekParser {
         try {
             return Jsoup.connect(String.format(URL, groupId, week)).userAgent(USER_AGENT).get();
         } catch (IOException e) {
-            throw new ConnectionException(e);
+            throw new ParserSourceConnectionException(e.getMessage());
         }
     }
 

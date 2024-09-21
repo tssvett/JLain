@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.bot.annotation.postprocessor;
 
-import dev.tssvett.schedule_bot.backend.exception.PostBeanProcessorException;
+import dev.tssvett.schedule_bot.backend.exception.annotation.PostBeanProcessorException;
 import dev.tssvett.schedule_bot.bot.annotation.AdminRequired;
 import dev.tssvett.schedule_bot.bot.properties.AdminProperties;
 import lombok.RequiredArgsConstructor;

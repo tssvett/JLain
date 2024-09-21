@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.parsing;
 
-import dev.tssvett.schedule_bot.backend.exception.ConnectionException;
-import dev.tssvett.schedule_bot.backend.exception.ParseException;
+import dev.tssvett.schedule_bot.backend.exception.parse.ParserSourceConnectionException;
+import dev.tssvett.schedule_bot.backend.exception.parse.ParseElementException;
 import dev.tssvett.schedule_bot.backend.entity.Group;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -28,7 +28,7 @@ public class GroupParser{
         try {
             document = Jsoup.connect(String.format(URL, facultyId, course)).userAgent(USER_AGENT).get();
         } catch (IOException e) {
-            throw new ConnectionException(e);
+            throw new ParserSourceConnectionException(e.getMessage());
         }
         Elements rawFaculties = document.select(GROUP_SELECTOR);
 
@@ -56,7 +56,7 @@ public class GroupParser{
         if (matcher.find()) {
             return Long.parseLong(matcher.group());
         } else {
-            throw new ParseException("Ошибка при айди группы");
+            throw new ParseElementException("Ошибка при айди группы");
         }
     }
 }

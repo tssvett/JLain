@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.course;
 
 import dev.tssvett.schedule_bot.backend.entity.Student;
-import dev.tssvett.schedule_bot.backend.exception.NotValidRegistrationStateException;
+import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
