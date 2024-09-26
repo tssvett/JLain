@@ -1,13 +1,13 @@
 package dev.tssvett.schedule_bot.backend.service;
 
-import dev.tssvett.schedule_bot.backend.entity.Faculty;
-import dev.tssvett.schedule_bot.backend.entity.Group;
-import dev.tssvett.schedule_bot.backend.entity.Notification;
-import dev.tssvett.schedule_bot.backend.entity.Student;
+import dev.tssvett.schedule_bot.persistence.entity.Faculty;
+import dev.tssvett.schedule_bot.persistence.entity.Group;
+import dev.tssvett.schedule_bot.persistence.entity.Notification;
+import dev.tssvett.schedule_bot.persistence.entity.Student;
 import dev.tssvett.schedule_bot.backend.exception.database.StudentNotExistsException;
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
-import dev.tssvett.schedule_bot.backend.repository.NotificationRepository;
-import dev.tssvett.schedule_bot.backend.repository.StudentRepository;
+import dev.tssvett.schedule_bot.persistence.repository.NotificationRepository;
+import dev.tssvett.schedule_bot.persistence.repository.StudentRepository;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

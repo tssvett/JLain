@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.backend.entity;
+package dev.tssvett.schedule_bot.persistence.entity;
 
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import jakarta.persistence.CascadeType;

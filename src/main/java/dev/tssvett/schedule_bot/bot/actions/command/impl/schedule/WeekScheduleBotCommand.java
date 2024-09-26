@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl.schedule;
 
 
-import dev.tssvett.schedule_bot.backend.entity.Student;
-import dev.tssvett.schedule_bot.backend.entity.Lesson;
+import dev.tssvett.schedule_bot.persistence.entity.Student;
+import dev.tssvett.schedule_bot.persistence.entity.Lesson;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;

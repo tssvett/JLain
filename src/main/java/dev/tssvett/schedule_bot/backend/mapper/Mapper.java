@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.backend.mapper;
 
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
-import dev.tssvett.schedule_bot.backend.entity.Student;
+import dev.tssvett.schedule_bot.persistence.entity.Student;
 
 public class Mapper {
 

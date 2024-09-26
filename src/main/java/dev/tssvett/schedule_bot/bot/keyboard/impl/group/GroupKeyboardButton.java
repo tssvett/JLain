@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.group;
 
-import dev.tssvett.schedule_bot.backend.entity.Group;
+import dev.tssvett.schedule_bot.persistence.entity.Group;
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.GroupService;
 import dev.tssvett.schedule_bot.backend.service.StudentService;

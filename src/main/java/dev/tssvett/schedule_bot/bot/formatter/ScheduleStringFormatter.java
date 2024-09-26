@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.bot.formatter;
 
-import dev.tssvett.schedule_bot.backend.entity.Lesson;
+import dev.tssvett.schedule_bot.persistence.entity.Lesson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

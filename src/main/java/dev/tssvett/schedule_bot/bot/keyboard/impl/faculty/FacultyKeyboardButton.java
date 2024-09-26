@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.faculty;
 
-import dev.tssvett.schedule_bot.backend.entity.Student;
-import dev.tssvett.schedule_bot.backend.entity.Faculty;
+import dev.tssvett.schedule_bot.persistence.entity.Student;
+import dev.tssvett.schedule_bot.persistence.entity.Faculty;
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.FacultyService;
 import dev.tssvett.schedule_bot.backend.service.StudentService;

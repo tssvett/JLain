@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.backend.service;
 
-import dev.tssvett.schedule_bot.backend.entity.Notification;
-import dev.tssvett.schedule_bot.backend.repository.NotificationRepository;
+import dev.tssvett.schedule_bot.persistence.entity.Notification;
+import dev.tssvett.schedule_bot.persistence.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

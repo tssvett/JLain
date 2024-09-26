@@ -1,6 +1,6 @@
-package dev.tssvett.schedule_bot.backend.repository;
+package dev.tssvett.schedule_bot.persistence.repository;
 
-import dev.tssvett.schedule_bot.backend.entity.Student;
+import dev.tssvett.schedule_bot.persistence.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

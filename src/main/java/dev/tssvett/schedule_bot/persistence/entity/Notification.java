@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.backend.entity;
+package dev.tssvett.schedule_bot.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

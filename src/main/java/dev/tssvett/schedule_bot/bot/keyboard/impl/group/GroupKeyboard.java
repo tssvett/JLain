@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.group;
 
-import dev.tssvett.schedule_bot.backend.entity.Group;
-import dev.tssvett.schedule_bot.backend.entity.Student;
+import dev.tssvett.schedule_bot.persistence.entity.Group;
+import dev.tssvett.schedule_bot.persistence.entity.Student;
 import dev.tssvett.schedule_bot.backend.service.GroupService;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.enums.Action;

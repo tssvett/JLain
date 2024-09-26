@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
-import dev.tssvett.schedule_bot.backend.entity.Student;
+import dev.tssvett.schedule_bot.persistence.entity.Student;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;

@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.parsing;
 
 import dev.tssvett.schedule_bot.backend.exception.parse.ParserSourceConnectionException;
 import dev.tssvett.schedule_bot.backend.exception.parse.ParseElementException;
-import dev.tssvett.schedule_bot.backend.entity.Group;
+import dev.tssvett.schedule_bot.persistence.entity.Group;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
