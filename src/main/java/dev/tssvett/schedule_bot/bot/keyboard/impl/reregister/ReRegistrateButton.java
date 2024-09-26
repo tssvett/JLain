@@ -3,6 +3,7 @@ package dev.tssvett.schedule_bot.bot.keyboard.impl.reregister;
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
+import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.faculty.FacultyKeyboard;
@@ -13,6 +14,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import static dev.tssvett.schedule_bot.bot.enums.Action.FACULTY_CHOOSE;
+import static dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants.YES;
 
 @Slf4j
 @Component
@@ -33,7 +35,9 @@ public class ReRegistrateButton implements KeyboardButton {
 
     public SendMessage chooseReRegistrationSendMessage(Long userId, Long chatId, String answer) {
         try {
-            if (studentService.chooseReRegistration(userId, answer)) {
+            if (answer.equals(YES)) {
+                studentService.updateStudentRegistrationState(userId, RegistrationState.FACULTY_CHOOSING);
+
                 return SendMessage.builder()
                         .chatId(chatId)
                         .text(MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE)

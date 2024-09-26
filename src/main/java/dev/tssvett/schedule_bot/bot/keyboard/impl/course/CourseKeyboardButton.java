@@ -34,7 +34,7 @@ public class CourseKeyboardButton implements KeyboardButton {
 
     public SendMessage createCourseChooseMessage(Long userId, Long chatId, Long course) {
         try {
-            Student user = studentService.chooseCourse(userId, course);
+            Student user = studentService.updateStudentCourse(userId, course);
             log.info("User {} successfully choose course {}", user.getUserId(), course);
 
             return SendMessage.builder()

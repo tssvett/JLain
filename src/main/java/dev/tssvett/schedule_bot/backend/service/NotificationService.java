@@ -19,6 +19,10 @@ public class NotificationService {
         return notificationRepository.findAll();
     }
 
+    public Notification saveNotification(Notification notification) {
+        return notificationRepository.save(notification);
+    }
+
     public Boolean isNotificationEnabledAndUserRegistered(Notification notification) {
         return notification.getEnabled() && notification.getStudent().getRegistrationState()
                 .equals(RegistrationState.SUCCESSFUL_REGISTRATION);

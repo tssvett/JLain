@@ -1,6 +1,5 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
-import dev.tssvett.schedule_bot.persistence.entity.Student;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
@@ -15,7 +14,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import static dev.tssvett.schedule_bot.bot.enums.Action.FACULTY_CHOOSE;
 import static dev.tssvett.schedule_bot.bot.enums.Action.REREGISTRATE;
 import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.FACULTY_CHOOSING;
-import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.SUCCESSFUL_REGISTRATION;
 
 @Slf4j
 @Component
@@ -32,8 +30,7 @@ public class RegisterBotCommand implements BotCommand {
     }
 
     private SendMessage sendRegisterCommandMessage(Long userId, Long chatId) {
-        Student user = studentService.createStudentIfNotExists(userId, chatId);
-        if (isSuccessfullyRegistered(user)) {
+        if (studentService.isRegistered(userId)) {
             log.info("User {} is successfully registered. Asking for re-registration.", userId);
 
             return SendMessage.builder()
@@ -43,7 +40,7 @@ public class RegisterBotCommand implements BotCommand {
                     .build();
         } else {
             log.info("User {} is not registered with SUCCESSFUL_REGISTRATION. Starting registration process.", userId);
-            studentService.changeStudentRegistrationState(user, FACULTY_CHOOSING);
+            studentService.updateStudentRegistrationState(userId, FACULTY_CHOOSING);
 
             return SendMessage.builder()
                     .chatId(chatId)
@@ -51,11 +48,5 @@ public class RegisterBotCommand implements BotCommand {
                     .text(MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE)
                     .build();
         }
-    }
-
-    private boolean isSuccessfullyRegistered(Student student) {
-        log.info("Current registration state: {} ", student.getRegistrationState().toString());
-
-        return student.getRegistrationState().equals(SUCCESSFUL_REGISTRATION);
     }
 }

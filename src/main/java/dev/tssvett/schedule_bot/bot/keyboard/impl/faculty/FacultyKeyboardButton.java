@@ -37,7 +37,7 @@ public class FacultyKeyboardButton implements KeyboardButton {
 
     public SendMessage createFacultyChooseMessage(Long userId, Long chatId, Faculty faculty) {
         try {
-            Student userWithChosenFaculty = studentService.chooseFaculty(userId, faculty);
+            Student userWithChosenFaculty = studentService.updateStudentFaculty(userId, faculty);
             log.info("User {} successfully choose faculty {}", userWithChosenFaculty.getUserId(), faculty.getName());
 
             return SendMessage.builder()

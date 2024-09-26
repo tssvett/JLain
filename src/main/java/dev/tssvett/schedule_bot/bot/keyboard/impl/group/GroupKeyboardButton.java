@@ -33,7 +33,7 @@ public class GroupKeyboardButton implements KeyboardButton {
 
     public SendMessage chooseGroupSendMessage(Long userId, Long chatId, Group group) {
         try {
-            studentService.chooseGroup(userId, group);
+            studentService.updateStudentGroup(userId, group);
 
             return SendMessage.builder()
                     .chatId(chatId)
