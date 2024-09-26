@@ -18,7 +18,7 @@ public class StartBotCommand implements BotCommand {
     @Override
     @NoneRequired
     public SendMessage execute(Long userId, Long chatId) {
-        studentService.createUserIfNotExists(userId, chatId);
+        studentService.createStudentIfNotExists(userId, chatId);
 
         return SendMessage.builder()
                 .chatId(chatId)

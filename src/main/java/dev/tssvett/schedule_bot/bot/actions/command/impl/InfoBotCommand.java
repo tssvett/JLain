@@ -22,7 +22,7 @@ public class InfoBotCommand implements BotCommand {
     @Transactional
     @RegistrationRequired
     public SendMessage execute(Long userId, Long chatId) {
-        Student student = studentService.findUserById(userId);
+        Student student = studentService.findStudentById(userId);
 
         return SendMessage.builder()
                 .chatId(chatId)

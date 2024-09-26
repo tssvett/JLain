@@ -29,7 +29,7 @@ public class TodayScheduleBotCommand implements BotCommand {
     @RegistrationRequired
     @Transactional
     public SendMessage execute(Long userId, Long chatId) {
-        Student student = studentService.findUserById(userId);
+        Student student = studentService.findStudentById(userId);
         List<Lesson> lessonsInWeek = schoolWeekParser.parse(student.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
         String formattedLessons = scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateCurrentDayName());
 

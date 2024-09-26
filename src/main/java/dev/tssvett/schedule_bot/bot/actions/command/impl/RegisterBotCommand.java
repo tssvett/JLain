@@ -32,7 +32,7 @@ public class RegisterBotCommand implements BotCommand {
     }
 
     private SendMessage sendRegisterCommandMessage(Long userId, Long chatId) {
-        Student user = studentService.createUserIfNotExists(userId, chatId);
+        Student user = studentService.createStudentIfNotExists(userId, chatId);
         if (isSuccessfullyRegistered(user)) {
             log.info("User {} is successfully registered. Asking for re-registration.", userId);
 
@@ -43,7 +43,7 @@ public class RegisterBotCommand implements BotCommand {
                     .build();
         } else {
             log.info("User {} is not registered with SUCCESSFUL_REGISTRATION. Starting registration process.", userId);
-            studentService.changeUserRegistrationState(user, FACULTY_CHOOSING);
+            studentService.changeStudentRegistrationState(user, FACULTY_CHOOSING);
 
             return SendMessage.builder()
                     .chatId(chatId)

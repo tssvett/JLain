@@ -1,9 +1,9 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.group;
 
-import dev.tssvett.schedule_bot.backend.entity.Student;
 import dev.tssvett.schedule_bot.backend.entity.Group;
-import dev.tssvett.schedule_bot.backend.repository.GroupRepository;
-import dev.tssvett.schedule_bot.backend.repository.StudentRepository;
+import dev.tssvett.schedule_bot.backend.entity.Student;
+import dev.tssvett.schedule_bot.backend.service.GroupService;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.enums.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.Keyboard;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +21,15 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class GroupKeyboard extends Keyboard {
-    private final GroupRepository groupRepository;
-    private final StudentRepository studentRepository;
+    private final GroupService groupService;
+    private final StudentService studentService;
     private static final Integer GROUP_KEYS_IN_ROW = 3;
 
     @Transactional
     public InlineKeyboardMarkup createInlineKeyboard(Action action, Long userId) {
-        Student user = studentRepository.findById(userId).orElse(null);
+        Student user = studentService.findStudentById(userId);
         Long courseNumber = user.getCourse();
-        List<Group> groups = groupRepository.findAll();
+        List<Group> groups = groupService.findAllGroups();
 
         //Фильтруем группы по курсу и факультету
         groups = groups.stream()

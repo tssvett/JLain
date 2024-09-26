@@ -57,7 +57,7 @@ public class SchedulingNotification {
 
     @Transactional
     private SendMessage createMessageToSend(Long userId) {
-        Student student = studentService.findUserById(userId);
+        Student student = studentService.findStudentById(userId);
         List<Lesson> lessonsInWeek = schoolWeekParser.parse(student.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
         String formattedLessons = "Уведомление! Расписание на сегодня\n\n" + scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateTomorrowDayName());
 

@@ -1,11 +1,11 @@
 package dev.tssvett.schedule_bot.backend.service;
 
-import dev.tssvett.schedule_bot.backend.entity.Student;
 import dev.tssvett.schedule_bot.backend.entity.Faculty;
 import dev.tssvett.schedule_bot.backend.entity.Group;
 import dev.tssvett.schedule_bot.backend.entity.Notification;
-import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
+import dev.tssvett.schedule_bot.backend.entity.Student;
 import dev.tssvett.schedule_bot.backend.exception.database.StudentNotExistsException;
+import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.backend.repository.StudentRepository;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
@@ -27,17 +27,17 @@ public class StudentService {
     private final NotificationRepository notificationRepository;
 
     @Transactional
-    public Student findUserById(Long userId) {
-        return studentRepository.findById(userId).orElseThrow(() -> new StudentNotExistsException("No user with id: " + userId));
+    public Student findStudentById(Long studentId) {
+        return studentRepository.findById(studentId).orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
     }
 
-    public Student chooseFaculty(Long userId, Faculty faculty) {
-        Student student = studentRepository.findById(userId).orElseThrow(() -> new StudentNotExistsException("No user with id: " + userId));
+    public Student chooseFaculty(Long studentId, Faculty faculty) {
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
         if (!student.getRegistrationState().equals(FACULTY_CHOOSING)) {
-            throw new NotValidRegistrationStateException(String.format("User click on %s faculty with wrong state %s",
+            throw new NotValidRegistrationStateException(String.format("Student click on %s faculty with wrong state %s",
                     faculty.getName(), student.getRegistrationState()));
         } else {
-            log.info("User {} choose faculty {}. Save it to database", userId, faculty.getName());
+            log.info("Student {} choose faculty {}. Save it to database", studentId, faculty.getName());
             student.setFaculty(faculty);
             student.setRegistrationState(RegistrationState.COURSE_CHOOSING);
 
@@ -45,13 +45,13 @@ public class StudentService {
         }
     }
 
-    public Student chooseCourse(Long userId, Long course) {
-        Student student = studentRepository.findById(userId).orElseThrow(() -> new StudentNotExistsException("No user with id: " + userId));
+    public Student chooseCourse(Long studentId, Long course) {
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
         if (!student.getRegistrationState().equals(RegistrationState.COURSE_CHOOSING)) {
-            throw new NotValidRegistrationStateException(String.format("User click on %s course with wrong state %s",
+            throw new NotValidRegistrationStateException(String.format("Student click on %s course with wrong state %s",
                     course, student.getRegistrationState()));
         } else {
-            log.info("User {} choose course {}. Save {} course into database", userId, course, course);
+            log.info("Student {} choose course {}. Save {} course into database", studentId, course, course);
             student.setCourse(course);
             student.setRegistrationState(RegistrationState.GROUP_CHOOSING);
 
@@ -59,13 +59,13 @@ public class StudentService {
         }
     }
 
-    public Student chooseGroup(Long userId, Group group) {
-        Student student = studentRepository.findById(userId).orElseThrow(() -> new StudentNotExistsException("No user with id: " + userId));
+    public Student chooseGroup(Long studentId, Group group) {
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
         if (!student.getRegistrationState().equals(RegistrationState.GROUP_CHOOSING)) {
-            throw new NotValidRegistrationStateException(String.format("User click on %s group with wrong state %s",
+            throw new NotValidRegistrationStateException(String.format("Student click on %s group with wrong state %s",
                     group.getName(), student.getRegistrationState()));
         } else {
-            log.info("User {} choose group {}. Save it to database", userId, group.getName());
+            log.info("Student {} choose group {}. Save it to database", studentId, group.getName());
             student.setGroup(group);
             student.setRegistrationState(SUCCESSFUL_REGISTRATION);
 
@@ -73,24 +73,24 @@ public class StudentService {
         }
     }
 
-    public Student chooseNotification(Long userId, boolean notificationStatus) {
-        return studentRepository.findById(userId)
+    public Student chooseNotification(Long studentId, boolean notificationStatus) {
+        return studentRepository.findById(studentId)
                 .map(user -> {
                     Notification notification = user.getNotification();
                     notification.setEnabled(notificationStatus);
                     notificationRepository.save(notification);
                     return studentRepository.save(user);
                 })
-                .orElseThrow(() -> new StudentNotExistsException("User not found with ID: " + userId));
+                .orElseThrow(() -> new StudentNotExistsException("Student not found with ID: " + studentId));
     }
 
-    public boolean chooseReRegistration(Long userId, String answer) {
-        Student student = studentRepository.findById(userId).orElseThrow(() -> new StudentNotExistsException("No user with id: " + userId));
+    public boolean chooseReRegistration(Long studentId, String answer) {
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
         if (!student.getRegistrationState().equals(SUCCESSFUL_REGISTRATION)) {
-            throw new NotValidRegistrationStateException(String.format("User click on %s re-registration with wrong state %s",
+            throw new NotValidRegistrationStateException(String.format("Student click on %s re-registration with wrong state %s",
                     answer, student.getRegistrationState()));
         } else {
-            log.info("User {} choose answer {} to re-registration.", userId, answer);
+            log.info("Student {} choose answer {} to re-registration.", studentId, answer);
             if (answer.equals(YES)) {
                 student.setRegistrationState(FACULTY_CHOOSING);
                 studentRepository.save(student);
@@ -101,38 +101,38 @@ public class StudentService {
         }
     }
 
-    public Student createUserIfNotExists(Long userId, Long chatId) {
-        return studentRepository.findById(userId).orElseGet(() -> {
-            log.info("User {} is not in database. Add them to database", userId);
+    public Student createStudentIfNotExists(Long studentId, Long chatId) {
+        return studentRepository.findById(studentId).orElseGet(() -> {
+            log.info("Student {} is not in database. Add them to database", studentId);
             Notification notification = Notification.builder()
                     .enabled(true)
                     .build();
 
-            Student newUser = Student.builder()
-                    .userId(userId)
+            Student newStudent = Student.builder()
+                    .userId(studentId)
                     .chatId(chatId)
                     .registrationState(START_REGISTER)
                     .notification(notification)
                     .build();
 
-            notification.setStudent(newUser);
-            studentRepository.save(newUser);
+            notification.setStudent(newStudent);
+            studentRepository.save(newStudent);
 
-            return newUser;
+            return newStudent;
         });
     }
 
-    public void changeUserRegistrationState(Student student, RegistrationState state) {
+    public void changeStudentRegistrationState(Student student, RegistrationState state) {
         student.setRegistrationState(state);
         Student savedUser = studentRepository.save(student);
-        log.info("User {} registration state changed to {}", savedUser.getUserId(), savedUser.getRegistrationState());
+        log.info("Student {} registration state changed to {}", savedUser.getUserId(), savedUser.getRegistrationState());
     }
 
-    public Boolean isExist(Long userId) {
-        return studentRepository.findById(userId).isPresent();
+    public Boolean isExist(Long studentId) {
+        return studentRepository.findById(studentId).isPresent();
     }
 
-    public Boolean isRegistered(Long userId) {
-        return studentRepository.findById(userId).map(botUser -> botUser.getRegistrationState().equals(SUCCESSFUL_REGISTRATION)).orElse(false);
+    public Boolean isRegistered(Long studentId) {
+        return studentRepository.findById(studentId).map(student -> student.getRegistrationState().equals(SUCCESSFUL_REGISTRATION)).orElse(false);
     }
 }
