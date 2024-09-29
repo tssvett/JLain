@@ -33,11 +33,6 @@ public class StudentService {
     private final GroupRepository groupRepository;
     private final NotificationRepository notificationRepository;
 
-    public Student findStudentById(Long studentId) {
-        return studentRepository.findById(studentId)
-                .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
-    }
-
     public StudentInfoDto getStudentInfoById(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
@@ -77,7 +72,8 @@ public class StudentService {
     }
 
     public void updateStudentRegistrationState(Long studentId, RegistrationState state) {
-        Student student = this.findStudentById(studentId);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
         student.setRegistrationState(state);
         log.debug("Student {} updated state to {}", studentId, state);
         studentRepository.save(student);
@@ -109,7 +105,8 @@ public class StudentService {
 
     private void proceedRegistrationState(Long studentId, Object newValue, RegistrationState validState,
                                           RegistrationState newState, Consumer<Student> setter) {
-        Student student = this.findStudentById(studentId);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
         validateRegistrationState(student, newValue, validState);
 
         student.setRegistrationState(newState);

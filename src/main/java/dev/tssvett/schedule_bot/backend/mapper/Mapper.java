@@ -2,10 +2,12 @@ package dev.tssvett.schedule_bot.backend.mapper;
 
 import dev.tssvett.schedule_bot.backend.dto.FacultyInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.GroupInfoDto;
+import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.NotificationInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.persistence.entity.Faculty;
 import dev.tssvett.schedule_bot.persistence.entity.Group;
+import dev.tssvett.schedule_bot.persistence.entity.Lesson;
 import dev.tssvett.schedule_bot.persistence.entity.Notification;
 import dev.tssvett.schedule_bot.persistence.entity.Student;
 
@@ -81,5 +83,33 @@ public class Mapper {
                 notification.getId(),
                 notification.getEnabled()
         );
+    }
+
+    public static LessonInfoDto toLessonInfoDto(@NotNull Lesson lesson) {
+        return new LessonInfoDto(
+                lesson.getId(),
+                lesson.getName(),
+                lesson.getType(),
+                lesson.getPlace(),
+                lesson.getTeacher(),
+                lesson.getSubgroup(),
+                lesson.getTime(),
+                lesson.getDateDay(),
+                lesson.getDateNumber()
+        );
+    }
+
+    public static Lesson toLesson(@NotNull LessonInfoDto lessonInfoDto) {
+        return Lesson.builder()
+                .id(lessonInfoDto.lessonId())
+                .name(lessonInfoDto.name())
+                .type(lessonInfoDto.type())
+                .place(lessonInfoDto.place())
+                .teacher(lessonInfoDto.teacher())
+                .subgroup(lessonInfoDto.subgroup())
+                .time(lessonInfoDto.time())
+                .dateDay(lessonInfoDto.dateDay())
+                .dateNumber(lessonInfoDto.dateNumber())
+                .build();
     }
 }

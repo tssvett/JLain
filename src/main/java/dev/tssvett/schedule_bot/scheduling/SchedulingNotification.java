@@ -1,14 +1,12 @@
 package dev.tssvett.schedule_bot.scheduling;
 
-import dev.tssvett.schedule_bot.persistence.entity.Student;
-import dev.tssvett.schedule_bot.persistence.entity.Lesson;
-import dev.tssvett.schedule_bot.persistence.entity.Notification;
+import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.service.NotificationService;
-import dev.tssvett.schedule_bot.backend.service.StudentService;
+import dev.tssvett.schedule_bot.backend.service.ScheduleService;
 import dev.tssvett.schedule_bot.bot.TelegramBot;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
 import dev.tssvett.schedule_bot.bot.utils.CurrentDateCalculator;
-import dev.tssvett.schedule_bot.parsing.SchoolWeekParser;
+import dev.tssvett.schedule_bot.persistence.entity.Notification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -28,8 +26,7 @@ import java.util.List;
 public class SchedulingNotification {
     private final TelegramBot telegramBot;
     private final NotificationService notificationService;
-    private final SchoolWeekParser schoolWeekParser;
-    private final StudentService studentService;
+    private final ScheduleService scheduleService;
     private final ScheduleStringFormatter scheduleStringFormatter;
     private final CurrentDateCalculator currentDateCalculator;
 
@@ -57,8 +54,7 @@ public class SchedulingNotification {
 
     @Transactional
     private SendMessage createMessageToSend(Long userId) {
-        Student student = studentService.findStudentById(userId);
-        List<Lesson> lessonsInWeek = schoolWeekParser.parse(student.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
+        List<LessonInfoDto> lessonsInWeek = scheduleService.getWeekSchedule(userId);
         String formattedLessons = "Уведомление! Расписание на сегодня\n\n" + scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateTomorrowDayName());
 
         return SendMessage.builder()

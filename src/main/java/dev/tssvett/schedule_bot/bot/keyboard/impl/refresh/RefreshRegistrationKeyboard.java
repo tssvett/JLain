@@ -19,12 +19,18 @@ public class RefreshRegistrationKeyboard extends Keyboard {
     @Override
     public InlineKeyboardMarkup createInlineKeyboard(Action action, Long userId) {
         List<String> answers = List.of("Да", "Нет");
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = createRows(answers, action);
+
+        return new InlineKeyboardMarkup(rows);
+    }
+
+    private List<List<InlineKeyboardButton>> createRows(List<String> answers, Action action) {
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
         for (String answer : answers) {
             rows.add(List.of(createButton(answer, answer, action)));
         }
-        inlineKeyboardMarkup.setKeyboard(rows);
-        return inlineKeyboardMarkup;
+
+        return rows;
     }
 }
