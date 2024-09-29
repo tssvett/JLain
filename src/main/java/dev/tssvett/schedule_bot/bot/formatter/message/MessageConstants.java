@@ -79,11 +79,11 @@ public class MessageConstants {
         return "ℹ️ **Информация о пользователе:**\n\n" +
                 "👤 **ID пользователя:** " + studentInfoDto.userId() + "\n\n" +
                 "💬 **ID чата:** " + studentInfoDto.chatId() + "\n\n" +
-                "🏫 **Факультет:** " + studentInfoDto.faculty().getName() + "\n\n" +
+                "🏫 **Факультет:** " + studentInfoDto.faculty().name() + "\n\n" +
                 "📚 **Курс:** " + studentInfoDto.course() + "\n\n" +
-                "👥 **Группа:** " + studentInfoDto.group().getName() + "\n\n" +
+                "👥 **Группа:** " + studentInfoDto.group().name() + "\n\n" +
                 "📝 **Статус регистрации:** " +
                 (studentInfoDto.registrationState().equals(RegistrationState.SUCCESSFUL_REGISTRATION) ? "✅ Успешно пройдена" : "❌ Не завершена") + "\n\n" +
-                "🔔 **Уведомления:** " + (studentInfoDto.notification().getEnabled() ? "✅ Включены" : "❌ Выключены");
+                "🔔 **Уведомления:** " + (studentInfoDto.notification().enabled() ? "✅ Включены" : "❌ Отключены");
     }
 }

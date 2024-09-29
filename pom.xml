@@ -23,6 +23,7 @@
         <liquibase.version>4.29.1</liquibase.version>
         <postgresql.version>42.7.3</postgresql.version>
         <hibernate.version>6.5.2.Final</hibernate.version>
+        <lombok.version>1.18.30</lombok.version>
     </properties>
 
     <dependencies>
@@ -42,13 +43,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
             <version>${spring.boot.version}</version>
-        </dependency>
-
-        <!-- Lombok Dependency -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <!-- Telegram Bot Dependency -->
@@ -86,6 +80,14 @@
             <version>${hibernate.version}</version>
         </dependency>
 
+        <!-- Lombok Dependency -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <version>${lombok.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -114,6 +116,9 @@
                     <!-- Use Java version defined in properties -->
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
 

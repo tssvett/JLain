@@ -1,9 +1,11 @@
 package dev.tssvett.schedule_bot.backend.service;
 
+import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.backend.exception.database.FacultyNotExistException;
 import dev.tssvett.schedule_bot.backend.exception.database.GroupNotExistException;
 import dev.tssvett.schedule_bot.backend.exception.database.StudentNotExistsException;
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
+import dev.tssvett.schedule_bot.backend.mapper.Mapper;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import dev.tssvett.schedule_bot.persistence.entity.Faculty;
 import dev.tssvett.schedule_bot.persistence.entity.Group;
@@ -34,6 +36,13 @@ public class StudentService {
     public Student findStudentById(Long studentId) {
         return studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
+    }
+
+    public StudentInfoDto getStudentInfoById(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
+
+        return Mapper.toStudentInfoDto(student);
     }
 
     public void updateStudentFaculty(Long studentId, Long facultyId) {

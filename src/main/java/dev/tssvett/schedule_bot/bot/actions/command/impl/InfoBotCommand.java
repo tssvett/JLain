@@ -1,7 +1,6 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
-import dev.tssvett.schedule_bot.persistence.entity.Student;
-import dev.tssvett.schedule_bot.backend.mapper.Mapper;
+import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
@@ -22,11 +21,11 @@ public class InfoBotCommand implements BotCommand {
     @Transactional
     @RegistrationRequired
     public SendMessage execute(Long userId, Long chatId) {
-        Student student = studentService.findStudentById(userId);
+        StudentInfoDto studentInfoDto = studentService.getStudentInfoById(userId);
 
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageConstants.generateInfoMessage(Mapper.toStudentInfoDto(student)))
+                .text(MessageConstants.generateInfoMessage(studentInfoDto))
                 .build();
     }
 }
