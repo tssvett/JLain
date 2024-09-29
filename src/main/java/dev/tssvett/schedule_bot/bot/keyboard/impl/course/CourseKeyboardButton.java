@@ -1,12 +1,11 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.course;
 
-import dev.tssvett.schedule_bot.persistence.entity.Student;
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.group.GroupKeyboard;
+import dev.tssvett.schedule_bot.bot.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,31 +23,39 @@ public class CourseKeyboardButton implements KeyboardButton {
 
     @Override
     public SendMessage click(Update update) {
-        CallbackDetails callbackDetails = CallbackDetails.fromString(update.getCallbackQuery().getData());
-        Long course = Long.parseLong(callbackDetails.getCallbackInformation());
-        Long chatId = update.getCallbackQuery().getMessage().getChatId();
-        Long userId = update.getCallbackQuery().getFrom().getId();
+        Long chatId = UpdateUtils.getChatId(update);
+        Long userId = UpdateUtils.getUserId(update);
+        Long course = UpdateUtils.getCourse(update);
 
-        return createCourseChooseMessage(userId, chatId, course);
+        return handleClick(userId, chatId, course);
     }
 
-    public SendMessage createCourseChooseMessage(Long userId, Long chatId, Long course) {
-        try {
-            Student user = studentService.updateStudentCourse(userId, course);
-            log.info("User {} successfully choose course {}", user.getUserId(), course);
 
-            return SendMessage.builder()
-                    .chatId(chatId)
-                    .text(MessageConstants.REGISTER_CHOOSE_GROUP_SUCCESSFULLY_MESSAGE)
-                    .replyMarkup(groupKeyboard.createInlineKeyboard(GROUP_CHOOSE, userId))
-                    .build();
+    private SendMessage handleClick(Long userId, Long chatId, Long course) {
+        try {
+            studentService.updateStudentCourse(userId, course);
+
+            return chooseGroupSendMessage(userId, chatId);
+
         } catch (NotValidRegistrationStateException e) {
             log.warn("User {} try to choose course {} but it's already chosen", userId, course);
 
-            return SendMessage.builder()
-                    .chatId(chatId)
-                    .text(MessageConstants.COURSE_CLICK_WITH_ERROR_STATE)
-                    .build();
+            return chooseGroupWrongStateSendMessage(chatId);
         }
+    }
+
+    private SendMessage chooseGroupSendMessage(Long userId, Long chatId) {
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(MessageConstants.REGISTER_CHOOSE_GROUP_SUCCESSFULLY_MESSAGE)
+                .replyMarkup(groupKeyboard.createInlineKeyboard(GROUP_CHOOSE, userId))
+                .build();
+    }
+
+    private SendMessage chooseGroupWrongStateSendMessage(Long chatId) {
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(MessageConstants.COURSE_CLICK_WITH_ERROR_STATE)
+                .build();
     }
 }

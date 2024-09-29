@@ -1,14 +1,11 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.faculty;
 
-import dev.tssvett.schedule_bot.persistence.entity.Student;
-import dev.tssvett.schedule_bot.persistence.entity.Faculty;
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
-import dev.tssvett.schedule_bot.backend.service.FacultyService;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.course.CourseKeyboard;
+import dev.tssvett.schedule_bot.bot.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,37 +18,43 @@ import static dev.tssvett.schedule_bot.bot.enums.Action.COURSE_CHOOSE;
 @Component
 @RequiredArgsConstructor
 public class FacultyKeyboardButton implements KeyboardButton {
-    private final FacultyService facultyService;
     private final StudentService studentService;
     private final CourseKeyboard courseKeyboard;
 
     @Override
     public SendMessage click(Update update) {
-        Long facultyId = Long.parseLong(CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation());
-        Faculty faculty = facultyService.findFacultyById(facultyId);
-        Long chatId = update.getCallbackQuery().getMessage().getChatId();
-        Long userId = update.getCallbackQuery().getFrom().getId();
+        Long chatId = UpdateUtils.getChatId(update);
+        Long userId = UpdateUtils.getUserId(update);
+        Long facultyId = UpdateUtils.getFacultyId(update);
 
-        return createFacultyChooseMessage(userId, chatId, faculty);
+        return handleClick(userId, chatId, facultyId);
     }
 
-    public SendMessage createFacultyChooseMessage(Long userId, Long chatId, Faculty faculty) {
+    private SendMessage handleClick(Long userId, Long chatId, Long facultyId) {
         try {
-            Student userWithChosenFaculty = studentService.updateStudentFaculty(userId, faculty);
-            log.info("User {} successfully choose faculty {}", userWithChosenFaculty.getUserId(), faculty.getName());
+            studentService.updateStudentFaculty(userId, facultyId);
 
-            return SendMessage.builder()
-                    .chatId(chatId)
-                    .text(MessageConstants.REGISTER_CHOOSE_COURSE_MESSAGE)
-                    .replyMarkup(courseKeyboard.createInlineKeyboard(COURSE_CHOOSE, userId))
-                    .build();
+            return chooseCourseSendMessage(userId, chatId);
+
         } catch (NotValidRegistrationStateException e) {
-            log.warn("User {} try to choose faculty {} but it's already chosen", userId, faculty.getName());
+            log.warn("User {} try to choose faculty {} but it's already chosen", userId, facultyId);
 
-            return SendMessage.builder()
-                    .chatId(chatId)
-                    .text(MessageConstants.FACULTY_CLICK_WITH_ERROR_STATE)
-                    .build();
+            return chooseCourseWrongStateSendMessage(chatId);
         }
+    }
+
+    private SendMessage chooseCourseSendMessage(Long userId, Long chatId) {
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(MessageConstants.REGISTER_CHOOSE_COURSE_MESSAGE)
+                .replyMarkup(courseKeyboard.createInlineKeyboard(COURSE_CHOOSE, userId))
+                .build();
+    }
+
+    private SendMessage chooseCourseWrongStateSendMessage(Long chatId) {
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(MessageConstants.FACULTY_CLICK_WITH_ERROR_STATE)
+                .build();
     }
 }

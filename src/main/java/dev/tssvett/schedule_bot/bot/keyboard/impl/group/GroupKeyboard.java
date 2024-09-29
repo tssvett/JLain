@@ -30,7 +30,8 @@ public class GroupKeyboard extends Keyboard {
         Student user = studentService.findStudentById(userId);
         Long courseNumber = user.getCourse();
         List<Group> groups = groupService.findAllGroups();
-
+        log.info("Create inline keyboard for groups {}", groups);
+        log.info("Course {} and user {}", courseNumber, user);
         //Фильтруем группы по курсу и факультету
         groups = groups.stream()
                 .filter(group -> Objects.equals(group.getCourse(), courseNumber))

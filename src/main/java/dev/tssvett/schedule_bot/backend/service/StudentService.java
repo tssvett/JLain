@@ -1,5 +1,7 @@
 package dev.tssvett.schedule_bot.backend.service;
 
+import dev.tssvett.schedule_bot.backend.exception.database.FacultyNotExistException;
+import dev.tssvett.schedule_bot.backend.exception.database.GroupNotExistException;
 import dev.tssvett.schedule_bot.backend.exception.database.StudentNotExistsException;
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
@@ -7,6 +9,9 @@ import dev.tssvett.schedule_bot.persistence.entity.Faculty;
 import dev.tssvett.schedule_bot.persistence.entity.Group;
 import dev.tssvett.schedule_bot.persistence.entity.Notification;
 import dev.tssvett.schedule_bot.persistence.entity.Student;
+import dev.tssvett.schedule_bot.persistence.repository.FacultyRepository;
+import dev.tssvett.schedule_bot.persistence.repository.GroupRepository;
+import dev.tssvett.schedule_bot.persistence.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.persistence.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Consumer;
 
-import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.COURSE_CHOOSING;
-import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.GROUP_CHOOSING;
 import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.START_REGISTER;
 
 @Slf4j
@@ -24,63 +27,58 @@ import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.START_REGISTE
 @RequiredArgsConstructor
 public class StudentService {
     private final StudentRepository studentRepository;
+    private final FacultyRepository facultyRepository;
+    private final GroupRepository groupRepository;
+    private final NotificationRepository notificationRepository;
 
     public Student findStudentById(Long studentId) {
         return studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
     }
 
-    public Student updateStudentFaculty(Long studentId, Faculty faculty) {
-        return proceedRegistrationState(studentId, faculty, RegistrationState.FACULTY_CHOOSING,
-                RegistrationState.COURSE_CHOOSING, studentRepository::save);
+    public void updateStudentFaculty(Long studentId, Long facultyId) {
+        Faculty faculty = facultyRepository.findById(facultyId)
+                .orElseThrow(() -> new FacultyNotExistException("Faculties with id: " + facultyId + " not found"));
+        proceedRegistrationState(studentId, faculty, RegistrationState.FACULTY_CHOOSING, RegistrationState.COURSE_CHOOSING,
+                student -> student.setFaculty(faculty));
     }
 
-    public Student updateStudentCourse(Long studentId, Long course) {
-        return proceedRegistrationState(studentId, course, COURSE_CHOOSING, RegistrationState.GROUP_CHOOSING,
-                studentRepository::save);
+    public void updateStudentCourse(Long studentId, Long course) {
+        proceedRegistrationState(studentId, course, RegistrationState.COURSE_CHOOSING,
+                RegistrationState.GROUP_CHOOSING, student -> student.setCourse(course));
     }
 
-    public Student updateStudentGroup(Long studentId, Group group) {
-        return proceedRegistrationState(studentId, group, GROUP_CHOOSING, RegistrationState.SUCCESSFUL_REGISTRATION,
-                studentRepository::save);
+    public void updateStudentGroup(Long studentId, Long groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new GroupNotExistException("Group with id: " + groupId + " not found"));
+        proceedRegistrationState(studentId, group, RegistrationState.GROUP_CHOOSING,
+                RegistrationState.SUCCESSFUL_REGISTRATION, student -> student.setGroup(group));
     }
 
-    public Student updateStudentNotification(Long studentId, Notification notification) {
-        return proceedRegistrationState(studentId, notification, RegistrationState.SUCCESSFUL_REGISTRATION,
-                RegistrationState.SUCCESSFUL_REGISTRATION, studentRepository::save);
+    public void updateStudentNotification(Long studentId, Boolean notificationStatus) {
+        Notification notification = studentRepository.findById(studentId)
+                .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId))
+                .getNotification();
+
+        notification.setEnabled(notificationStatus);
+        notificationRepository.save(notification);
+
+        proceedRegistrationState(studentId, notification, RegistrationState.SUCCESSFUL_REGISTRATION,
+                RegistrationState.SUCCESSFUL_REGISTRATION, student -> student.setNotification(notification));
     }
 
-    public Student updateStudentRegistrationState(Long studentId, RegistrationState state) {
+    public void updateStudentRegistrationState(Long studentId, RegistrationState state) {
         Student student = this.findStudentById(studentId);
         student.setRegistrationState(state);
-        log.info("Student {} updated state to {}", studentId, state);
-
-        return studentRepository.save(student);
+        log.debug("Student {} updated state to {}", studentId, state);
+        studentRepository.save(student);
     }
 
     @Transactional
-    public Student createStudentIfNotExists(Long studentId, Long chatId) {
-        return studentRepository.findById(studentId)
+    public Long createStudentIfNotExists(Long studentId, Long chatId) {
+        Student student = studentRepository.findById(studentId)
                 .orElseGet(() -> createStudent(studentId, chatId));
-    }
-
-    @Transactional
-    public Student createStudent(Long studentId, Long chatId) {
-        log.info("Student {} is not in database. Adding them to database", studentId);
-
-        Notification notification = Notification.builder()
-                .enabled(true)
-                .build();
-
-        Student newStudent = Student.builder()
-                .userId(studentId)
-                .chatId(chatId)
-                .registrationState(START_REGISTER)
-                .notification(notification)
-                .build();
-
-        notification.setStudent(newStudent);
-        return studentRepository.save(newStudent);
+        return student.getUserId();
     }
 
     public Boolean isExist(Long studentId) {
@@ -100,14 +98,34 @@ public class StudentService {
         }
     }
 
-    private Student proceedRegistrationState(Long studentId, Object newValue, RegistrationState validState, RegistrationState newState, Consumer<Student> setter) {
+    private void proceedRegistrationState(Long studentId, Object newValue, RegistrationState validState,
+                                          RegistrationState newState, Consumer<Student> setter) {
         Student student = this.findStudentById(studentId);
         validateRegistrationState(student, newValue, validState);
 
-        setter.accept(student);
         student.setRegistrationState(newState);
-        log.info("Student {} updated state to {} with value {}", studentId, newState, newValue);
+        setter.accept(student);
 
-        return studentRepository.save(student);
+        studentRepository.save(student);
+        log.debug("Student {} updated state to {} with value {}", studentId, newState, newValue);
+    }
+
+    @Transactional
+    private Student createStudent(Long studentId, Long chatId) {
+        log.info("Student {} is not in database. Adding them to database", studentId);
+
+        Notification notification = Notification.builder()
+                .enabled(true)
+                .build();
+
+        Student newStudent = Student.builder()
+                .userId(studentId)
+                .chatId(chatId)
+                .registrationState(START_REGISTER)
+                .notification(notification)
+                .build();
+
+        notification.setStudent(newStudent);
+        return studentRepository.save(newStudent);
     }
 }
