@@ -22,7 +22,8 @@ public class GroupService {
         Student user = studentRepository.findById(userId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + userId));
 
-        return groupRepository.findAll().stream()
+        return groupRepository.findAll()
+                .stream()
                 .filter(group -> group.getCourse().equals(user.getCourse()))
                 .filter(group -> group.getFaculty().getName().equals(user.getFaculty().getName()))
                 .toList();

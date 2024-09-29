@@ -28,6 +28,9 @@ public class ScheduleService {
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + userId));
         List<Lesson> lessonsInWeek = schoolWeekParser.parse(student.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
 
-        return lessonsInWeek.stream().map(Mapper::toLessonInfoDto).toList();
+        return lessonsInWeek
+                .stream()
+                .map(Mapper::toLessonInfoDto)
+                .toList();
     }
 }
