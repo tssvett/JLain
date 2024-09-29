@@ -49,4 +49,15 @@ public class UpdateUtils {
             return null;
         }
     }
+
+    public static Boolean getResreshRegistrationStatus(Update update) {
+        try {
+            String answer = CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
+            //представим что он бегает по списку разрешенных слов, которых много
+            //но сейчас оно ровно 1
+            return answer.equals("Да");
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

@@ -9,9 +9,11 @@ import dev.tssvett.schedule_bot.persistence.entity.Group;
 import dev.tssvett.schedule_bot.persistence.entity.Notification;
 import dev.tssvett.schedule_bot.persistence.entity.Student;
 
+import javax.validation.constraints.NotNull;
+
 public class Mapper {
 
-    public static StudentInfoDto toStudentInfoDto(Student student) {
+    public static StudentInfoDto toStudentInfoDto(@NotNull Student student) {
         return new StudentInfoDto(
                 student.getUserId(),
                 student.getChatId(),
@@ -23,7 +25,7 @@ public class Mapper {
         );
     }
 
-    public static Student toStudent(StudentInfoDto studentInfoDto) {
+    public static Student toStudent(@NotNull StudentInfoDto studentInfoDto) {
         return Student.builder()
                 .userId(studentInfoDto.userId())
                 .chatId(studentInfoDto.chatId())
@@ -35,7 +37,7 @@ public class Mapper {
                 .build();
     }
 
-    public static GroupInfoDto toGroupInfoDto(Group group) {
+    public static GroupInfoDto toGroupInfoDto(@NotNull Group group) {
         return new GroupInfoDto(
                 group.getGroupId(),
                 group.getName(),
@@ -44,7 +46,7 @@ public class Mapper {
         );
     }
 
-    public static Group toGroup(GroupInfoDto groupInfoDto) {
+    public static Group toGroup(@NotNull GroupInfoDto groupInfoDto) {
         return Group.builder()
                 .groupId(groupInfoDto.groupId())
                 .name(groupInfoDto.name())
@@ -53,32 +55,31 @@ public class Mapper {
                 .build();
     }
 
-    public static FacultyInfoDto toFacultyInfoDto(Faculty faculty) {
+    public static FacultyInfoDto toFacultyInfoDto(@NotNull Faculty faculty) {
         return new FacultyInfoDto(
                 faculty.getFacultyId(),
                 faculty.getName()
         );
     }
 
-    public static Faculty toFaculty(FacultyInfoDto facultyInfoDto) {
+    public static Faculty toFaculty(@NotNull FacultyInfoDto facultyInfoDto) {
         return Faculty.builder()
                 .facultyId(facultyInfoDto.facultyId())
                 .name(facultyInfoDto.name())
                 .build();
     }
 
-    public static Notification toNotification(NotificationInfoDto notification) {
+    public static Notification toNotification(@NotNull NotificationInfoDto notification) {
         return Notification.builder()
                 .id(notification.notificationId())
                 .enabled(notification.enabled())
                 .build();
     }
 
-    public static NotificationInfoDto toNotificationInfoDto(Notification notification) {
+    public static NotificationInfoDto toNotificationInfoDto(@NotNull Notification notification) {
         return new NotificationInfoDto(
                 notification.getId(),
                 notification.getEnabled()
         );
     }
-
 }

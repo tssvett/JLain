@@ -5,14 +5,14 @@ import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.faculty.FacultyKeyboard;
-import dev.tssvett.schedule_bot.bot.keyboard.impl.reregister.ReRegistrateKeyboard;
+import dev.tssvett.schedule_bot.bot.keyboard.impl.refresh.RefreshRegistrationKeyboard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import static dev.tssvett.schedule_bot.bot.enums.Action.FACULTY_CHOOSE;
-import static dev.tssvett.schedule_bot.bot.enums.Action.REREGISTRATE;
+import static dev.tssvett.schedule_bot.bot.enums.Action.REFRESH_REGISTRATION;
 import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.FACULTY_CHOOSING;
 
 @Slf4j
@@ -20,7 +20,7 @@ import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.FACULTY_CHOOS
 @RequiredArgsConstructor
 public class RegisterBotCommand implements BotCommand {
     private final StudentService studentService;
-    private final ReRegistrateKeyboard reRegistrateKeyboard;
+    private final RefreshRegistrationKeyboard refreshRegistrationKeyboard;
     private final FacultyKeyboard facultyKeyboard;
 
     @Override
@@ -35,7 +35,7 @@ public class RegisterBotCommand implements BotCommand {
 
             return SendMessage.builder()
                     .chatId(chatId)
-                    .replyMarkup(reRegistrateKeyboard.createInlineKeyboard(REREGISTRATE, userId))
+                    .replyMarkup(refreshRegistrationKeyboard.createInlineKeyboard(REFRESH_REGISTRATION, userId))
                     .text(MessageConstants.ALREADY_REGISTERED_MESSAGE)
                     .build();
         } else {

@@ -15,7 +15,7 @@ public class KeyboardHandler {
     private final KeyboardButton facultyKeyboardButton;
     private final KeyboardButton courseKeyboardButton;
     private final KeyboardButton groupKeyboardButton;
-    private final KeyboardButton reRegistrateButton;
+    private final KeyboardButton refreshRegistrationButton;
     private final KeyboardButton notificationKeyboardButton;
 
     public SendMessage handleKeyboardAction(Update update) {
@@ -23,7 +23,7 @@ public class KeyboardHandler {
             case FACULTY_CHOOSE -> facultyKeyboardButton.click(update);
             case COURSE_CHOOSE -> courseKeyboardButton.click(update);
             case GROUP_CHOOSE -> groupKeyboardButton.click(update);
-            case REREGISTRATE -> reRegistrateButton.click(update);
+            case REFRESH_REGISTRATION -> refreshRegistrationButton.click(update);
             case NOTIFICATION -> notificationKeyboardButton.click(update);
         };
     }

@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.bot.keyboard.impl.reregister;
+package dev.tssvett.schedule_bot.bot.keyboard.impl.refresh;
 
 import dev.tssvett.schedule_bot.bot.enums.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.Keyboard;
@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ReRegistrateKeyboard extends Keyboard {
+public class RefreshRegistrationKeyboard extends Keyboard {
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard(Action action, Long userId) {
