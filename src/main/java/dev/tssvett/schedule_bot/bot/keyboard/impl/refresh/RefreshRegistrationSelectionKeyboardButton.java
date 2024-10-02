@@ -40,10 +40,17 @@ public class RefreshRegistrationSelectionKeyboardButton implements KeyboardButto
     }
 
     private SendMessage sendFacultySelectionMessage(long userId, long chatId) {
-        return SendMessage.builder().chatId(chatId).text(MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE).replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId)).build();
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE)
+                .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId))
+                .build();
     }
 
     private SendMessage sendUserRejectRefreshRegistrationMessage(long chatId) {
-        return SendMessage.builder().chatId(chatId).text(MessageConstants.NO_RE_REGISTRATION_ANSWER).build();
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(MessageConstants.NO_RE_REGISTRATION_ANSWER)
+                .build();
     }
 }
