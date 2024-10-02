@@ -1,15 +1,17 @@
 package dev.tssvett.schedule_bot.bot.utils;
 
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
+import lombok.NoArgsConstructor;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class UpdateUtils {
 
-    public static Long getChatId(Update update) {
+    public static long getChatId(Update update) {
         return update.getCallbackQuery().getMessage().getChatId();
     }
 
-    public static Long getUserId(Update update) {
+    public static long getUserId(Update update) {
         return update.getCallbackQuery().getFrom().getId();
     }
 
@@ -17,47 +19,27 @@ public class UpdateUtils {
         return update.getCallbackQuery().getData();
     }
 
-    public static Long getFacultyId(Update update) {
-        try {
-            return Long.parseLong(CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation());
-        } catch (Exception e) {
-            return null;
-        }
+    public static long getFacultyId(Update update) {
+        return Long.parseLong(CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation());
     }
 
-    public static Long getGroupId(Update update) {
-        try {
-            return Long.parseLong(CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation());
-        } catch (Exception e) {
-            return null;
-        }
+    public static long getGroupId(Update update) {
+        return Long.parseLong(CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation());
     }
 
-    public static Long getCourse(Update update) {
-        try {
-            return Long.parseLong(CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation());
-        } catch (Exception e) {
-            return null;
-        }
+    public static long getCourse(Update update) {
+        return Long.parseLong(CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation());
     }
 
-    public static Boolean getNotificationStatus(Update update) {
-        try {
-            String answer = CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
-            return answer.equals("Включить");
-        } catch (Exception e) {
-            return null;
-        }
+    public static boolean getNotificationStatus(Update update) {
+        String answer = CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
+        return answer.equals("Включить");
     }
 
-    public static Boolean getResreshRegistrationStatus(Update update) {
-        try {
-            String answer = CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
-            //представим что он бегает по списку разрешенных слов, которых много
-            //но сейчас оно ровно 1
-            return answer.equals("Да");
-        } catch (Exception e) {
-            return null;
-        }
+    public static boolean getRefreshRegistrationStatus(Update update) {
+        String answer = CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
+        //представим что он бегает по списку разрешенных слов, которых много
+        //но сейчас оно ровно 1
+        return answer.equals("Да");
     }
 }

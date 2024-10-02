@@ -12,25 +12,25 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class NotificationKeyboardButton implements KeyboardButton {
+public class NotificationSelectionKeyboardButton implements KeyboardButton {
     private final StudentService studentService;
 
     @Override
-    public SendMessage click(Update update) {
-        Long userId = UpdateUtils.getUserId(update);
-        Long chatId = UpdateUtils.getChatId(update);
-        Boolean notificationStatus = UpdateUtils.getNotificationStatus(update);
+    public SendMessage onButtonClick(Update update) {
+        long userId = UpdateUtils.getUserId(update);
+        long chatId = UpdateUtils.getChatId(update);
+        boolean notificationStatus = UpdateUtils.getNotificationStatus(update);
 
-        return handleClick(userId, chatId, notificationStatus);
+        return processNotificationSelectionOnButtonClick(userId, chatId, notificationStatus);
     }
 
-    private SendMessage handleClick(Long userId, Long chatId, Boolean notificationStatus) {
+    private SendMessage processNotificationSelectionOnButtonClick(long userId, long chatId, boolean notificationStatus) {
         studentService.updateStudentNotification(userId, notificationStatus);
 
-        return changeNotificationSendMessage(chatId, notificationStatus);
+        return sendCurrentNotificationStatusMessage(chatId, notificationStatus);
     }
 
-    private SendMessage changeNotificationSendMessage(Long chatId, Boolean notificationStatus) {
+    private SendMessage sendCurrentNotificationStatusMessage(long chatId, boolean notificationStatus) {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text("Уведомления " + (notificationStatus ? "включены" : "отключены"))

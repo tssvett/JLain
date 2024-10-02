@@ -17,34 +17,34 @@ import static dev.tssvett.schedule_bot.bot.enums.Action.GROUP_CHOOSE;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CourseKeyboardButton implements KeyboardButton {
+public class CourseSelectionKeyboardButton implements KeyboardButton {
     private final StudentService studentService;
     private final GroupKeyboard groupKeyboard;
 
     @Override
-    public SendMessage click(Update update) {
-        Long chatId = UpdateUtils.getChatId(update);
-        Long userId = UpdateUtils.getUserId(update);
-        Long course = UpdateUtils.getCourse(update);
+    public SendMessage onButtonClick(Update update) {
+        long chatId = UpdateUtils.getChatId(update);
+        long userId = UpdateUtils.getUserId(update);
+        long course = UpdateUtils.getCourse(update);
 
-        return handleClick(userId, chatId, course);
+        return processCourseSelectionOnButtonClick(userId, chatId, course);
     }
 
 
-    private SendMessage handleClick(Long userId, Long chatId, Long course) {
+    private SendMessage processCourseSelectionOnButtonClick(long userId, long chatId, long course) {
         try {
             studentService.updateStudentCourse(userId, course);
 
-            return chooseGroupSendMessage(userId, chatId);
+            return sendGroupSelectionMessage(userId, chatId);
 
         } catch (NotValidRegistrationStateException e) {
             log.warn("User {} try to choose course {} but it's already chosen", userId, course);
 
-            return chooseGroupWrongStateSendMessage(chatId);
+            return sendAlreadySelectedCourseMessage(chatId);
         }
     }
 
-    private SendMessage chooseGroupSendMessage(Long userId, Long chatId) {
+    private SendMessage sendGroupSelectionMessage(long userId, long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageConstants.REGISTER_CHOOSE_GROUP_SUCCESSFULLY_MESSAGE)
@@ -52,7 +52,7 @@ public class CourseKeyboardButton implements KeyboardButton {
                 .build();
     }
 
-    private SendMessage chooseGroupWrongStateSendMessage(Long chatId) {
+    private SendMessage sendAlreadySelectedCourseMessage(long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageConstants.COURSE_CLICK_WITH_ERROR_STATE)

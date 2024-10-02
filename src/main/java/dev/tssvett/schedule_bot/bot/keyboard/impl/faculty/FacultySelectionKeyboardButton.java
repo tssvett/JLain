@@ -17,33 +17,33 @@ import static dev.tssvett.schedule_bot.bot.enums.Action.COURSE_CHOOSE;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FacultyKeyboardButton implements KeyboardButton {
+public class FacultySelectionKeyboardButton implements KeyboardButton {
     private final StudentService studentService;
     private final CourseKeyboard courseKeyboard;
 
     @Override
-    public SendMessage click(Update update) {
-        Long chatId = UpdateUtils.getChatId(update);
-        Long userId = UpdateUtils.getUserId(update);
-        Long facultyId = UpdateUtils.getFacultyId(update);
+    public SendMessage onButtonClick(Update update) {
+        long chatId = UpdateUtils.getChatId(update);
+        long userId = UpdateUtils.getUserId(update);
+        long facultyId = UpdateUtils.getFacultyId(update);
 
-        return handleClick(userId, chatId, facultyId);
+        return processFacultySelectionOnButtonClick(userId, chatId, facultyId);
     }
 
-    private SendMessage handleClick(Long userId, Long chatId, Long facultyId) {
+    private SendMessage processFacultySelectionOnButtonClick(long userId, long chatId, long facultyId) {
         try {
             studentService.updateStudentFaculty(userId, facultyId);
 
-            return chooseCourseSendMessage(userId, chatId);
+            return sendCourseSelectionMessage(userId, chatId);
 
         } catch (NotValidRegistrationStateException e) {
             log.warn("User {} try to choose faculty {} but it's already chosen", userId, facultyId);
 
-            return chooseCourseWrongStateSendMessage(chatId);
+            return sendAlreadySelectedFacultyMessage(chatId);
         }
     }
 
-    private SendMessage chooseCourseSendMessage(Long userId, Long chatId) {
+    private SendMessage sendCourseSelectionMessage(long userId, long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageConstants.REGISTER_CHOOSE_COURSE_MESSAGE)
@@ -51,7 +51,7 @@ public class FacultyKeyboardButton implements KeyboardButton {
                 .build();
     }
 
-    private SendMessage chooseCourseWrongStateSendMessage(Long chatId) {
+    private SendMessage sendAlreadySelectedFacultyMessage(long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageConstants.FACULTY_CLICK_WITH_ERROR_STATE)
