@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.backend.service;
 
-import dev.tssvett.schedule_bot.backend.entity.Notification;
-import dev.tssvett.schedule_bot.backend.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.persistence.entity.Notification;
+import dev.tssvett.schedule_bot.persistence.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class NotificationService {
     }
 
     public Boolean isNotificationEnabledAndUserRegistered(Notification notification) {
-        return notification.getEnabled() && notification.getBotUser().getRegistrationState()
+        return notification.getEnabled() && notification.getStudent().getRegistrationState()
                 .equals(RegistrationState.SUCCESSFUL_REGISTRATION);
     }
 }

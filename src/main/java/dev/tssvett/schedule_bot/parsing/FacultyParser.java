@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.parsing;
 
-import dev.tssvett.schedule_bot.backend.entity.Faculty;
-import dev.tssvett.schedule_bot.backend.exception.ConnectionException;
-import dev.tssvett.schedule_bot.backend.exception.ParseException;
+import dev.tssvett.schedule_bot.persistence.entity.Faculty;
+import dev.tssvett.schedule_bot.backend.exception.parse.ParserSourceConnectionException;
+import dev.tssvett.schedule_bot.backend.exception.parse.ParseElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,7 +31,7 @@ public class FacultyParser implements Parser<Faculty> {
         try {
             document = Jsoup.connect(URL).userAgent(USER_AGENT).get();
         } catch (IOException e) {
-            throw new ConnectionException(e);
+            throw new ParserSourceConnectionException(e.getMessage());
         }
         Elements rawFaculties = document.select(FACULTIES_SELECTOR);
 
@@ -59,7 +59,7 @@ public class FacultyParser implements Parser<Faculty> {
         if (matcher.find()) {
             return matcher.group();
         } else {
-            throw new ParseException("Ошибка при парсинге айди факультета");
+            throw new ParseElementException("Ошибка при парсинге айди факультета");
         }
     }
 }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <preConditions onFail="WARN">
+        <not>
+            <tableExists tableName="student"/>
+        </not>
+    </preConditions>
+    <changeSet id="create-table-student" author="tssvett">
+        <createTable tableName="student">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="chat_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="faculty_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="group_id" type="BIGINT">
+                <constraints nullable="true"/>"
+            </column>
+
+            <column name="course" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="registration_state" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="student"
+                baseColumnNames="faculty_id"
+                referencedTableName="faculty"
+                referencedColumnNames="faculty_id"
+                constraintName="fk_student_faculty"/>
+
+        <addForeignKeyConstraint
+                baseTableName="student"
+                baseColumnNames="group_id"
+                referencedTableName="group"
+                referencedColumnNames="group_id"
+                constraintName="fk_student_group"/>
+    </changeSet>
+
+</databaseChangeLog>

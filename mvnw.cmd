@@ -23,7 +23,7 @@
 @REM
 @REM Optional ENV vars
 @REM   MVNW_REPOURL - repo url base for downloading maven distribution
-@REM   MVNW_USERNAME/MVNW_PASSWORD - botUser and password for downloading maven
+@REM   MVNW_USERNAME/MVNW_PASSWORD - student and password for downloading maven
 @REM   MVNW_VERBOSE - true: enable verbose log; others: silence the output
 @REM ----------------------------------------------------------------------------
 

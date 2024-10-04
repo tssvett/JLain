@@ -1,8 +1,7 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
-import dev.tssvett.schedule_bot.backend.dto.BotUserInfoDto;
-import dev.tssvett.schedule_bot.backend.entity.BotUser;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
@@ -16,25 +15,17 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @Component
 @RequiredArgsConstructor
 public class InfoBotCommand implements BotCommand {
-    private final UserService userService;
+    private final StudentService studentService;
 
     @Override
     @Transactional
     @RegistrationRequired
     public SendMessage execute(Long userId, Long chatId) {
-        BotUser botUser = userService.findUserById(userId);
+        StudentInfoDto studentInfoDto = studentService.getStudentInfoById(userId);
 
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageConstants.createInfoMessageFromParams(BotUserInfoDto.builder()
-                        .userId(userId)
-                        .chatId(chatId)
-                        .faculty(botUser.getFaculty())
-                        .group(botUser.getGroup())
-                        .course(botUser.getCourse())
-                        .registrationState(botUser.getRegistrationState())
-                        .notification(botUser.getNotification())
-                        .build()))
+                .text(MessageConstants.generateInfoMessage(studentInfoDto))
                 .build();
     }
 }

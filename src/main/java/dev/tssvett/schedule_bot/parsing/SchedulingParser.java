@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.parsing;
 
-import dev.tssvett.schedule_bot.backend.entity.Faculty;
-import dev.tssvett.schedule_bot.backend.entity.Group;
+import dev.tssvett.schedule_bot.persistence.entity.Faculty;
+import dev.tssvett.schedule_bot.persistence.entity.Group;
 import dev.tssvett.schedule_bot.backend.service.FacultyService;
 import dev.tssvett.schedule_bot.backend.service.GroupService;
 import lombok.RequiredArgsConstructor;

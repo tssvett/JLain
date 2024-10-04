@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot.annotation.postprocessor;
 
-import dev.tssvett.schedule_bot.backend.exception.PostBeanProcessorException;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.exception.annotation.PostBeanProcessorException;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -17,11 +17,11 @@ import java.lang.reflect.Proxy;
 @Slf4j
 @Component
 public class RegistrationRequiredPostProcessor implements BeanPostProcessor {
-    private final UserService userService;
+    private final StudentService studentService;
     private final TransactionTemplate transactionTemplate;
 
-    public RegistrationRequiredPostProcessor(UserService userService, PlatformTransactionManager transactionManager) {
-        this.userService = userService;
+    public RegistrationRequiredPostProcessor(StudentService studentService, PlatformTransactionManager transactionManager) {
+        this.studentService = studentService;
         this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
@@ -57,7 +57,7 @@ public class RegistrationRequiredPostProcessor implements BeanPostProcessor {
         //Проксирование теряет транзакцию, используем transactionTemplate
         return transactionTemplate.execute(status -> {
             try {
-                return userService.isRegistered(userId) ? (SendMessage) method.invoke(bean, args) : sendNeedToRegisterMessage(chatId);
+                return studentService.isRegistered(userId) ? (SendMessage) method.invoke(bean, args) : sendNeedToRegisterMessage(chatId);
             } catch (Exception e) {
                 log.error("Error invoking method {}: {}", method.getName(), e.getMessage());
                 status.setRollbackOnly();

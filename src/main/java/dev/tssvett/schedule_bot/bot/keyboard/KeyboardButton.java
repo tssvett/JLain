@@ -5,5 +5,5 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 public interface KeyboardButton {
 
-    SendMessage click(Update update);
+    SendMessage onButtonClick(Update update);
 }

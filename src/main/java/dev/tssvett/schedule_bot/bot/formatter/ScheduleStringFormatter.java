@@ -1,6 +1,8 @@
 package dev.tssvett.schedule_bot.bot.formatter;
 
-import dev.tssvett.schedule_bot.backend.entity.Lesson;
+import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
+import dev.tssvett.schedule_bot.backend.mapper.Mapper;
+import dev.tssvett.schedule_bot.persistence.entity.Lesson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -18,17 +20,17 @@ public class ScheduleStringFormatter {
     private static final String MILITARY_EMOJI = "🟠"; // Оранжевый круг для военных занятий
     private static final String DEFAULT_EMOJI = "🔴"; // Красный круг для очных занятий
 
-    public String formatWeek(List<Lesson> weekLessons) {
+    public String formatWeek(List<LessonInfoDto> weekLessons) {
         StringBuilder sb = new StringBuilder();
 
         // Группируем уроки по дням
-        Map<String, List<Lesson>> lessonsByDay = groupLessonsByDay(weekLessons);
+        Map<String, List<LessonInfoDto>> lessonsByDay = groupLessonsByDay(weekLessons);
 
         // Определяем порядок дней недели
         List<String> daysOfWeek = List.of("понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье");
 
         for (String day : daysOfWeek) {
-            List<Lesson> dayLessons = lessonsByDay.get(day);
+            List<LessonInfoDto> dayLessons = lessonsByDay.get(day);
             if (dayLessons != null && !dayLessons.isEmpty()) {
                 appendDaySchedule(sb, day, dayLessons);
             }
@@ -37,16 +39,16 @@ public class ScheduleStringFormatter {
         return sb.toString();
     }
 
-    public String formatDay(List<Lesson> weekLessons, String weekDayName) {
+    public String formatDay(List<LessonInfoDto> weekLessons, String weekDayName) {
         StringBuilder sb = new StringBuilder();
         if (weekDayName.equals("воскресенье")) {
             weekDayName = "понедельник";
         }
 
         // Группируем уроки по дням
-        Map<String, List<Lesson>> lessonsByDay = groupLessonsByDay(weekLessons);
+        Map<String, List<LessonInfoDto>> lessonsByDay = groupLessonsByDay(weekLessons);
 
-        List<Lesson> dayLessons = lessonsByDay.get(weekDayName);
+        List<LessonInfoDto> dayLessons = lessonsByDay.get(weekDayName);
         if (dayLessons != null && !dayLessons.isEmpty()) {
             appendDaySchedule(sb, weekDayName, dayLessons);
         }
@@ -54,24 +56,26 @@ public class ScheduleStringFormatter {
         return sb.toString();
     }
 
-    private Map<String, List<Lesson>> groupLessonsByDay(List<Lesson> lessons) {
+    private Map<String, List<LessonInfoDto>> groupLessonsByDay(List<LessonInfoDto> lessons) {
         return lessons.stream()
+                .map(Mapper::toLesson)
                 .filter(Lesson::isExist) // Исключаем пары, которых нет
-                .collect(Collectors.groupingBy(Lesson::getDateDay));
+                .map(Mapper::toLessonInfoDto)
+                .collect(Collectors.groupingBy(LessonInfoDto::dateDay));
     }
 
-    private void appendDaySchedule(StringBuilder sb, String day, List<Lesson> dayLessons) {
-        String dateNumber = dayLessons.getFirst().getDateNumber(); // Получаем дату для вывода
+    private void appendDaySchedule(StringBuilder sb, String day, List<LessonInfoDto> dayLessons) {
+        String dateNumber = dayLessons.getFirst().dateNumber(); // Получаем дату для вывода
         sb.append("🔹 ").append(capitalizeFirstLetter(day)).append(" (").append(dateNumber).append("):\n");
 
-        for (Lesson lesson : dayLessons) {
+        for (LessonInfoDto lesson : dayLessons) {
             sb.append(formatLesson(lesson));
         }
 
         sb.append("\n"); // Добавляем пустую строку для разделения дней
     }
 
-    private String formatLesson(Lesson lesson) {
+    private String formatLesson(LessonInfoDto lesson) {
         String emoji = getEmojiForLesson(lesson);
 
         return String.format(
@@ -80,22 +84,21 @@ public class ScheduleStringFormatter {
                         "Место: %s\n" +
                         "Время: %s\n\n",
                 emoji,
-                capitalizeFirstLetter(lesson.getName()),
-                lesson.getType(),
-                lesson.getPlace(),
-                lesson.getTime()
+                capitalizeFirstLetter(lesson.name()),
+                lesson.type(),
+                lesson.place(),
+                lesson.time()
         );
     }
 
-    private String getEmojiForLesson(Lesson lesson) {
-        if (lesson.getPlace().equalsIgnoreCase("online")) {
+    private String getEmojiForLesson(LessonInfoDto lesson) {
+        if (lesson.place().equalsIgnoreCase("online")) {
             return ONLINE_EMOJI;
-        } else if (lesson.getType().equalsIgnoreCase("лабораторная")) {
+        } else if (lesson.type().equalsIgnoreCase("лабораторная")) {
             return LAB_EMOJI;
-        } else if (lesson.getType().equalsIgnoreCase("лекция")) {
+        } else if (lesson.type().equalsIgnoreCase("лекция")) {
             return LECTURE_EMOJI;
-        } else if (lesson.getName().equalsIgnoreCase("Военная кафедра")) {
-            lesson.setType("Военное"); // Устанавливаем тип "Военное"
+        } else if (lesson.name().equalsIgnoreCase("Военная кафедра")) {
             return MILITARY_EMOJI;
         } else {
             return DEFAULT_EMOJI;

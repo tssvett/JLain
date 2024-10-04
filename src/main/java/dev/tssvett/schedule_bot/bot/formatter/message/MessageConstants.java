@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.bot.formatter.message;
 
-import dev.tssvett.schedule_bot.backend.dto.BotUserInfoDto;
+import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 
 public class MessageConstants {
@@ -75,18 +75,15 @@ public class MessageConstants {
     }
 
 
-    public static String createInfoMessageFromParams(BotUserInfoDto botUserInfoDto) {
-
+    public static String generateInfoMessage(StudentInfoDto studentInfoDto) {
         return "ℹ️ **Информация о пользователе:**\n\n" +
-                "👤 **ID пользователя:** " + botUserInfoDto.getUserId() + "\n\n" +
-                "💬 **ID чата:** " + botUserInfoDto.getChatId() + "\n\n" +
-                "🏫 **Факультет:** " + botUserInfoDto.getFaculty().getName() + "\n\n" +
-                "📚 **Курс:** " + botUserInfoDto.getCourse() + "\n\n" +
-                "👥 **Группа:** " + botUserInfoDto.getGroup().getName() + "\n\n" +
+                "👤 **ID пользователя:** " + studentInfoDto.userId() + "\n\n" +
+                "💬 **ID чата:** " + studentInfoDto.chatId() + "\n\n" +
+                "🏫 **Факультет:** " + studentInfoDto.faculty().name() + "\n\n" +
+                "📚 **Курс:** " + studentInfoDto.course() + "\n\n" +
+                "👥 **Группа:** " + studentInfoDto.group().name() + "\n\n" +
                 "📝 **Статус регистрации:** " +
-                (botUserInfoDto.getRegistrationState().equals(RegistrationState.SUCCESSFUL_REGISTRATION) ? "✅ Успешно пройдена" : "❌ Не завершена") + "\n\n" +
-                "🔔 **Уведомления:** " + (botUserInfoDto.getNotification().getEnabled() ? "✅ Включены" : "❌ Выключены");
+                (studentInfoDto.registrationState().equals(RegistrationState.SUCCESSFUL_REGISTRATION) ? "✅ Успешно пройдена" : "❌ Не завершена") + "\n\n" +
+                "🔔 **Уведомления:** " + (studentInfoDto.notification().enabled() ? "✅ Включены" : "❌ Отключены");
     }
-
-
 }

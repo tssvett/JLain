@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl;
 
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.NoneRequired;
 import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
@@ -13,12 +13,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @Component
 @RequiredArgsConstructor
 public class StartBotCommand implements BotCommand {
-    private final UserService userService;
+    private final StudentService studentService;
 
     @Override
     @NoneRequired
     public SendMessage execute(Long userId, Long chatId) {
-        userService.createUserIfNotExists(userId, chatId);
+        studentService.createStudentIfNotExists(userId, chatId);
 
         return SendMessage.builder()
                 .chatId(chatId)

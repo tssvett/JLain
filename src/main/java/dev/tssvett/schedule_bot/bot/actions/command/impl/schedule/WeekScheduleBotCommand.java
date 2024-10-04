@@ -1,14 +1,11 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl.schedule;
 
 
-import dev.tssvett.schedule_bot.backend.entity.BotUser;
-import dev.tssvett.schedule_bot.backend.entity.Lesson;
-import dev.tssvett.schedule_bot.backend.service.UserService;
+import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
+import dev.tssvett.schedule_bot.backend.service.ScheduleService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
-import dev.tssvett.schedule_bot.bot.utils.CurrentDateCalculator;
-import dev.tssvett.schedule_bot.parsing.SchoolWeekParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,17 +18,14 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class WeekScheduleBotCommand implements BotCommand {
-    private final SchoolWeekParser schoolWeekParser;
-    private final UserService userService;
+    private final ScheduleService scheduleService;
     private final ScheduleStringFormatter scheduleStringFormatter;
-    private final CurrentDateCalculator currentDateCalculator;
 
     @Override
     @RegistrationRequired
     @Transactional
     public SendMessage execute(Long userId, Long chatId) {
-        BotUser botUser = userService.findUserById(userId);
-        List<Lesson> lessonsInWeek = schoolWeekParser.parse(botUser.getGroup().getGroupId(), currentDateCalculator.calculateWeekNumber());
+        List<LessonInfoDto> lessonsInWeek = scheduleService.getWeekSchedule(userId);
         String formattedLessons = scheduleStringFormatter.formatWeek(lessonsInWeek);
 
         return SendMessage.builder()

@@ -7,7 +7,7 @@ public enum Action {
     FACULTY_CHOOSE("faculty"),
     COURSE_CHOOSE("course"),
     GROUP_CHOOSE("group"),
-    REREGISTRATE("reregistrate"),
+    REFRESH_REGISTRATION("refresh_registration"),
     NOTIFICATION("notification");
 
     private final String actionName;

@@ -4,13 +4,13 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <changeSet id="create-botUser-tag-1.0" author="tssvett">
+    <changeSet id="create-student-tag-1.0" author="tssvett">
         <tagDatabase tag="v.1.0"/>
     </changeSet>
 
     <include file="create-table-faculty.xml" relativeToChangelogFile="true"/>
     <include file="create-table-group.xml" relativeToChangelogFile="true"/>
-    <include file="create-table-bot_user.xml" relativeToChangelogFile="true"/>
+    <include file="create-table-student.xml" relativeToChangelogFile="true"/>
     <include file="create-table-notification.xml" relativeToChangelogFile="true"/>
     <include file="create-table-lesson.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

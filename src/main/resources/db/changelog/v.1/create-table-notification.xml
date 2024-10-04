@@ -28,7 +28,7 @@
         <addForeignKeyConstraint
                 baseTableName="notification"
                 baseColumnNames="user_id"
-                referencedTableName="bot_user"
+                referencedTableName="student"
                 referencedColumnNames="user_id"
                 constraintName="fk_notification_user"/>
     </changeSet>
