@@ -28,7 +28,7 @@ public class Notification {
     private Long id;
 
     @Column(name = "enabled")
-    private Boolean enabled;
+    private boolean enabled;
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
