@@ -17,8 +17,8 @@ public class NotificationSelectionKeyboardButton implements KeyboardButton {
 
     @Override
     public SendMessage onButtonClick(Update update) {
-        long userId = UpdateUtils.getUserId(update);
-        long chatId = UpdateUtils.getChatId(update);
+        long userId = UpdateUtils.getUserIdFromCallbackQuery(update);
+        long chatId = UpdateUtils.getChatIdFromCallbackQuery(update);
         boolean notificationStatus = UpdateUtils.getNotificationStatus(update);
 
         return processNotificationSelectionOnButtonClick(userId, chatId, notificationStatus);

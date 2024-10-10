@@ -23,8 +23,8 @@ public class CourseSelectionKeyboardButton implements KeyboardButton {
 
     @Override
     public SendMessage onButtonClick(Update update) {
-        long chatId = UpdateUtils.getChatId(update);
-        long userId = UpdateUtils.getUserId(update);
+        long chatId = UpdateUtils.getChatIdFromCallbackQuery(update);
+        long userId = UpdateUtils.getUserIdFromCallbackQuery(update);
         long course = UpdateUtils.getCourse(update);
 
         return processCourseSelectionOnButtonClick(userId, chatId, course);

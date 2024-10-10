@@ -20,8 +20,8 @@ public class GroupSelectionKeyboardButton implements KeyboardButton {
 
     @Override
     public SendMessage onButtonClick(Update update) {
-        long userId = UpdateUtils.getUserId(update);
-        long chatId = UpdateUtils.getChatId(update);
+        long userId = UpdateUtils.getUserIdFromCallbackQuery(update);
+        long chatId = UpdateUtils.getChatIdFromCallbackQuery(update);
         long groupId = UpdateUtils.getGroupId(update);
 
         return processGroupSelectionOnButtonClick(userId, chatId, groupId);

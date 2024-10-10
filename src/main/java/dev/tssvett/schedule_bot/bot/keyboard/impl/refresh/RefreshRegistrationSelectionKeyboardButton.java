@@ -23,8 +23,8 @@ public class RefreshRegistrationSelectionKeyboardButton implements KeyboardButto
 
     @Override
     public SendMessage onButtonClick(Update update) {
-        long chatId = UpdateUtils.getChatId(update);
-        long userId = UpdateUtils.getUserId(update);
+        long chatId = UpdateUtils.getChatIdFromCallbackQuery(update);
+        long userId = UpdateUtils.getUserIdFromCallbackQuery(update);
         boolean isCorrectAnswer = UpdateUtils.getRefreshRegistrationStatus(update);
 
         return processRefreshRegistrationSelectionOnButtonClick(userId, chatId, isCorrectAnswer);

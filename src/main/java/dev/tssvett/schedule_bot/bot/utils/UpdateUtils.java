@@ -7,16 +7,28 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class UpdateUtils {
 
-    public static long getChatId(Update update) {
+    public static long getChatIdFromCallbackQuery(Update update) {
         return update.getCallbackQuery().getMessage().getChatId();
     }
 
-    public static long getUserId(Update update) {
+    public static long getChatIdFromMessage(Update update) {
+        return update.getMessage().getChatId();
+    }
+
+    public static long getUserIdFromCallbackQuery(Update update) {
         return update.getCallbackQuery().getFrom().getId();
+    }
+
+    public static long getUserIdFromMessage(Update update) {
+        return update.getMessage().getFrom().getId();
     }
 
     public static String getData(Update update) {
         return update.getCallbackQuery().getData();
+    }
+
+    public static String getFirstWordFromMessage(Update update) {
+        return update.getMessage().getText().split(" ")[0];
     }
 
     public static long getFacultyId(Update update) {

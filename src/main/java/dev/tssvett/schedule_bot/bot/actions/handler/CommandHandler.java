@@ -1,25 +1,23 @@
 package dev.tssvett.schedule_bot.bot.actions.handler;
 
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
-import dev.tssvett.schedule_bot.bot.enums.Command;
-import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
+import dev.tssvett.schedule_bot.bot.utils.CommandUtils;
+import dev.tssvett.schedule_bot.bot.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.Arrays;
-
-import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.HELP;
-import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.INFO;
-import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.NOTIFICATION;
-import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.PICTURE;
-import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.REGISTER;
-import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.START;
-import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.TODAY;
-import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.TOMORROW;
-import static dev.tssvett.schedule_bot.bot.actions.command.constants.CommandConstants.WEEK;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.HELP_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.INFO_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.NOTIFICATION_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.PICTURE_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.REGISTER_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.START_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.TODAY_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.TOMORROW_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.WEEK_COMMAND;
 
 
 @Slf4j
@@ -38,47 +36,23 @@ public class CommandHandler {
     private final BotCommand notificationBotCommand;
 
     public SendMessage handleCommands(Update update) {
-        String command = update.getMessage().getText().split(" ")[0];
-        Long userId = update.getMessage().getFrom().getId();
-        Long chatId = update.getMessage().getChatId();
-        if (!messageIsAvailableCommand(command)) {
-            return new SendMessage(String.valueOf(chatId), MessageConstants.UNAVAILABLE_COMMAND);
-        } else {
-            log.info("Received [{}] from user [{}]", command, userId);
-            return switch (getBaseCommand(command)) {
-                case START -> startBotCommand.execute(userId, chatId);
-                case HELP -> helpBotCommand.execute(userId, chatId);
-                case TODAY -> todayScheduleBotCommand.execute(userId, chatId);
-                case TOMORROW -> tomorrowScheduleBotCommand.execute(userId, chatId);
-                case WEEK -> weekScheduleBotCommand.execute(userId, chatId);
-                case PICTURE -> pictureBotCommand.execute(userId, chatId);
-                case REGISTER -> registerBotCommand.execute(userId, chatId);
-                case INFO -> infoBotCommand.execute(userId, chatId);
-                case NOTIFICATION -> notificationBotCommand.execute(userId, chatId);
-                default -> unknownBotCommand.execute(userId, chatId);
-            };
-        }
-    }
+        Long userId = UpdateUtils.getUserIdFromMessage(update);
+        Long chatId = UpdateUtils.getChatIdFromMessage(update);
 
-    private boolean messageIsAvailableCommand(String command) {
-        return command.startsWith("/") && isCommandInEnum(command);
-    }
+        String command = CommandUtils.parseCommandFromMessage(UpdateUtils.getFirstWordFromMessage(update));
+        log.info("Received [{}] from user [{}]", command, userId);
 
-    private boolean isCommandInEnum(String command) {
-        return Arrays.stream(Command.values())
-                .anyMatch(enumCommand -> {
-                    String commandName = enumCommand.getCommandName();
-                    return command.equals(commandName) ||
-                            command.equalsIgnoreCase(commandName + "@JLainBot");
-                });
-    }
-
-    private String getBaseCommand(String command) {
-        int atIndex = command.indexOf("@");
-        if (atIndex != -1) {
-            return command.substring(0, atIndex);
-        } else {
-            return command;
-        }
+        return switch (command) {
+            case START_COMMAND -> startBotCommand.execute(userId, chatId);
+            case HELP_COMMAND -> helpBotCommand.execute(userId, chatId);
+            case TODAY_COMMAND -> todayScheduleBotCommand.execute(userId, chatId);
+            case TOMORROW_COMMAND -> tomorrowScheduleBotCommand.execute(userId, chatId);
+            case WEEK_COMMAND -> weekScheduleBotCommand.execute(userId, chatId);
+            case PICTURE_COMMAND -> pictureBotCommand.execute(userId, chatId);
+            case REGISTER_COMMAND -> registerBotCommand.execute(userId, chatId);
+            case INFO_COMMAND -> infoBotCommand.execute(userId, chatId);
+            case NOTIFICATION_COMMAND -> notificationBotCommand.execute(userId, chatId);
+            default -> unknownBotCommand.execute(userId, chatId);
+        };
     }
 }
