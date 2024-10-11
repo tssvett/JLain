@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.bot.utils;
 
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@UtilityClass
 public class CommandUtils {
 
     public static String parseCommandFromMessage(String command) {

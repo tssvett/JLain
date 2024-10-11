@@ -5,7 +5,7 @@ import dev.tssvett.schedule_bot.backend.service.NotificationService;
 import dev.tssvett.schedule_bot.backend.service.ScheduleService;
 import dev.tssvett.schedule_bot.bot.TelegramBot;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
-import dev.tssvett.schedule_bot.bot.utils.CurrentDateCalculator;
+import dev.tssvett.schedule_bot.bot.utils.DateUtils;
 import dev.tssvett.schedule_bot.persistence.entity.Notification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,6 @@ public class SchedulingNotification {
     private final NotificationService notificationService;
     private final ScheduleService scheduleService;
     private final ScheduleStringFormatter scheduleStringFormatter;
-    private final CurrentDateCalculator currentDateCalculator;
 
     @Scheduled(fixedDelayString = "${scheduling.notification.delay}")
     public void sendScheduleNotificationsToUsers() {
@@ -55,8 +54,10 @@ public class SchedulingNotification {
     @Transactional
     private SendMessage createMessageToSend(Long userId) {
         List<LessonInfoDto> lessonsInWeek = scheduleService.getWeekSchedule(userId);
-        String formattedLessons = "Уведомление! Расписание на сегодня\n\n" + scheduleStringFormatter.formatDay(lessonsInWeek, currentDateCalculator.calculateTomorrowDayName());
-
+        String formattedLessons = String.format(
+                "Уведомление! Расписание на сегодня%n%n%s",
+                scheduleStringFormatter.formatDay(lessonsInWeek, DateUtils.calculateTomorrowDayName())
+        );
         return SendMessage.builder()
                 .chatId(userId)
                 .text(formattedLessons)

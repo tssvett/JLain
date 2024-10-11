@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.bot.keyboard.impl.group;
 
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
+import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.bot.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
@@ -43,14 +43,14 @@ public class GroupSelectionKeyboardButton implements KeyboardButton {
     private SendMessage sendRegistrationCompletedMessage(long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageConstants.SUCCESSFULLY_REGISTERED_MESSAGE)
+                .text(MessageTextConstantsUtils.SUCCESSFULLY_REGISTERED_MESSAGE)
                 .build();
     }
 
     private SendMessage sendAlreadySelectedGroupMessage(long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageConstants.GROUP_CLICK_WITH_ERROR_STATE)
+                .text(MessageTextConstantsUtils.GROUP_CLICK_WITH_ERROR_STATE)
                 .build();
     }
 }

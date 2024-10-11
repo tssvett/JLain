@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.bot.keyboard.impl.refresh;
 
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
-import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
+import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.faculty.FacultyKeyboard;
 import dev.tssvett.schedule_bot.bot.utils.UpdateUtils;
@@ -42,7 +42,7 @@ public class RefreshRegistrationSelectionKeyboardButton implements KeyboardButto
     private SendMessage sendFacultySelectionMessage(long userId, long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE)
+                .text(MessageTextConstantsUtils.REGISTER_FACULTY_CHOOSING_MESSAGE)
                 .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId))
                 .build();
     }
@@ -50,7 +50,7 @@ public class RefreshRegistrationSelectionKeyboardButton implements KeyboardButto
     private SendMessage sendUserRejectRefreshRegistrationMessage(long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageConstants.NO_RE_REGISTRATION_ANSWER)
+                .text(MessageTextConstantsUtils.NO_RE_REGISTRATION_ANSWER)
                 .build();
     }
 }

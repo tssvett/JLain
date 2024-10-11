@@ -1,10 +1,10 @@
 package dev.tssvett.schedule_bot.bot.utils;
 
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@UtilityClass
 public class UpdateUtils {
 
     public static long getChatIdFromCallbackQuery(Update update) {
