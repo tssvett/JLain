@@ -47,7 +47,7 @@ public class SchedulingNotification {
                     Нужно изменить SendMessage на BotApiMethod<?>
                     Тогда отсюда можно будет убрать telegramBot, и возвращать просто List<BotApiMethod<?>>
                  */
-                telegramBot.sendMessage(createMessageToSend(notification.getStudent().getUserId()));
+                telegramBot.executeBotMethod(createMessageToSend(notification.getStudent().getUserId()));
             }
         });
     }

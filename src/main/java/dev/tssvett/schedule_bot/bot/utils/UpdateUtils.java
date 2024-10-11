@@ -54,4 +54,9 @@ public class UpdateUtils {
         //но сейчас оно ровно 1
         return answer.equals("Да");
     }
+
+    public static boolean messageIsText(Update update) {
+        return update.hasMessage() && update.getMessage().hasText();
+    }
+
 }

@@ -5,7 +5,7 @@ import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Slf4j
@@ -18,7 +18,7 @@ public class KeyboardHandler {
     private final KeyboardButton refreshRegistrationSelectionKeyboardButton;
     private final KeyboardButton notificationSelectionKeyboardButton;
 
-    public SendMessage handleKeyboardAction(Update update) {
+    public BotApiMethod<?> handleKeyboardAction(Update update) {
         return switch (CallbackDetails.fromString(update.getCallbackQuery().getData()).getAction()) {
             case FACULTY_CHOOSE -> facultySelectionKeyboardButton.onButtonClick(update);
             case COURSE_CHOOSE -> courseSelectionKeyboardButton.onButtonClick(update);

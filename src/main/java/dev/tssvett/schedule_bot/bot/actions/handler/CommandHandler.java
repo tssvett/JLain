@@ -6,6 +6,7 @@ import dev.tssvett.schedule_bot.bot.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -35,7 +36,7 @@ public class CommandHandler {
     private final BotCommand infoBotCommand;
     private final BotCommand notificationBotCommand;
 
-    public SendMessage handleCommands(Update update) {
+    public BotApiMethod<?> handleCommands(Update update) {
         Long userId = UpdateUtils.getUserIdFromMessage(update);
         Long chatId = UpdateUtils.getChatIdFromMessage(update);
 

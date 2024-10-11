@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -30,12 +29,12 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        sendMessage(callbackProvider.handleMessage(update));
+        executeBotMethod(callbackProvider.handleMessage(update));
     }
 
-    public void sendMessage(SendMessage sendMessage) {
+    public void executeBotMethod(BotApiMethod<?> botApiMethod) {
         try {
-            execute(sendMessage);
+            this.execute(botApiMethod);
         } catch (TelegramApiException e) {
             log.error(e.getMessage());
         }
