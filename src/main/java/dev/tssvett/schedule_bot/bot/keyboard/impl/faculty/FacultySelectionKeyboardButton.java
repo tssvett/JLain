@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.bot.keyboard.impl.faculty;
 
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
+import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.course.CourseKeyboard;
 import dev.tssvett.schedule_bot.bot.utils.UpdateUtils;
@@ -23,8 +23,8 @@ public class FacultySelectionKeyboardButton implements KeyboardButton {
 
     @Override
     public SendMessage onButtonClick(Update update) {
-        long chatId = UpdateUtils.getChatId(update);
-        long userId = UpdateUtils.getUserId(update);
+        long chatId = UpdateUtils.getChatIdFromCallbackQuery(update);
+        long userId = UpdateUtils.getUserIdFromCallbackQuery(update);
         long facultyId = UpdateUtils.getFacultyId(update);
 
         return processFacultySelectionOnButtonClick(userId, chatId, facultyId);
@@ -46,7 +46,7 @@ public class FacultySelectionKeyboardButton implements KeyboardButton {
     private SendMessage sendCourseSelectionMessage(long userId, long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageConstants.REGISTER_CHOOSE_COURSE_MESSAGE)
+                .text(MessageTextConstantsUtils.REGISTER_CHOOSE_COURSE_MESSAGE)
                 .replyMarkup(courseKeyboard.createInlineKeyboard(COURSE_CHOOSE, userId))
                 .build();
     }
@@ -54,7 +54,7 @@ public class FacultySelectionKeyboardButton implements KeyboardButton {
     private SendMessage sendAlreadySelectedFacultyMessage(long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageConstants.FACULTY_CLICK_WITH_ERROR_STATE)
+                .text(MessageTextConstantsUtils.FACULTY_CLICK_WITH_ERROR_STATE)
                 .build();
     }
 }

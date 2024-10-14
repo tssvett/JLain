@@ -3,7 +3,7 @@ package dev.tssvett.schedule_bot.bot.actions.command.impl;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
-import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
+import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.faculty.FacultyKeyboard;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.refresh.RefreshRegistrationKeyboard;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class RegisterBotCommand implements BotCommand {
             return SendMessage.builder()
                     .chatId(chatId)
                     .replyMarkup(refreshRegistrationKeyboard.createInlineKeyboard(REFRESH_REGISTRATION, userId))
-                    .text(MessageConstants.ALREADY_REGISTERED_MESSAGE)
+                    .text(MessageTextConstantsUtils.ALREADY_REGISTERED_MESSAGE)
                     .build();
         } else {
             log.info("User {} is not registered with SUCCESSFUL_REGISTRATION. Starting registration process.", userId);
@@ -45,7 +45,7 @@ public class RegisterBotCommand implements BotCommand {
             return SendMessage.builder()
                     .chatId(chatId)
                     .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId))
-                    .text(MessageConstants.REGISTER_FACULTY_CHOOSING_MESSAGE)
+                    .text(MessageTextConstantsUtils.REGISTER_FACULTY_CHOOSING_MESSAGE)
                     .build();
         }
     }

@@ -65,7 +65,7 @@ public class ScheduleStringFormatter {
     }
 
     private void appendDaySchedule(StringBuilder sb, String day, List<LessonInfoDto> dayLessons) {
-        String dateNumber = dayLessons.getFirst().dateNumber(); // Получаем дату для вывода
+        String dateNumber = dayLessons.get(0).dateNumber(); // Получаем дату для вывода
         sb.append("🔹 ").append(capitalizeFirstLetter(day)).append(" (").append(dateNumber).append("):\n");
 
         for (LessonInfoDto lesson : dayLessons) {

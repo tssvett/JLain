@@ -8,10 +8,11 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>schedule-bot</name>
     <description>Schedule bot for Samara University</description>
+    <packaging>jar</packaging>
 
     <properties>
         <!-- Project Properties -->
-        <java.version>22</java.version>
+        <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
@@ -105,6 +106,13 @@
                         </exclude>
                     </excludes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Maven Compiler Plugin -->
@@ -121,6 +129,23 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+
+            <!-- Maven Jar Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <mainClass>dev.tssvett.schedule_bot.ScheduleBotApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
 
         </plugins>
 

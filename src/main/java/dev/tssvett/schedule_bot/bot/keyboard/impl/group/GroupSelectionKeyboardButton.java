@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.bot.keyboard.impl.group;
 
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
+import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.bot.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ public class GroupSelectionKeyboardButton implements KeyboardButton {
 
     @Override
     public SendMessage onButtonClick(Update update) {
-        long userId = UpdateUtils.getUserId(update);
-        long chatId = UpdateUtils.getChatId(update);
+        long userId = UpdateUtils.getUserIdFromCallbackQuery(update);
+        long chatId = UpdateUtils.getChatIdFromCallbackQuery(update);
         long groupId = UpdateUtils.getGroupId(update);
 
         return processGroupSelectionOnButtonClick(userId, chatId, groupId);
@@ -43,14 +43,14 @@ public class GroupSelectionKeyboardButton implements KeyboardButton {
     private SendMessage sendRegistrationCompletedMessage(long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageConstants.SUCCESSFULLY_REGISTERED_MESSAGE)
+                .text(MessageTextConstantsUtils.SUCCESSFULLY_REGISTERED_MESSAGE)
                 .build();
     }
 
     private SendMessage sendAlreadySelectedGroupMessage(long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageConstants.GROUP_CLICK_WITH_ERROR_STATE)
+                .text(MessageTextConstantsUtils.GROUP_CLICK_WITH_ERROR_STATE)
                 .build();
     }
 }
