@@ -21,6 +21,7 @@ import java.util.List;
 public class TomorrowScheduleBotCommand implements BotCommand {
     private final ScheduleService scheduleService;
     private final ScheduleStringFormatter scheduleStringFormatter;
+    private final DateUtils dateUtils;
 
     @Override
     @RegistrationRequired
@@ -28,7 +29,7 @@ public class TomorrowScheduleBotCommand implements BotCommand {
     public SendMessage execute(Long userId, Long chatId) {
         List<LessonInfoDto> lessonsInWeek = scheduleService.getWeekSchedule(userId);
         String stringLessons = scheduleStringFormatter.formatDay(lessonsInWeek,
-                DateUtils.calculateTomorrowDayName());
+                dateUtils.calculateTomorrowDayName());
 
         return SendMessage.builder()
                 .chatId(chatId)

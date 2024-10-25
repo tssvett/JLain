@@ -1,13 +1,20 @@
 package dev.tssvett.schedule_bot.bot.enums.constants;
 
-public class CommandNames {
-    public static final String START_COMMAND = "/start";
-    public static final String HELP_COMMAND = "/help";
-    public static final String TODAY_COMMAND = "/today";
-    public static final String TOMORROW_COMMAND = "/tomorrow";
-    public static final String WEEK_COMMAND = "/week";
-    public static final String REGISTER_COMMAND = "/register";
-    public static final String PICTURE_COMMAND = "/picture";
-    public static final String INFO_COMMAND = "/info";
-    public static final String NOTIFICATION_COMMAND = "/notification";
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
+public enum CommandNames {
+    START_COMMAND("/start"),
+    HELP_COMMAND("/help"),
+    TODAY_COMMAND("/today"),
+    TOMORROW_COMMAND("/tomorrow"),
+    WEEK_COMMAND("/week"),
+    REGISTER_COMMAND("/register"),
+    PICTURE_COMMAND("/picture"),
+    INFO_COMMAND("/info"),
+    NOTIFICATION_COMMAND("/notification");
+
+    private final String commandName;
 }

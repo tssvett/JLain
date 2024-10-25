@@ -31,19 +31,14 @@ public class CommandHandler {
     public BotApiMethod<?> handleCommands(Update update) {
         Long userId = UpdateUtils.getUserIdFromMessage(update);
         Long chatId = UpdateUtils.getChatIdFromMessage(update);
+        Optional<CommandNames> commandName = CommandUtils.convertStringCommandToEnumValue(UpdateUtils.getFirstWordFromMessage(update));
 
-        Optional<CommandNames> optionalCommandName = CommandUtils.convertStringCommandToEnumValue(
-                UpdateUtils.getFirstWordFromMessage(update)
-        );
-
-        if (optionalCommandName.isEmpty()) {
+        if (commandName.isEmpty()) {
             return unknownBotCommand.execute(userId, chatId);
         }
+        log.info("Received [{}] from user [{}]", commandName.get().getCommandName(), userId);
 
-        CommandNames commandName = optionalCommandName.get();
-        log.info("Received [{}] from user [{}]", commandName.getCommandName(), userId);
-
-        return switch (commandName) {
+        return switch (commandName.get()) {
             case START_COMMAND -> startBotCommand.execute(userId, chatId);
             case HELP_COMMAND -> helpBotCommand.execute(userId, chatId);
             case TODAY_COMMAND -> todayScheduleBotCommand.execute(userId, chatId);

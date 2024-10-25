@@ -1,26 +1,37 @@
 package dev.tssvett.schedule_bot.bot.enums;
 
-import dev.tssvett.schedule_bot.bot.enums.constants.CommandNames;
 import lombok.Getter;
+
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.HELP_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.INFO_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.NOTIFICATION_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.PICTURE_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.REGISTER_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.START_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.TODAY_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.TOMORROW_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.WEEK_COMMAND;
 
 
 @Getter
 public enum Command {
-    TODAY(CommandNames.TODAY_COMMAND, "Расписание на сегодня"),
-    TOMORROW(CommandNames.TOMORROW_COMMAND, "Расписание на завтра"),
-    WEEK(CommandNames.WEEK_COMMAND, "Расписание на неделю"),
-    REGISTER(CommandNames.REGISTER_COMMAND, "Регистрация нового пользователя"),
-    START(CommandNames.START_COMMAND, "Начало работы"),
-    HELP(CommandNames.HELP_COMMAND, "Помощь"),
-    PICTURE(CommandNames.PICTURE_COMMAND, "Рандомная картинка"),
-    INFO(CommandNames.INFO_COMMAND, "Информация о пользователе"),
-    NOTIFICATION(CommandNames.NOTIFICATION_COMMAND, "Настройка уведомлений");
+    TODAY(TODAY_COMMAND.getCommandName(), "Расписание на сегодня"),
+    TOMORROW(TOMORROW_COMMAND.getCommandName(), "Расписание на завтра"),
+    WEEK(WEEK_COMMAND.getCommandName(), "Расписание на неделю"),
+    REGISTER(REGISTER_COMMAND.getCommandName(), "Регистрация нового пользователя"),
+    START(START_COMMAND.getCommandName(), "Начало работы"),
+    HELP(HELP_COMMAND.getCommandName(), "Помощь"),
+    PICTURE(PICTURE_COMMAND.getCommandName(), "Рандомная картинка"),
+    INFO(INFO_COMMAND.getCommandName(), "Информация о пользователе"),
+    NOTIFICATION(NOTIFICATION_COMMAND.getCommandName(), "Настройка уведомлений");
 
     private final String commandName;
     private final String description;
 
     Command(String commandName, String description) {
+
         this.commandName = commandName;
         this.description = description;
     }
+
 }

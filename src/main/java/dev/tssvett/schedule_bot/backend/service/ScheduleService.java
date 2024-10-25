@@ -20,12 +20,13 @@ import java.util.List;
 public class ScheduleService {
     private final StudentRepository studentRepository;
     private final SchoolWeekParser schoolWeekParser;
+    private final DateUtils dateUtils;
 
 
     public List<LessonInfoDto> getWeekSchedule(Long userId) {
         Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + userId));
-        List<Lesson> lessonsInWeek = schoolWeekParser.parse(student.getGroup().getGroupId(), DateUtils.calculateWeekNumber());
+        List<Lesson> lessonsInWeek = schoolWeekParser.parse(student.getGroup().getGroupId(), dateUtils.calculateCurrentUniversityEducationalWeek());
 
         return lessonsInWeek
                 .stream()

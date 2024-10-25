@@ -28,6 +28,7 @@ public class SchedulingNotification {
     private final NotificationService notificationService;
     private final ScheduleService scheduleService;
     private final ScheduleStringFormatter scheduleStringFormatter;
+    private final DateUtils dateUtils;
 
     @Scheduled(fixedDelayString = "${scheduling.notification.delay}")
     public void sendScheduleNotificationsToUsers() {
@@ -54,9 +55,8 @@ public class SchedulingNotification {
     @Transactional
     private SendMessage createMessageToSend(Long userId) {
         List<LessonInfoDto> lessonsInWeek = scheduleService.getWeekSchedule(userId);
-        String formattedLessons = String.format(
-                "Уведомление! Расписание на сегодня%n%n%s",
-                scheduleStringFormatter.formatDay(lessonsInWeek, DateUtils.calculateTomorrowDayName())
+        String formattedLessons = "Уведомление! Расписание на сегодня\n\n %s".formatted(
+                scheduleStringFormatter.formatDay(lessonsInWeek, dateUtils.calculateTomorrowDayName())
         );
         return SendMessage.builder()
                 .chatId(userId)
