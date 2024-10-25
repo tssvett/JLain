@@ -4,7 +4,7 @@ import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
-import dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants;
+import dev.tssvett.schedule_bot.bot.utils.message.MessageCreateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class InfoBotCommand implements BotCommand {
 
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageConstants.generateInfoMessage(studentInfoDto))
+                .text(MessageCreateUtils.createInfoCommandMessageText(studentInfoDto))
                 .build();
     }
 }

@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import static dev.tssvett.schedule_bot.bot.formatter.message.MessageConstants.NOT_ADMIN_MESSAGE;
+import static dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils.NOT_ADMIN_MESSAGE;
 
 @Slf4j
 @Component

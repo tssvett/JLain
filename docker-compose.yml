@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: schedule-bot
+    depends_on:
+      - postgres
+    environment:
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      BOT_NAME: ${BOT_NAME}
+      BOT_TOKEN: ${BOT_TOKEN}
+      ADMIN_ID: ${ADMIN_ID}
+      SCHEDULING_DELAY: ${SCHEDULING_DELAY}
+    ports:
+      - "8080:8080"

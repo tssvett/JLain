@@ -32,11 +32,14 @@ admin:
 
 scheduling:
   notification:
-    delay: ${SCHEDULING_DELAY:60000}
+    delay: ${SCHEDULING_DELAY:86400000}
     enabled: true
   group:
     delay: ${SCHEDULING_DELAY:86400000}
     enabled: false
   faculty:
     delay: ${SCHEDULING_DELAY:86400000}
-    enabled: true
+    enabled: false
+
+samara-university:
+  semester-start-date: 2024-09-02

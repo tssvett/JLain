@@ -6,7 +6,7 @@ import dev.tssvett.schedule_bot.backend.service.ScheduleService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
-import dev.tssvett.schedule_bot.bot.utils.CurrentDateCalculator;
+import dev.tssvett.schedule_bot.bot.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ import java.util.List;
 public class TomorrowScheduleBotCommand implements BotCommand {
     private final ScheduleService scheduleService;
     private final ScheduleStringFormatter scheduleStringFormatter;
-    private final CurrentDateCalculator currentDateCalculator;
+    private final DateUtils dateUtils;
 
     @Override
     @RegistrationRequired
@@ -29,7 +29,7 @@ public class TomorrowScheduleBotCommand implements BotCommand {
     public SendMessage execute(Long userId, Long chatId) {
         List<LessonInfoDto> lessonsInWeek = scheduleService.getWeekSchedule(userId);
         String stringLessons = scheduleStringFormatter.formatDay(lessonsInWeek,
-                currentDateCalculator.calculateTomorrowDayName());
+                dateUtils.calculateTomorrowDayName());
 
         return SendMessage.builder()
                 .chatId(chatId)

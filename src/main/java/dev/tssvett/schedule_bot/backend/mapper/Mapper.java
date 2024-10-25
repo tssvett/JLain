@@ -81,7 +81,7 @@ public class Mapper {
     public static NotificationInfoDto toNotificationInfoDto(@NotNull Notification notification) {
         return new NotificationInfoDto(
                 notification.getId(),
-                notification.getEnabled()
+                notification.isEnabled()
         );
     }
 
