@@ -55,12 +55,22 @@ public class SchedulingNotification {
     @Transactional
     private SendMessage createMessageToSend(Long userId) {
         List<LessonInfoDto> lessonsInWeek = scheduleService.getWeekSchedule(userId);
-        String formattedLessons = "Уведомление! Расписание на сегодня\n\n %s".formatted(
-                scheduleStringFormatter.formatDay(lessonsInWeek, dateUtils.calculateTomorrowDayName())
-        );
+        String formattedLessons = formatLessonsForTomorrow(lessonsInWeek);
+
         return SendMessage.builder()
                 .chatId(userId)
                 .text(formattedLessons)
                 .build();
+    }
+
+    private String formatLessonsForTomorrow(List<LessonInfoDto> lessonsInWeek) {
+        String tomorrowDayName = dateUtils.calculateTomorrowDayName();
+        String formattedDay = scheduleStringFormatter.formatDay(lessonsInWeek, tomorrowDayName);
+
+        return String.format("""
+            Уведомление! Расписание на завтра
+            
+            %s
+            """, formattedDay);
     }
 }

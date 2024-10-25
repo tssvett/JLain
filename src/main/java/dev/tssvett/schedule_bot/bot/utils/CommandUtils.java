@@ -18,10 +18,11 @@ public class CommandUtils {
     }
 
     public static Optional<CommandNames> convertStringCommandToEnumValue(String command) {
-        try {
-            return Optional.of(CommandNames.valueOf(command));
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
+        for (CommandNames commandName : CommandNames.values()) {
+            if (commandName.getCommandName().equals(command)) {
+                return Optional.of(commandName);
+            }
         }
+        return Optional.empty();
     }
 }
