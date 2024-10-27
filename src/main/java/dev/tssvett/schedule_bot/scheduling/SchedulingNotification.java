@@ -13,10 +13,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -40,37 +40,36 @@ public class SchedulingNotification {
 
         notifications.forEach(notification -> {
             if (notificationService.isNotificationEnabledAndUserRegistered(notification)) {
-                log.info("Sending notification to user: {}", notification.getStudent().getUserId());
+                Long userId = notification.getStudent().getUserId();
+                log.info("Sending notification to user: {}", userId);
                 /*
                  TODO: добавить боту возможность множественной рассылки
                     Сейчас бот ловит только SendMessage, а List<SendMessage> не видит
                     Нужно изменить SendMessage на BotApiMethod<?>
                     Тогда отсюда можно будет убрать telegramBot, и возвращать просто List<BotApiMethod<?>>
                  */
-                telegramBot.executeBotMethod(createMessageToSend(notification.getStudent().getUserId()));
+                Map<String, List<LessonInfoDto>> weekSchedule = scheduleService.getWeekScheduleMapByDate(userId);
+                String formattedLessons = formatLessonsForTomorrow(weekSchedule);
+                telegramBot.executeBotMethod(createMessageToSend(userId, formattedLessons));
             }
         });
     }
 
-    @Transactional
-    private SendMessage createMessageToSend(Long userId) {
-        List<LessonInfoDto> lessonsInWeek = scheduleService.getWeekSchedule(userId);
-        String formattedLessons = formatLessonsForTomorrow(lessonsInWeek);
-
+    private SendMessage createMessageToSend(Long userId, String formattedLessons) {
         return SendMessage.builder()
                 .chatId(userId)
                 .text(formattedLessons)
                 .build();
     }
 
-    private String formatLessonsForTomorrow(List<LessonInfoDto> lessonsInWeek) {
+    private String formatLessonsForTomorrow(Map<String, List<LessonInfoDto>> lessonsInWeek) {
         String tomorrowDayName = dateUtils.calculateTomorrowDayName();
         String formattedDay = scheduleStringFormatter.formatDay(lessonsInWeek, tomorrowDayName);
 
         return String.format("""
-            Уведомление! Расписание на завтра
-            
-            %s
-            """, formattedDay);
+                Уведомление! Расписание на завтра
+                            
+                %s
+                """, formattedDay);
     }
 }

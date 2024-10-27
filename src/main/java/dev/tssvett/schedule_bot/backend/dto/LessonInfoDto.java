@@ -13,4 +13,7 @@ public record LessonInfoDto(
         String dateDay,
         String dateNumber
 ) {
+    public boolean isExist() {
+        return name != null && !name.isEmpty();
+    }
 }

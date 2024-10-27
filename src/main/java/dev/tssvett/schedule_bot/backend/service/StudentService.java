@@ -33,6 +33,7 @@ public class StudentService {
     private final GroupRepository groupRepository;
     private final NotificationRepository notificationRepository;
 
+    @Transactional
     public StudentInfoDto getStudentInfoById(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
