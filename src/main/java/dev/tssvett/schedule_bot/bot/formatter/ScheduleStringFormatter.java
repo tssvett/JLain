@@ -18,53 +18,58 @@ public class ScheduleStringFormatter {
             "пятница", "суббота", "воскресенье");
 
     public String formatWeek(Map<String, List<LessonInfoDto>> weekLessons) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder weekScheduleStringBuilder = new StringBuilder();
 
         DAYS_OF_WEEK.stream()
                 .filter(day -> dayHasLessons(weekLessons.get(day)))
-                .forEach(day -> formatExistingEducationalDay(sb, day, weekLessons.get(day)));
+                .forEach(day -> weekScheduleStringBuilder.append(existingEducationalDayToString(day, weekLessons.get(day))));
 
-        return sb.toString();
+        return weekScheduleStringBuilder.toString();
     }
 
     public String formatDay(Map<String, List<LessonInfoDto>> lessonsByDay, String weekDayName) {
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder dayScheduleStringBuilder = new StringBuilder();
         List<LessonInfoDto> dayLessons = lessonsByDay.get(weekDayName);
 
         if (dayHasLessons(dayLessons)) {
-            formatExistingEducationalDay(sb, weekDayName, dayLessons);
+            dayScheduleStringBuilder.append(existingEducationalDayToString(weekDayName, dayLessons));
         } else {
-            formatEmptyEducationalDay(sb, weekDayName);
+            dayScheduleStringBuilder.append(emptyEducationalDayToString(weekDayName));
         }
 
+        return dayScheduleStringBuilder.toString();
+    }
+
+    private String existingEducationalDayToString(String weekDayName, @NotNull List<LessonInfoDto> dayLessons) {
+        StringBuilder sb = new StringBuilder();
+        String lessonDate = dayLessons.get(0).dateNumber();
+
+        sb.append(dayHeaderToString(weekDayName, lessonDate));
+        dayLessons.forEach(lesson -> sb.append(lessonToString(lesson)));
+        sb.append("\n");
         return sb.toString();
     }
 
-    private void formatExistingEducationalDay(StringBuilder sb, String weekDayName, @NotNull List<LessonInfoDto> dayLessons) {
-        String lessonDate = dayLessons.get(0).dateNumber();
-
-        sb.append(createDayHeader(weekDayName, lessonDate));
-        dayLessons.forEach(lesson -> sb.append(formatLesson(lesson)));
-        sb.append("\n");
-    }
-
-    private void formatEmptyEducationalDay(StringBuilder sb, String weekDayName) {
+    private String emptyEducationalDayToString(String weekDayName) {
+        StringBuilder sb = new StringBuilder();
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         sb.append(String.format("""
                 %s %s (%s):
                 Зачилься, пар нет :)
                 """, MessageTextConstantsUtils.DAY_HEADER, capitalizeFirstLetter(weekDayName), currentDate));
         sb.append("\n");
+
+        return sb.toString();
     }
 
-    private String createDayHeader(String day, String lessonDate) {
+    private String dayHeaderToString(String day, String lessonDate) {
         return String.format("""
                 %s %s (%s):
                 """, MessageTextConstantsUtils.DAY_HEADER, capitalizeFirstLetter(day), lessonDate);
     }
 
-    private String formatLesson(LessonInfoDto lesson) {
+    private String lessonToString(LessonInfoDto lesson) {
         return String.format("""
                         %s %s
                         Тип: %s
