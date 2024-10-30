@@ -68,10 +68,10 @@ public class MessageTextConstantsUtils {
     public static final String NOT_ADMIN_MESSAGE = "Вы не администратор. Не трогай.....";
 
     //Emojis for schedule messages
-    public static final String ONLINE_EMOJI = "🟢"; // Зеленый круг для online
-    public static final String LAB_EMOJI = "🟣"; // Фиолетовый круг для лабораторной
-    public static final String LECTURE_EMOJI = "🟡"; // Желтый круг для лекций
-    public static final String MILITARY_EMOJI = "🟠"; // Оранжевый круг для военных занятий
-    public static final String DEFAULT_EMOJI = "🔴"; // Красный круг для очных занятий
+    public static final String LAB_EMOJI = "🟣";
+    public static final String LECTURE_EMOJI = "🟢";
+    public static final String OTHER_EMOJI = "🟠";
+    public static final String PRACTICE_EMOJI = "🔴";
+    public static final String EXAM_EMOJI = "⚔️";
     public static final String DAY_HEADER = "🔹";
 }

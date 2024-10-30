@@ -1,28 +1,31 @@
 package dev.tssvett.schedule_bot.bot.formatter;
 
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
+import dev.tssvett.schedule_bot.bot.enums.DaysOfWeek;
+import dev.tssvett.schedule_bot.bot.enums.LessonType;
+import dev.tssvett.schedule_bot.bot.enums.Subgroup;
 import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Component
 public class ScheduleStringFormatter {
-    private static final List<String> DAYS_OF_WEEK = List.of("понедельник", "вторник", "среда", "четверг",
-            "пятница", "суббота", "воскресенье");
 
     public String formatWeek(Map<String, List<LessonInfoDto>> weekLessons) {
         StringBuilder weekScheduleStringBuilder = new StringBuilder();
 
-        DAYS_OF_WEEK.stream()
-                .filter(day -> dayHasLessons(weekLessons.get(day)))
-                .forEach(day -> weekScheduleStringBuilder.append(existingEducationalDayToString(day, weekLessons.get(day))));
+        Arrays.stream(DaysOfWeek.values())
+                .filter(day -> dayHasLessons(weekLessons.get(day.getName())))
+                .forEach(day -> weekScheduleStringBuilder.append(existingEducationalDayToString(day.getName(),
+                        weekLessons.get(day.getName()))));
 
         return weekScheduleStringBuilder.toString();
     }
@@ -41,11 +44,12 @@ public class ScheduleStringFormatter {
         return dayScheduleStringBuilder.toString();
     }
 
-    private String existingEducationalDayToString(String weekDayName, @NotNull List<LessonInfoDto> dayLessons) {
+    private String existingEducationalDayToString(String weekDayName, List<LessonInfoDto> dayLessons) {
         StringBuilder sb = new StringBuilder();
         String lessonDate = dayLessons.get(0).dateNumber();
-
         sb.append(dayHeaderToString(weekDayName, lessonDate));
+        sb.append("\n");
+
         dayLessons.forEach(lesson -> sb.append(lessonToString(lesson)));
         sb.append("\n");
         return sb.toString();
@@ -65,37 +69,27 @@ public class ScheduleStringFormatter {
 
     private String dayHeaderToString(String day, String lessonDate) {
         return String.format("""
-                %s %s (%s):
+                %s %s (%s)
                 """, MessageTextConstantsUtils.DAY_HEADER, capitalizeFirstLetter(day), lessonDate);
     }
 
     private String lessonToString(LessonInfoDto lesson) {
         return String.format("""
-                        %s %s
-                        Тип: %s
-                        Место: %s
-                        Время: %s
+                        %s %s | %s | %s%s
                                     
-                        """, getEmojiForLesson(lesson), capitalizeFirstLetter(lesson.name()),
-                lesson.type(),
+                        """, getEmojiForLesson(lesson), lesson.time(), capitalizeFirstLetter(lesson.name()),
                 lesson.place(),
-                lesson.time());
+                lesson.subgroup().equals(Subgroup.EMPTY) ? "" : "\nПодгруппа: " + lesson.subgroup().getName());
     }
 
     private String getEmojiForLesson(LessonInfoDto lesson) {
-        String place = lesson.place().toLowerCase();
-        String type = lesson.type().toLowerCase();
-        String name = lesson.name().toLowerCase();
-
-        if ("online".equals(place)) {
-            return MessageTextConstantsUtils.ONLINE_EMOJI;
-        }
-
-        return switch (type) {
-            case "лабораторная" -> MessageTextConstantsUtils.LAB_EMOJI;
-            case "лекция" -> MessageTextConstantsUtils.LECTURE_EMOJI;
-            default -> "военная кафедра".equals(name) ? MessageTextConstantsUtils.MILITARY_EMOJI
-                    : MessageTextConstantsUtils.DEFAULT_EMOJI;
+        return switch (lesson.type()) {
+            case LABORATORY -> MessageTextConstantsUtils.LAB_EMOJI;
+            case LECTURE -> MessageTextConstantsUtils.LECTURE_EMOJI;
+            case PRACTICE -> MessageTextConstantsUtils.PRACTICE_EMOJI;
+            case ANOTHER -> MessageTextConstantsUtils.OTHER_EMOJI;
+            case EXAM -> MessageTextConstantsUtils.EXAM_EMOJI;
+            default -> "";
         };
     }
 
