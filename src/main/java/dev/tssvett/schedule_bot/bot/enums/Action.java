@@ -1,8 +1,10 @@
 package dev.tssvett.schedule_bot.bot.enums;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public enum Action {
     FACULTY_CHOOSE("faculty"),
     COURSE_CHOOSE("course"),
@@ -11,8 +13,4 @@ public enum Action {
     NOTIFICATION("notification");
 
     private final String actionName;
-
-    Action(String actionName) {
-        this.actionName = actionName;
-    }
 }

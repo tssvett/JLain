@@ -1,10 +1,10 @@
 package dev.tssvett.schedule_bot.bot.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public enum DaysOfWeek {
     MONDAY("понедельник"),
     TUESDAY("вторник"),
@@ -15,5 +15,4 @@ public enum DaysOfWeek {
     SUNDAY("воскресенье");
 
     private final String name;
-
 }

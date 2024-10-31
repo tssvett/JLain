@@ -32,7 +32,7 @@ public class CommandHandler {
         Long userId = UpdateUtils.getUserIdFromMessage(update);
         Long chatId = UpdateUtils.getChatIdFromMessage(update);
 
-        Optional<CommandNames> optionalCommandName = CommandUtils.convertStringCommandToEnumValue(
+        Optional<CommandNames> optionalCommandName =  CommandNames.fromCommandName(
                 UpdateUtils.getFirstWordFromMessage(update)
         );
 

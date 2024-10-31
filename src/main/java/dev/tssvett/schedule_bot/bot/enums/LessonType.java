@@ -3,6 +3,8 @@ package dev.tssvett.schedule_bot.bot.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
@@ -16,12 +18,19 @@ public enum LessonType {
 
     private final String name;
 
-    public static LessonType fromName(String name) {
+    private static final Map<String, LessonType> NAME_TO_TYPE_MAP = new HashMap<>();
+
+    static {
         for (LessonType type : values()) {
-            if (type.getName().equals(name)) {
-                return type;
-            }
+            NAME_TO_TYPE_MAP.put(type.getName(), type);
         }
-        throw new IllegalArgumentException(name + " is not a valid LessonType");
+    }
+
+    public static LessonType fromName(String name) {
+        LessonType type = NAME_TO_TYPE_MAP.get(name);
+        if (type == null) {
+            throw new IllegalArgumentException(name + " is not a valid LessonType");
+        }
+        return type;
     }
 }
