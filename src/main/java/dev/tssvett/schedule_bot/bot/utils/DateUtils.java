@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
@@ -14,11 +15,11 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class DateUtils {
     private final SamaraUniversityProperties properties;
+    private static final String DATE_PATTERN = "dd.MM.yyyy";
 
     public Integer calculateCurrentUniversityEducationalWeek() {
         LocalDate now = LocalDate.now();
         LocalDate semesterStart = properties.getSemesterStartDate();
-        log.info(semesterStart.toString());
         log.debug("Current Week number: {}", (int) (now.toEpochDay() - semesterStart.toEpochDay()) / 7 + 1);
 
         return (int) (now.toEpochDay() - semesterStart.toEpochDay()) / 7 + 1;
@@ -37,5 +38,9 @@ public class DateUtils {
         log.debug("Current day name: {}", dayName);
 
         return dayName;
+    }
+
+    public String getCurrentDate() {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN));
     }
 }

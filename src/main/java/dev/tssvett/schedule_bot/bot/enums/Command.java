@@ -1,6 +1,7 @@
 package dev.tssvett.schedule_bot.bot.enums;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.HELP_COMMAND;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.INFO_COMMAND;
@@ -14,6 +15,7 @@ import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.WEEK_COM
 
 
 @Getter
+@RequiredArgsConstructor
 public enum Command {
     TODAY(TODAY_COMMAND.getCommandName(), "Расписание на сегодня"),
     TOMORROW(TOMORROW_COMMAND.getCommandName(), "Расписание на завтра"),
@@ -27,11 +29,4 @@ public enum Command {
 
     private final String commandName;
     private final String description;
-
-    Command(String commandName, String description) {
-
-        this.commandName = commandName;
-        this.description = description;
-    }
-
 }

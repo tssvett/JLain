@@ -1,114 +1,62 @@
 package dev.tssvett.schedule_bot.bot.formatter;
 
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
-import dev.tssvett.schedule_bot.backend.mapper.Mapper;
-import dev.tssvett.schedule_bot.persistence.entity.Lesson;
+import dev.tssvett.schedule_bot.bot.enums.DaysOfWeek;
+import dev.tssvett.schedule_bot.bot.utils.DateUtils;
+import dev.tssvett.schedule_bot.bot.utils.message.MessageCreateUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ScheduleStringFormatter {
+    private final DateUtils dateUtils;
 
-    private static final String ONLINE_EMOJI = "🟢"; // Зеленый круг для online
-    private static final String LAB_EMOJI = "🟣"; // Фиолетовый круг для лабораторной
-    private static final String LECTURE_EMOJI = "🟡"; // Желтый круг для лекций
-    private static final String MILITARY_EMOJI = "🟠"; // Оранжевый круг для военных занятий
-    private static final String DEFAULT_EMOJI = "🔴"; // Красный круг для очных занятий
+    public String formatWeek(Map<String, List<LessonInfoDto>> weekLessons) {
+        StringBuilder weekScheduleStringBuilder = new StringBuilder();
 
-    public String formatWeek(List<LessonInfoDto> weekLessons) {
-        StringBuilder sb = new StringBuilder();
+        Arrays.stream(DaysOfWeek.values())
+                .filter(day -> dayHasLessons(weekLessons.get(day.getName())))
+                .forEach(day -> weekScheduleStringBuilder.append(existingEducationalDayToString(day.getName(),
+                        weekLessons.get(day.getName()))));
 
-        // Группируем уроки по дням
-        Map<String, List<LessonInfoDto>> lessonsByDay = groupLessonsByDay(weekLessons);
-
-        // Определяем порядок дней недели
-        List<String> daysOfWeek = List.of("понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье");
-
-        for (String day : daysOfWeek) {
-            List<LessonInfoDto> dayLessons = lessonsByDay.get(day);
-            if (dayLessons != null && !dayLessons.isEmpty()) {
-                appendDaySchedule(sb, day, dayLessons);
-            }
-        }
-
-        return sb.toString();
+        return weekScheduleStringBuilder.toString();
     }
 
-    public String formatDay(List<LessonInfoDto> weekLessons, String weekDayName) {
-        StringBuilder sb = new StringBuilder();
-        if (weekDayName.equals("воскресенье")) {
-            weekDayName = "понедельник";
-        }
-
-        // Группируем уроки по дням
-        Map<String, List<LessonInfoDto>> lessonsByDay = groupLessonsByDay(weekLessons);
+    public String formatDay(Map<String, List<LessonInfoDto>> lessonsByDay, String weekDayName) {
+        StringBuilder dayStringBuilder = new StringBuilder();
 
         List<LessonInfoDto> dayLessons = lessonsByDay.get(weekDayName);
-        if (dayLessons != null && !dayLessons.isEmpty()) {
-            appendDaySchedule(sb, weekDayName, dayLessons);
-        }
-
-        return sb.toString();
-    }
-
-    private Map<String, List<LessonInfoDto>> groupLessonsByDay(List<LessonInfoDto> lessons) {
-        return lessons.stream()
-                .map(Mapper::toLesson)
-                .filter(Lesson::isExist) // Исключаем пары, которых нет
-                .map(Mapper::toLessonInfoDto)
-                .collect(Collectors.groupingBy(LessonInfoDto::dateDay));
-    }
-
-    private void appendDaySchedule(StringBuilder sb, String day, List<LessonInfoDto> dayLessons) {
-        String dateNumber = dayLessons.get(0).dateNumber(); // Получаем дату для вывода
-        sb.append("🔹 ").append(capitalizeFirstLetter(day)).append(" (").append(dateNumber).append("):\n");
-
-        for (LessonInfoDto lesson : dayLessons) {
-            sb.append(formatLesson(lesson));
-        }
-
-        sb.append("\n"); // Добавляем пустую строку для разделения дней
-    }
-
-    private String formatLesson(LessonInfoDto lesson) {
-        String emoji = getEmojiForLesson(lesson);
-
-        return String.format(
-                "%s %s\n" + // Смайлик и название пары
-                        "Тип: %s\n" +
-                        "Место: %s\n" +
-                        "Время: %s\n\n",
-                emoji,
-                capitalizeFirstLetter(lesson.name()),
-                lesson.type(),
-                lesson.place(),
-                lesson.time()
-        );
-    }
-
-    private String getEmojiForLesson(LessonInfoDto lesson) {
-        if (lesson.place().equalsIgnoreCase("online")) {
-            return ONLINE_EMOJI;
-        } else if (lesson.type().equalsIgnoreCase("лабораторная")) {
-            return LAB_EMOJI;
-        } else if (lesson.type().equalsIgnoreCase("лекция")) {
-            return LECTURE_EMOJI;
-        } else if (lesson.name().equalsIgnoreCase("Военная кафедра")) {
-            return MILITARY_EMOJI;
+        if (dayHasLessons(dayLessons)) {
+            dayStringBuilder.append(existingEducationalDayToString(weekDayName, dayLessons));
         } else {
-            return DEFAULT_EMOJI;
+            dayStringBuilder.append(emptyEducationalDayToString(weekDayName));
         }
+
+        return dayStringBuilder.toString();
     }
 
-    private String capitalizeFirstLetter(String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
-        }
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    private String existingEducationalDayToString(String weekDayName, List<LessonInfoDto> dayLessons) {
+        StringBuilder dayStringBuilder = new StringBuilder();
+
+        dayStringBuilder.append(MessageCreateUtils.createDayHeader(weekDayName, dayLessons.get(0).dateNumber()));
+        dayLessons.forEach(lesson -> dayStringBuilder.append(MessageCreateUtils.createStringLesson(lesson)));
+        dayStringBuilder.append("\n");
+
+        return dayStringBuilder.toString();
+    }
+
+    private String emptyEducationalDayToString(String weekDayName) {
+        return MessageCreateUtils.createNotExistingDayMessage(weekDayName, dateUtils.getCurrentDate());
+    }
+
+    private boolean dayHasLessons(List<LessonInfoDto> dayLessons) {
+        return dayLessons != null && !dayLessons.isEmpty();
     }
 }

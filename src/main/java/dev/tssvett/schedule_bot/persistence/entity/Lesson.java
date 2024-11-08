@@ -1,7 +1,11 @@
 package dev.tssvett.schedule_bot.persistence.entity;
 
+import dev.tssvett.schedule_bot.bot.enums.LessonType;
+import dev.tssvett.schedule_bot.bot.enums.Subgroup;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,7 +35,9 @@ public class Lesson {
     private String name;
 
     @Column(name = "type", nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private LessonType type;
+
 
     @Column(name = "place", nullable = false)
     private String place;
@@ -39,8 +45,9 @@ public class Lesson {
     @Column(name = "teacher", nullable = false)
     private String teacher;
 
-    @Column(name = "subgroup", nullable = false)
-    private String subgroup;
+    @Column(name = "subgroup")
+    @Enumerated(EnumType.STRING)
+    private Subgroup subgroup;
 
     @Column(name = "time", nullable = false)
     private String time;

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -26,10 +27,12 @@ public class TodayScheduleBotCommand implements BotCommand {
     @RegistrationRequired
     @Transactional
     public SendMessage execute(Long userId, Long chatId) {
-        List<LessonInfoDto> lessonsInWeek = scheduleService.getWeekSchedule(userId);
-        String stringLessons = scheduleStringFormatter.formatDay(lessonsInWeek,
-                dateUtils.calculateCurrentDayName());
+        Map<String, List<LessonInfoDto>> weekSchedule = scheduleService.getWeekScheduleMapByDate(userId);
+        String stringLessons = scheduleStringFormatter.formatDay(weekSchedule, dateUtils.calculateCurrentDayName());
 
-        return SendMessage.builder().chatId(chatId).text(stringLessons).build();
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(stringLessons)
+                .build();
     }
 }

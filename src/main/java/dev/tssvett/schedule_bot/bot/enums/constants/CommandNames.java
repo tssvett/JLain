@@ -3,6 +3,10 @@ package dev.tssvett.schedule_bot.bot.enums.constants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 @AllArgsConstructor
 @Getter
 public enum CommandNames {
@@ -17,4 +21,18 @@ public enum CommandNames {
     NOTIFICATION_COMMAND("/notification");
 
     private final String commandName;
+
+    private static final Map<String, CommandNames> NAME_TO_COMMAND_MAP = new HashMap<>();
+
+    static {
+        for (CommandNames command : values()) {
+            NAME_TO_COMMAND_MAP.put(command.getCommandName(), command);
+        }
+    }
+
+    public static Optional<CommandNames> fromCommandName(String commandName) {
+        CommandNames command = NAME_TO_COMMAND_MAP.get(commandName);
+
+        return Optional.ofNullable(command);
+    }
 }

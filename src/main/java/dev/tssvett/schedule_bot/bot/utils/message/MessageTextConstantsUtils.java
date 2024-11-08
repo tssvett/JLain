@@ -66,4 +66,12 @@ public class MessageTextConstantsUtils {
     public static final String NO_RE_REGISTRATION_ANSWER = "🌟 Похоже, в другой раз 🌟";
     public static final String SETUP_NOTIFICATION = "🔔 Настройте свои уведомления 🔔";
     public static final String NOT_ADMIN_MESSAGE = "Вы не администратор. Не трогай.....";
+
+    //Emojis for schedule messages
+    public static final String LAB_EMOJI = "🟣";
+    public static final String LECTURE_EMOJI = "🟢";
+    public static final String OTHER_EMOJI = "🟠";
+    public static final String PRACTICE_EMOJI = "🔴";
+    public static final String EXAM_EMOJI = "⚔️";
+    public static final String DAY_HEADER = "🔹";
 }

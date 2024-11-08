@@ -16,12 +16,4 @@ public class CommandUtils {
             return command;
         }
     }
-
-    public static Optional<CommandNames> convertStringCommandToEnumValue(String command) {
-        try {
-            return Optional.of(CommandNames.valueOf(command));
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
-        }
-    }
 }
