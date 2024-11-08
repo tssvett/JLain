@@ -18,13 +18,13 @@ import lombok.Setter;
 import java.util.Set;
 
 @Entity
-@Table(name = "\"group\"")
+@Table(name = "educational_group")
 @Builder
 @Getter
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Group {
+public class EducationalGroup {
     @Id
     @Column(name = "group_id", nullable = false)
     private Long groupId;
@@ -39,6 +39,6 @@ public class Group {
     @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "educationalGroup", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Student> students;
 }

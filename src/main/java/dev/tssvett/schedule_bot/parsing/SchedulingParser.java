@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.parsing;
 
 import dev.tssvett.schedule_bot.persistence.entity.Faculty;
-import dev.tssvett.schedule_bot.persistence.entity.Group;
+import dev.tssvett.schedule_bot.persistence.entity.EducationalGroup;
 import dev.tssvett.schedule_bot.backend.service.FacultyService;
 import dev.tssvett.schedule_bot.backend.service.GroupService;
 import lombok.RequiredArgsConstructor;
@@ -39,13 +39,13 @@ public class SchedulingParser {
             log.info("Parsing groups from faculty " + faculty.getName() + " with id " + faculty.getFacultyId());
             for (Integer course : courses) {
                 log.info("Parsing groups from course " + course);
-                List<Group> groups = groupParser.parse(faculty.getFacultyId(), course);
-                for (Group group : groups) {
-                    group.setFaculty(faculty);
-                    group.setCourse(Long.valueOf(course));
+                List<EducationalGroup> educationalGroups = groupParser.parse(faculty.getFacultyId(), course);
+                for (EducationalGroup educationalGroup : educationalGroups) {
+                    educationalGroup.setFaculty(faculty);
+                    educationalGroup.setCourse(Long.valueOf(course));
                 }
-                log.info("Parsed " + groups.size() + " groups");
-                groupService.saveGroups(groups);
+                log.info("Parsed " + educationalGroups.size() + " groups");
+                groupService.saveGroups(educationalGroups);
             }
         }
         log.info("Total groups in database: " + groupService.findAllGroups().size());

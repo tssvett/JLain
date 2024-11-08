@@ -6,7 +6,7 @@ import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.NotificationInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.persistence.entity.Faculty;
-import dev.tssvett.schedule_bot.persistence.entity.Group;
+import dev.tssvett.schedule_bot.persistence.entity.EducationalGroup;
 import dev.tssvett.schedule_bot.persistence.entity.Lesson;
 import dev.tssvett.schedule_bot.persistence.entity.Notification;
 import dev.tssvett.schedule_bot.persistence.entity.Student;
@@ -22,7 +22,7 @@ public class Mapper {
                 student.getCourse(),
                 student.getRegistrationState(),
                 toFacultyInfoDto(student.getFaculty()),
-                toGroupInfoDto(student.getGroup()),
+                toGroupInfoDto(student.getEducationalGroup()),
                 toNotificationInfoDto(student.getNotification())
         );
     }
@@ -34,22 +34,22 @@ public class Mapper {
                 .course(studentInfoDto.course())
                 .registrationState(studentInfoDto.registrationState())
                 .faculty(toFaculty(studentInfoDto.faculty()))
-                .group(toGroup(studentInfoDto.group()))
+                .educationalGroup(toGroup(studentInfoDto.group()))
                 .notification(toNotification(studentInfoDto.notification()))
                 .build();
     }
 
-    public static GroupInfoDto toGroupInfoDto(@NotNull Group group) {
+    public static GroupInfoDto toGroupInfoDto(@NotNull EducationalGroup educationalGroup) {
         return new GroupInfoDto(
-                group.getGroupId(),
-                group.getName(),
-                group.getCourse(),
-                toFacultyInfoDto(group.getFaculty())
+                educationalGroup.getGroupId(),
+                educationalGroup.getName(),
+                educationalGroup.getCourse(),
+                toFacultyInfoDto(educationalGroup.getFaculty())
         );
     }
 
-    public static Group toGroup(@NotNull GroupInfoDto groupInfoDto) {
-        return Group.builder()
+    public static EducationalGroup toGroup(@NotNull GroupInfoDto groupInfoDto) {
+        return EducationalGroup.builder()
                 .groupId(groupInfoDto.groupId())
                 .name(groupInfoDto.name())
                 .course(groupInfoDto.course())

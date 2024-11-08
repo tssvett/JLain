@@ -8,7 +8,7 @@ import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrat
 import dev.tssvett.schedule_bot.backend.mapper.Mapper;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import dev.tssvett.schedule_bot.persistence.entity.Faculty;
-import dev.tssvett.schedule_bot.persistence.entity.Group;
+import dev.tssvett.schedule_bot.persistence.entity.EducationalGroup;
 import dev.tssvett.schedule_bot.persistence.entity.Notification;
 import dev.tssvett.schedule_bot.persistence.entity.Student;
 import dev.tssvett.schedule_bot.persistence.repository.FacultyRepository;
@@ -54,10 +54,10 @@ public class StudentService {
     }
 
     public void updateStudentGroup(Long studentId, Long groupId) {
-        Group group = groupRepository.findById(groupId)
+        EducationalGroup educationalGroup = groupRepository.findById(groupId)
                 .orElseThrow(() -> new GroupNotExistException("Group with id: " + groupId + " not found"));
-        proceedRegistrationState(studentId, group, RegistrationState.GROUP_CHOOSING,
-                RegistrationState.SUCCESSFUL_REGISTRATION, student -> student.setGroup(group));
+        proceedRegistrationState(studentId, educationalGroup, RegistrationState.GROUP_CHOOSING,
+                RegistrationState.SUCCESSFUL_REGISTRATION, student -> student.setEducationalGroup(educationalGroup));
     }
 
     public void updateStudentNotification(Long studentId, Boolean notificationStatus) {

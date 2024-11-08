@@ -31,7 +31,7 @@ public class Faculty {
     private String name;
 
     @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Group> groups;
+    private Set<EducationalGroup> educationalGroups;
 
     @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Student> students;

@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.backend.service;
 
 import dev.tssvett.schedule_bot.backend.exception.database.StudentNotExistsException;
-import dev.tssvett.schedule_bot.persistence.entity.Group;
+import dev.tssvett.schedule_bot.persistence.entity.EducationalGroup;
 import dev.tssvett.schedule_bot.persistence.entity.Student;
 import dev.tssvett.schedule_bot.persistence.repository.GroupRepository;
 import dev.tssvett.schedule_bot.persistence.repository.StudentRepository;
@@ -18,7 +18,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final StudentRepository studentRepository;
 
-    public List<Group> getFilteredByCourseAndFacultyGroups(Long userId) {
+    public List<EducationalGroup> getFilteredByCourseAndFacultyGroups(Long userId) {
         Student user = studentRepository.findById(userId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + userId));
 
@@ -31,11 +31,11 @@ public class GroupService {
     }
 
 
-    public void saveGroups(List<Group> groups) {
-        groupRepository.saveAll(groups);
+    public void saveGroups(List<EducationalGroup> educationalGroups) {
+        groupRepository.saveAll(educationalGroups);
     }
 
-    public List<Group> findAllGroups() {
+    public List<EducationalGroup> findAllGroups() {
         return groupRepository.findAll();
     }
 }
