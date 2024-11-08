@@ -30,6 +30,9 @@ public class TodayScheduleBotCommand implements BotCommand {
         Map<String, List<LessonInfoDto>> weekSchedule = scheduleService.getWeekScheduleMapByDate(userId);
         String stringLessons = scheduleStringFormatter.formatDay(weekSchedule, dateUtils.calculateCurrentDayName());
 
-        return SendMessage.builder().chatId(chatId).text(stringLessons).build();
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(stringLessons)
+                .build();
     }
 }

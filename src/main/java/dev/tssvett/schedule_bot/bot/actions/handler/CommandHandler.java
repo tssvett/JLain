@@ -2,7 +2,6 @@ package dev.tssvett.schedule_bot.bot.actions.handler;
 
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.enums.constants.CommandNames;
-import dev.tssvett.schedule_bot.bot.utils.CommandUtils;
 import dev.tssvett.schedule_bot.bot.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,7 @@ public class CommandHandler {
         Long userId = UpdateUtils.getUserIdFromMessage(update);
         Long chatId = UpdateUtils.getChatIdFromMessage(update);
 
-        Optional<CommandNames> optionalCommandName =  CommandNames.fromCommandName(
+        Optional<CommandNames> optionalCommandName = CommandNames.fromCommandName(
                 UpdateUtils.getFirstWordFromMessage(update)
         );
 

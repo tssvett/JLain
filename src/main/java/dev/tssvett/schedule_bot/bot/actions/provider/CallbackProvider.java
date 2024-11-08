@@ -17,6 +17,8 @@ public class CallbackProvider {
     private final KeyboardHandler keyboardHandler;
 
     public BotApiMethod<?> handleMessage(Update update) {
-        return UpdateUtils.messageIsText(update) ? commandsHandler.handleCommands(update) : keyboardHandler.handleKeyboardAction(update);
+        return UpdateUtils.messageIsText(update) ?
+                commandsHandler.handleCommands(update) :
+                keyboardHandler.handleKeyboardAction(update);
     }
 }
