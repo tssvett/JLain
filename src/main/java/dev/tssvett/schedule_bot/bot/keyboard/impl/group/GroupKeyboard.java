@@ -3,7 +3,7 @@ package dev.tssvett.schedule_bot.bot.keyboard.impl.group;
 import dev.tssvett.schedule_bot.backend.service.GroupService;
 import dev.tssvett.schedule_bot.bot.enums.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.Keyboard;
-import dev.tssvett.schedule_bot.persistence.entity.EducationalGroup;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,13 +23,13 @@ public class GroupKeyboard extends Keyboard {
 
     @Transactional
     public InlineKeyboardMarkup createInlineKeyboard(Action action, Long userId) {
-        List<EducationalGroup> educationalGroups = groupService.getFilteredByCourseAndFacultyGroups(userId);
+        List<EducationalGroupRecord> educationalGroups = groupService.getFilteredByCourseAndFacultyGroups(userId);
         List<List<InlineKeyboardButton>> rows = createRows(educationalGroups, action);
 
         return new InlineKeyboardMarkup(rows);
     }
 
-    private List<List<InlineKeyboardButton>> createRows(List<EducationalGroup> educationalGroups, Action action) {
+    private List<List<InlineKeyboardButton>> createRows(List<EducationalGroupRecord> educationalGroups, Action action) {
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
 
         for (int i = 0; i < educationalGroups.size(); i += GROUP_KEYS_IN_ROW) {
@@ -42,11 +42,11 @@ public class GroupKeyboard extends Keyboard {
         return rows;
     }
 
-    private List<InlineKeyboardButton> createRow(int startIndex, List<EducationalGroup> educationalGroups, Action action) {
+    private List<InlineKeyboardButton> createRow(int startIndex, List<EducationalGroupRecord> educationalGroups, Action action) {
         List<InlineKeyboardButton> keyboardButtonRow = new ArrayList<>();
 
         for (int j = 0; j < GROUP_KEYS_IN_ROW && (startIndex + j) < educationalGroups.size(); j++) {
-            EducationalGroup educationalGroup = educationalGroups.get(startIndex + j);
+            EducationalGroupRecord educationalGroup = educationalGroups.get(startIndex + j);
             keyboardButtonRow.add(createButton(educationalGroup.getName(), String.valueOf(educationalGroup.getGroupId()), action));
         }
 

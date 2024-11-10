@@ -1,115 +1,53 @@
 package dev.tssvett.schedule_bot.backend.mapper;
 
-import dev.tssvett.schedule_bot.backend.dto.FacultyInfoDto;
-import dev.tssvett.schedule_bot.backend.dto.GroupInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
-import dev.tssvett.schedule_bot.backend.dto.NotificationInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
-import dev.tssvett.schedule_bot.persistence.entity.Faculty;
-import dev.tssvett.schedule_bot.persistence.entity.EducationalGroup;
-import dev.tssvett.schedule_bot.persistence.entity.Lesson;
-import dev.tssvett.schedule_bot.persistence.entity.Notification;
-import dev.tssvett.schedule_bot.persistence.entity.Student;
+import dev.tssvett.schedule_bot.bot.enums.LessonType;
+import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.bot.enums.Subgroup;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
 
 import javax.validation.constraints.NotNull;
 
 public class Mapper {
 
-    public static StudentInfoDto toStudentInfoDto(@NotNull Student student) {
+    public static StudentInfoDto toStudentInfoDto(@NotNull StudentRecord student) {
         return new StudentInfoDto(
                 student.getUserId(),
                 student.getChatId(),
                 student.getCourse(),
-                student.getRegistrationState(),
-                toFacultyInfoDto(student.getFaculty()),
-                toGroupInfoDto(student.getEducationalGroup()),
-                toNotificationInfoDto(student.getNotification())
+                RegistrationState.valueOf(student.getRegistrationState()),
+                student.getFacultyId(),
+                student.getGroupId()
         );
     }
 
-    public static Student toStudent(@NotNull StudentInfoDto studentInfoDto) {
-        return Student.builder()
-                .userId(studentInfoDto.userId())
-                .chatId(studentInfoDto.chatId())
-                .course(studentInfoDto.course())
-                .registrationState(studentInfoDto.registrationState())
-                .faculty(toFaculty(studentInfoDto.faculty()))
-                .educationalGroup(toGroup(studentInfoDto.group()))
-                .notification(toNotification(studentInfoDto.notification()))
-                .build();
-    }
-
-    public static GroupInfoDto toGroupInfoDto(@NotNull EducationalGroup educationalGroup) {
-        return new GroupInfoDto(
-                educationalGroup.getGroupId(),
-                educationalGroup.getName(),
-                educationalGroup.getCourse(),
-                toFacultyInfoDto(educationalGroup.getFaculty())
-        );
-    }
-
-    public static EducationalGroup toGroup(@NotNull GroupInfoDto groupInfoDto) {
-        return EducationalGroup.builder()
-                .groupId(groupInfoDto.groupId())
-                .name(groupInfoDto.name())
-                .course(groupInfoDto.course())
-                .faculty(toFaculty(groupInfoDto.faculty()))
-                .build();
-    }
-
-    public static FacultyInfoDto toFacultyInfoDto(@NotNull Faculty faculty) {
-        return new FacultyInfoDto(
-                faculty.getFacultyId(),
-                faculty.getName()
-        );
-    }
-
-    public static Faculty toFaculty(@NotNull FacultyInfoDto facultyInfoDto) {
-        return Faculty.builder()
-                .facultyId(facultyInfoDto.facultyId())
-                .name(facultyInfoDto.name())
-                .build();
-    }
-
-    public static Notification toNotification(@NotNull NotificationInfoDto notification) {
-        return Notification.builder()
-                .id(notification.notificationId())
-                .enabled(notification.enabled())
-                .build();
-    }
-
-    public static NotificationInfoDto toNotificationInfoDto(@NotNull Notification notification) {
-        return new NotificationInfoDto(
-                notification.getId(),
-                notification.isEnabled()
-        );
-    }
-
-    public static LessonInfoDto toLessonInfoDto(@NotNull Lesson lesson) {
+    public static LessonInfoDto toLessonInfoDto(@NotNull LessonRecord lesson) {
         return new LessonInfoDto(
                 lesson.getId(),
                 lesson.getName(),
-                lesson.getType(),
+                LessonType.fromName(lesson.getType()),
                 lesson.getPlace(),
                 lesson.getTeacher(),
-                lesson.getSubgroup(),
+                Subgroup.fromName(lesson.getSubgroup()),
                 lesson.getTime(),
                 lesson.getDateDay(),
                 lesson.getDateNumber()
         );
     }
 
-    public static Lesson toLesson(@NotNull LessonInfoDto lessonInfoDto) {
-        return Lesson.builder()
-                .id(lessonInfoDto.lessonId())
-                .name(lessonInfoDto.name())
-                .type(lessonInfoDto.type())
-                .place(lessonInfoDto.place())
-                .teacher(lessonInfoDto.teacher())
-                .subgroup(lessonInfoDto.subgroup())
-                .time(lessonInfoDto.time())
-                .dateDay(lessonInfoDto.dateDay())
-                .dateNumber(lessonInfoDto.dateNumber())
-                .build();
+    public static LessonRecord toLesson(@NotNull LessonInfoDto lessonInfoDto) {
+        return new LessonRecord(
+                lessonInfoDto.lessonId(),
+                lessonInfoDto.name(),
+                lessonInfoDto.type().getName(),
+                lessonInfoDto.place(),
+                lessonInfoDto.teacher(),
+                lessonInfoDto.subgroup().getName(),
+                lessonInfoDto.time(),
+                lessonInfoDto.dateDay(),
+                lessonInfoDto.dateNumber());
+
     }
 }

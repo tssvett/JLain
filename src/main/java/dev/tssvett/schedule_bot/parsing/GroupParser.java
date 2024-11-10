@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.parsing;
 
 import dev.tssvett.schedule_bot.backend.exception.parse.ParserSourceConnectionException;
 import dev.tssvett.schedule_bot.backend.exception.parse.ParseElementException;
-import dev.tssvett.schedule_bot.persistence.entity.EducationalGroup;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,7 +23,7 @@ public class GroupParser{
     private static final String USER_AGENT = "Mozilla/5.0";
     private static final String GROUP_SELECTOR = "body > div.container.timetable > div > div > div > a";
 
-    public List<EducationalGroup> parse(Long facultyId, Integer course) {
+    public List<EducationalGroupRecord> parse(Long facultyId, Integer course) {
         Document document = null;
         try {
             document = Jsoup.connect(String.format(URL, facultyId, course)).userAgent(USER_AGENT).get();
@@ -35,16 +35,13 @@ public class GroupParser{
         return parseAll(rawFaculties);
     }
 
-    private List<EducationalGroup> parseAll(Elements rawGroups) {
-        List<EducationalGroup> educationalGroups = new ArrayList<>();
+    private List<EducationalGroupRecord> parseAll(Elements rawGroups) {
+        List<EducationalGroupRecord> educationalGroups = new ArrayList<>();
         for (org.jsoup.nodes.Element rawGroup : rawGroups) {
             String rawHref = rawGroup.attr("href");
             String rawName = rawGroup.select("a.btn-text.group-catalog__group span").first().text();
-            EducationalGroup educationalGroup = EducationalGroup.builder()
-                    .groupId(parseGroupId(rawHref))
-                    .name(rawName)
-                    .build();
-            educationalGroups.add(educationalGroup);
+            //TODO: надо сделать отдельные дтошки для парсера и потом их маппить
+            educationalGroups.add(new EducationalGroupRecord(parseGroupId(rawHref), rawName, null, null));
         }
 
         return educationalGroups;

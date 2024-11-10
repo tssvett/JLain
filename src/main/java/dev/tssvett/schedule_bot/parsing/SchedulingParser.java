@@ -1,9 +1,9 @@
 package dev.tssvett.schedule_bot.parsing;
 
-import dev.tssvett.schedule_bot.persistence.entity.Faculty;
-import dev.tssvett.schedule_bot.persistence.entity.EducationalGroup;
 import dev.tssvett.schedule_bot.backend.service.FacultyService;
 import dev.tssvett.schedule_bot.backend.service.GroupService;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.FacultyRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -27,21 +27,21 @@ public class SchedulingParser {
     @Scheduled(fixedDelayString = "${scheduling.group.delay}")
     public void updateGroupsInDatabase() {
         List<Integer> courses = List.of(1, 2, 3, 4, 5);
-        List<Faculty> faculties = facultyParser.parse();
+        List<FacultyRecord> faculties = facultyParser.parse();
         saveAllFacultiesInDatabase(faculties);
         saveAllGroupsInDatabase(faculties, courses);
     }
 
-    private void saveAllGroupsInDatabase(List<Faculty> faculties, List<Integer> courses) {
+    private void saveAllGroupsInDatabase(List<FacultyRecord> faculties, List<Integer> courses) {
         log.info("Staring parsing all groups in all faculties");
         log.info("Founded " + faculties.size() + " faculties");
-        for (Faculty faculty : faculties) {
+        for (FacultyRecord faculty : faculties) {
             log.info("Parsing groups from faculty " + faculty.getName() + " with id " + faculty.getFacultyId());
             for (Integer course : courses) {
                 log.info("Parsing groups from course " + course);
-                List<EducationalGroup> educationalGroups = groupParser.parse(faculty.getFacultyId(), course);
-                for (EducationalGroup educationalGroup : educationalGroups) {
-                    educationalGroup.setFaculty(faculty);
+                List<EducationalGroupRecord> educationalGroups = groupParser.parse(faculty.getFacultyId(), course);
+                for (EducationalGroupRecord educationalGroup : educationalGroups) {
+                    educationalGroup.setFacultyId(faculty.getFacultyId());
                     educationalGroup.setCourse(Long.valueOf(course));
                 }
                 log.info("Parsed " + educationalGroups.size() + " groups");
@@ -51,7 +51,7 @@ public class SchedulingParser {
         log.info("Total groups in database: " + groupService.findAllGroups().size());
     }
 
-    private void saveAllFacultiesInDatabase(List<Faculty> faculties) {
+    private void saveAllFacultiesInDatabase(List<FacultyRecord> faculties) {
         log.info("Staring parsing all faculties");
         facultyService.saveFaculties(faculties);
         log.info("Total faculties in database: {}", facultyService.findAllFaculties().size());

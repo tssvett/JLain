@@ -23,11 +23,11 @@ public class MessageCreateUtils {
                 🔔 **Уведомления:** %s""".formatted(
                 studentInfoDto.userId(),
                 studentInfoDto.chatId(),
-                studentInfoDto.faculty().name(),
+                //studentInfoDto.faculty().name(),
                 studentInfoDto.course(),
-                studentInfoDto.group().name(),
-                (studentInfoDto.registrationState().equals(RegistrationState.SUCCESSFUL_REGISTRATION) ? "✅ Успешно пройдена" : "❌ Не завершена"),
-                (studentInfoDto.notification().enabled() ? "✅ Включены" : "❌ Отключены")
+                //studentInfoDto.group().name(),
+                (studentInfoDto.registrationState().equals(RegistrationState.SUCCESSFUL_REGISTRATION) ? "✅ Успешно пройдена" : "❌ Не завершена")
+                //(studentInfoDto.notification().enabled() ? "✅ Включены" : "❌ Отключены")
         );
     }
 

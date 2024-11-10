@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.backend.service;
 
-import dev.tssvett.schedule_bot.persistence.entity.Faculty;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.FacultyRecord;
 import dev.tssvett.schedule_bot.persistence.repository.FacultyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +14,11 @@ import java.util.List;
 public class FacultyService {
     private final FacultyRepository facultyRepository;
 
-    public List<Faculty> findAllFaculties() {
+    public List<FacultyRecord> findAllFaculties() {
         return facultyRepository.findAll();
     }
 
-    public void saveFaculties(List<Faculty> faculties) {
+    public void saveFaculties(List<FacultyRecord> faculties) {
         facultyRepository.saveAll(faculties);
     }
 }

@@ -6,7 +6,7 @@ import dev.tssvett.schedule_bot.backend.service.ScheduleService;
 import dev.tssvett.schedule_bot.bot.TelegramBot;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
 import dev.tssvett.schedule_bot.bot.utils.DateUtils;
-import dev.tssvett.schedule_bot.persistence.entity.Notification;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -36,22 +36,20 @@ public class SchedulingNotification {
         /*TODO: 1) сделать специальный запрос в бд, который будет вытаскивать только те уведомления, которые включены
                 2) Выводить количество юзеров которым идет рассылка
         */
-        List<Notification> notifications = notificationService.findAllNotifications();
+        List<NotificationRecord> notifications = notificationService.findAllEnabledNotificationsWithRegisteredStudents();
 
         notifications.forEach(notification -> {
-            if (notificationService.isNotificationEnabledAndUserRegistered(notification)) {
-                Long userId = notification.getStudent().getUserId();
-                log.info("Sending notification to user: {}", userId);
+            Long userId = notification.getUserId();
+            log.info("Sending notification to user: {}", userId);
                 /*
                  TODO: добавить боту возможность множественной рассылки
                     Сейчас бот ловит только SendMessage, а List<SendMessage> не видит
                     Нужно изменить SendMessage на BotApiMethod<?>
                     Тогда отсюда можно будет убрать telegramBot, и возвращать просто List<BotApiMethod<?>>
                  */
-                Map<String, List<LessonInfoDto>> weekSchedule = scheduleService.getWeekScheduleMapByDate(userId);
-                String formattedLessons = formatLessonsForTomorrow(weekSchedule);
-                telegramBot.executeBotMethod(createMessageToSend(userId, formattedLessons));
-            }
+            Map<String, List<LessonInfoDto>> weekSchedule = scheduleService.getWeekScheduleMapByDate(userId);
+            String formattedLessons = formatLessonsForTomorrow(weekSchedule);
+            telegramBot.executeBotMethod(createMessageToSend(userId, formattedLessons));
         });
     }
 

@@ -18,14 +18,13 @@
 
         <!-- Library Versions -->
         <spring.boot.version>3.3.2</spring.boot.version>
-        <spring.boot.data.jpa.version>3.3.4</spring.boot.data.jpa.version>
         <telegrambots.version>6.9.7.1</telegrambots.version>
         <jsoup.version>1.18.1</jsoup.version>
         <liquibase.version>4.29.1</liquibase.version>
         <postgresql.version>42.7.3</postgresql.version>
-        <hibernate.version>6.5.2.Final</hibernate.version>
         <lombok.version>1.18.30</lombok.version>
         <jooq.version>3.19.15</jooq.version>
+        <jdbc.version>6.1.14</jdbc.version>
 
         <!-- Database Properties -->
         <db.url>${DB_URL}</db.url>
@@ -39,11 +38,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring.boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>${spring.boot.data.jpa.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -66,13 +60,6 @@
             <version>${jsoup.version}</version>
         </dependency>
 
-        <!-- Database Migration Dependency -->
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <version>${liquibase.version}</version>
-        </dependency>
-
         <!-- PostgreSQL Driver Dependency -->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -80,11 +67,12 @@
             <version>${postgresql.version}</version>
         </dependency>
 
-        <!-- Hibernate Core Dependency -->
+        <!-- JDBC Dependency -->
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
         <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${jdbc.version}</version>
         </dependency>
 
         <!-- Lombok Dependency -->
@@ -203,8 +191,8 @@
                             <inputSchema>public</inputSchema>
                         </database>
                         <target>
+                            <directory>src/main/java</directory>
                             <packageName>dev.tssvett.schedule_bot.persistence.model</packageName>
-                            <directory>target/generated-sources/jooq</directory>
                         </target>
                     </generator>
                 </configuration>

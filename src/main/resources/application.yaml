@@ -11,14 +11,11 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false
-    hibernate:
-      ddl-auto: validate
-
-
   liquibase:
+    url: ${DB_URL}
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
     change-log: db/changelog/changelog-master.yaml
     enabled: true
 
@@ -36,10 +33,10 @@ scheduling:
     enabled: true
   group:
     delay: ${SCHEDULING_DELAY:86400000}
-    enabled: true
+    enabled: false
   faculty:
     delay: ${SCHEDULING_DELAY:86400000}
-    enabled: true
+    enabled: false
 
 samara-university:
   semester-start-date: 2024-09-02

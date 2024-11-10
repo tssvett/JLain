@@ -3,7 +3,7 @@ package dev.tssvett.schedule_bot.parsing;
 import dev.tssvett.schedule_bot.backend.exception.parse.ParserSourceConnectionException;
 import dev.tssvett.schedule_bot.bot.enums.LessonType;
 import dev.tssvett.schedule_bot.bot.enums.Subgroup;
-import dev.tssvett.schedule_bot.persistence.entity.Lesson;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,12 +24,12 @@ public class SchoolWeekParser {
     private static final String SCHOOL_WEEK_SELECTOR = ".schedule__item";
     private static final String TIME_SELECTOR = ".schedule__time";
 
-    public List<Lesson> parse(Long groupId, Integer week) {
+    public List<LessonRecord> parse(Long groupId, Integer week) {
         Document document = fetchDocument(groupId, week);
         Elements rawSchoolWeek = document.select(SCHOOL_WEEK_SELECTOR);
         List<String> lessonTimes = parseLessonTimes(document);
         List<String> lessonDates = parseLessonDates(document);
-        List<Lesson> lessons = parseAll(rawSchoolWeek, lessonTimes, lessonDates);
+        List<LessonRecord> lessons = parseAll(rawSchoolWeek, lessonTimes, lessonDates);
 
         return sortLessonsByDay(lessons, lessonDates);
     }
@@ -60,8 +60,8 @@ public class SchoolWeekParser {
                 .toList();
     }
 
-    private List<Lesson> parseAll(Elements schoolWeek, List<String> lessonTimes, List<String> dates) {
-        List<Lesson> lessonsList = new LinkedList<>();
+    private List<LessonRecord> parseAll(Elements schoolWeek, List<String> lessonTimes, List<String> dates) {
+        List<LessonRecord> lessonsList = new LinkedList<>();
         Elements potentialLessons = removeFirstNElements(schoolWeek, 7);
         for (int i = 0; i < potentialLessons.size(); i++) {
             Elements lessons = potentialLessons.get(i).select(".schedule__lesson");
@@ -74,17 +74,16 @@ public class SchoolWeekParser {
         return lessonsList;
     }
 
-    private Lesson buildLesson(List<String> lessonTimes, List<String> dates, Element lessonElement, int i) {
-        return Lesson.builder()
-                .name(getName(lessonElement))
-                .type(getType(lessonElement))
-                .place(getPlace(lessonElement))
-                .teacher(getTeacher(lessonElement))
-                .subgroup(getSubgroupString(lessonElement))
-                .time(getTime(lessonTimes, dates, i))
-                .dateDay(getDateDay(dates, i))
-                .dateNumber(getDateNumber(dates, i))
-                .build();
+    private LessonRecord buildLesson(List<String> lessonTimes, List<String> dates, Element lessonElement, int i) {
+        return new LessonRecord(null,
+                getName(lessonElement),
+                getType(lessonElement).getName(),
+                getPlace(lessonElement),
+                getTeacher(lessonElement),
+                getSubgroupString(lessonElement).getName(),
+                getTime(lessonTimes, dates, i),
+                getDateDay(dates, i),
+                getDateNumber(dates, i));
     }
 
     private static String getDateNumber(List<String> dates, int i) {
@@ -153,7 +152,7 @@ public class SchoolWeekParser {
                 .toList());
     }
 
-    private List<Lesson> sortLessonsByDay(List<Lesson> lessons, List<String> dates) {
+    private List<LessonRecord> sortLessonsByDay(List<LessonRecord> lessons, List<String> dates) {
         return dates.stream().map(date -> {
                     String dayOfWeek = date.split(" ")[0];
                     return lessons.stream()

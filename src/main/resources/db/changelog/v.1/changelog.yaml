@@ -25,3 +25,7 @@ databaseChangeLog:
   - include:
       file: create-table-lesson.sql
       relativeToChangelogFile: true
+
+  - include:
+      file: table-student-column-notification_id-add.sql
+      relativeToChangelogFile: true
