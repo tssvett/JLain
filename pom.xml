@@ -25,6 +25,12 @@
         <postgresql.version>42.7.3</postgresql.version>
         <hibernate.version>6.5.2.Final</hibernate.version>
         <lombok.version>1.18.30</lombok.version>
+        <jooq.version>3.19.15</jooq.version>
+
+        <!-- Database Properties -->
+        <db.url>${DB_URL}</db.url>
+        <db.user>${DB_USERNAME}</db.user>
+        <db.password>${DB_PASSWORD}</db.password>
     </properties>
 
     <dependencies>
@@ -89,6 +95,23 @@
             <version>${lombok.version}</version>
         </dependency>
 
+        <!--Jooq Dependency -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -143,6 +166,47 @@
                             <mainClass>dev.tssvett.schedule_bot.ScheduleBotApplication</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+
+            <!-- JOOQ Code Generation Plugin -->
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>${jooq.version}</version>
+
+                <!-- The plugin should hook into the generate goal -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+
+                    <!-- JDBC connection parameters -->
+                    <jdbc>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>${db.url}</url>
+                        <user>${db.user}</user>
+                        <password>${db.password}</password>
+                    </jdbc>
+
+                    <!-- Generator parameters -->
+                    <generator>
+                        <database>
+                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+                            <includes>.*</includes>
+                            <excludes>Databasechangelog.*</excludes>
+                            <inputSchema>public</inputSchema>
+                        </database>
+                        <target>
+                            <packageName>dev.tssvett.schedule_bot.persistence.model</packageName>
+                            <directory>target/generated-sources/jooq</directory>
+                        </target>
+                    </generator>
                 </configuration>
             </plugin>
 
