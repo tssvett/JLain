@@ -39,17 +39,17 @@ public class SchedulingNotification {
         List<NotificationRecord> notifications = notificationService.findAllEnabledNotificationsWithRegisteredStudents();
 
         notifications.forEach(notification -> {
-            Long userId = notification.getUserId();
-            log.info("Sending notification to user: {}", userId);
+            //Long userId = notification.getUserId();
+            //log.info("Sending notification to user: {}", userId);
                 /*
                  TODO: добавить боту возможность множественной рассылки
                     Сейчас бот ловит только SendMessage, а List<SendMessage> не видит
                     Нужно изменить SendMessage на BotApiMethod<?>
                     Тогда отсюда можно будет убрать telegramBot, и возвращать просто List<BotApiMethod<?>>
                  */
-            Map<String, List<LessonInfoDto>> weekSchedule = scheduleService.getWeekScheduleMapByDate(userId);
-            String formattedLessons = formatLessonsForTomorrow(weekSchedule);
-            telegramBot.executeBotMethod(createMessageToSend(userId, formattedLessons));
+            //Map<String, List<LessonInfoDto>> weekSchedule = scheduleService.getWeekScheduleMapByDate(userId);
+            //String formattedLessons = formatLessonsForTomorrow(weekSchedule);
+            //telegramBot.executeBotMethod(createMessageToSend(userId, formattedLessons));
         });
     }
 

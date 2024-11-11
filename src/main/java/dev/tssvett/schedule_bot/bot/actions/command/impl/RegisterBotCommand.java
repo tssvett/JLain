@@ -40,6 +40,7 @@ public class RegisterBotCommand implements BotCommand {
                     .build();
         } else {
             log.info("User {} is not registered with SUCCESSFUL_REGISTRATION. Starting registration process.", userId);
+            studentService.createStudentIfNotExists(userId, chatId);
             studentService.updateStudentRegistrationState(userId, FACULTY_CHOOSING);
 
             return SendMessage.builder()

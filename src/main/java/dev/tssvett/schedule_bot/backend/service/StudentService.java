@@ -1,9 +1,8 @@
 package dev.tssvett.schedule_bot.backend.service;
 
-import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
+import dev.tssvett.schedule_bot.backend.exception.NotificationNotExistsException;
 import dev.tssvett.schedule_bot.backend.exception.database.StudentNotExistsException;
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
-import dev.tssvett.schedule_bot.backend.mapper.Mapper;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
@@ -13,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.START_REGISTER;
@@ -25,11 +25,9 @@ public class StudentService {
     private final NotificationRepository notificationRepository;
 
 
-    public StudentInfoDto getStudentInfoById(Long studentId) {
-        StudentRecord student = studentRepository.findById(studentId)
+    public StudentRecord getStudentInfoById(Long studentId) {
+        return studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
-
-        return Mapper.toStudentInfoDto(student);
     }
 
     public void updateStudentFaculty(Long studentId, Long facultyId) {
@@ -64,15 +62,16 @@ public class StudentService {
     }
 
     public void createStudentIfNotExists(Long studentId, Long chatId) {
-        studentRepository.findById(studentId)
-                .orElseGet(() -> createStudent(studentId, chatId));
+        if (studentRepository.findById(studentId).isEmpty()) {
+            createStudent(studentId, chatId);
+        }
     }
 
 
-    public Boolean isRegistered(Long studentId) {
-        return studentRepository.findById(studentId)
-                .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId))
-                .getRegistrationState().equals(RegistrationState.SUCCESSFUL_REGISTRATION.toString());
+    public boolean isRegistered(Long studentId) {
+        Optional<StudentRecord> student = studentRepository.findById(studentId);
+
+        return student.isPresent() && student.get().getRegistrationState().equals(RegistrationState.SUCCESSFUL_REGISTRATION.toString());
     }
 
     private void validateRegistrationState(StudentRecord student, RegistrationState state) {
@@ -92,14 +91,12 @@ public class StudentService {
         student.setRegistrationState(newState.name());
         setter.accept(student);
 
-        studentRepository.updateAll(student.getUserId(), student);
+        studentRepository.updateAllFields(student.getUserId(), student);
         log.debug("Student {} updated state to {}", studentId, newState);
     }
 
-    private StudentRecord createStudent(Long studentId, Long chatId) {
-        log.info("Student {} is not in database. Adding them to database", studentId);
-
-        NotificationRecord notification = new NotificationRecord(null, true, null);
+    private void createStudent(Long studentId, Long chatId) {
+        log.debug("Student {} is not in database. Adding them to database", studentId);
 
         StudentRecord newStudent = new StudentRecord(
                 studentId,
@@ -108,13 +105,23 @@ public class StudentService {
                 START_REGISTER.name(),
                 null,
                 null,
-                notification.getId()
+                null
         );
 
-        notification.setUserId(newStudent.getUserId());
-        notificationRepository.save(notification);
         studentRepository.save(newStudent);
 
-        return newStudent;
+        NotificationRecord notification = new NotificationRecord(null, true);
+        NotificationRecord savedNotification = notificationRepository.save(notification);
+
+        studentRepository.updateNotificationId(newStudent, savedNotification.getId());
+
+    }
+
+    public boolean isNotificationEnabled(Long userId) {
+        StudentRecord studentRecord = this.getStudentInfoById(userId);
+
+        return notificationRepository.findById(studentRecord.getNotificationId())
+                .orElseThrow(() -> new NotificationNotExistsException("No notification with id: " + studentRecord.getNotificationId()))
+                .getEnabled();
     }
 }

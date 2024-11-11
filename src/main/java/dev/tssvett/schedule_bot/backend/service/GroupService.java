@@ -2,6 +2,7 @@ package dev.tssvett.schedule_bot.backend.service;
 
 import dev.tssvett.schedule_bot.backend.exception.database.StudentNotExistsException;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
 import dev.tssvett.schedule_bot.persistence.repository.GroupRepository;
 import dev.tssvett.schedule_bot.persistence.repository.StudentRepository;
@@ -32,5 +33,10 @@ public class GroupService {
 
     public List<EducationalGroupRecord> findAllGroups() {
         return groupRepository.findAll();
+    }
+
+    public EducationalGroupRecord getGroupById(Long aLong) {
+        return groupRepository.findById(aLong)
+                .orElseThrow(() -> new StudentNotExistsException("No group with id: " + aLong));
     }
 }

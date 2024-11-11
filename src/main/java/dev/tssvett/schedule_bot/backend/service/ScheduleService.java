@@ -23,7 +23,7 @@ public class ScheduleService {
 
 
     public List<LessonInfoDto> getWeekScheduleList(Long userId) {
-        Long groupId = studentService.getStudentInfoById(userId).groupId();
+        Long groupId = Mapper.toStudentInfoDto(studentService.getStudentInfoById(userId)).groupId();
         List<LessonRecord> lessonsInWeek = schoolWeekParser.parse(groupId, dateUtils.calculateCurrentUniversityEducationalWeek());
 
         return lessonsInWeek
@@ -33,7 +33,7 @@ public class ScheduleService {
     }
 
     public Map<String, List<LessonInfoDto>> getWeekScheduleMapByDate(Long userId) {
-        Long groupId = studentService.getStudentInfoById(userId).groupId();
+        Long groupId = Mapper.toStudentInfoDto(studentService.getStudentInfoById(userId)).groupId();
         List<LessonRecord> lessons = schoolWeekParser.parse(groupId, dateUtils.calculateCurrentUniversityEducationalWeek());
 
         return lessons.stream()

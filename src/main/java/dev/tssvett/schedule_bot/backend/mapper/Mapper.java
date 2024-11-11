@@ -1,29 +1,48 @@
 package dev.tssvett.schedule_bot.backend.mapper;
 
+import dev.tssvett.schedule_bot.backend.dto.FacultyInfoDto;
+import dev.tssvett.schedule_bot.backend.dto.GroupInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
+import dev.tssvett.schedule_bot.backend.dto.NotificationInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.LessonType;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import dev.tssvett.schedule_bot.bot.enums.Subgroup;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.FacultyRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
+import lombok.experimental.UtilityClass;
 
-import javax.validation.constraints.NotNull;
-
+@UtilityClass
 public class Mapper {
 
-    public static StudentInfoDto toStudentInfoDto(@NotNull StudentRecord student) {
+    public static StudentInfoDto toStudentInfoDto(StudentRecord student) {
         return new StudentInfoDto(
                 student.getUserId(),
                 student.getChatId(),
                 student.getCourse(),
                 RegistrationState.valueOf(student.getRegistrationState()),
                 student.getFacultyId(),
-                student.getGroupId()
+                student.getGroupId(),
+                student.getNotificationId()
         );
     }
 
-    public static LessonInfoDto toLessonInfoDto(@NotNull LessonRecord lesson) {
+    public static StudentRecord toStudentRecord(StudentInfoDto student) {
+        return new StudentRecord(
+                student.userId(),
+                student.chatId(),
+                student.course(),
+                student.registrationState().name(),
+                student.facultyId(),
+                student.groupId(),
+                student.notificationId()
+        );
+    }
+
+    public static LessonInfoDto toLessonInfoDto(LessonRecord lesson) {
         return new LessonInfoDto(
                 lesson.getId(),
                 lesson.getName(),
@@ -37,17 +56,63 @@ public class Mapper {
         );
     }
 
-    public static LessonRecord toLesson(@NotNull LessonInfoDto lessonInfoDto) {
+    public static LessonRecord toLessonRecord(LessonInfoDto lesson) {
         return new LessonRecord(
-                lessonInfoDto.lessonId(),
-                lessonInfoDto.name(),
-                lessonInfoDto.type().getName(),
-                lessonInfoDto.place(),
-                lessonInfoDto.teacher(),
-                lessonInfoDto.subgroup().getName(),
-                lessonInfoDto.time(),
-                lessonInfoDto.dateDay(),
-                lessonInfoDto.dateNumber());
+                lesson.lessonId(),
+                lesson.name(),
+                lesson.type().name(),
+                lesson.place(),
+                lesson.teacher(),
+                lesson.subgroup().name(),
+                lesson.time(),
+                lesson.dateDay(),
+                lesson.dateNumber()
+        );
+    }
 
+    public static GroupInfoDto toGroupInfoDto(EducationalGroupRecord educationalGroupRecord) {
+        return new GroupInfoDto(
+                educationalGroupRecord.getGroupId(),
+                educationalGroupRecord.getName(),
+                educationalGroupRecord.getCourse(),
+                educationalGroupRecord.getFacultyId()
+        );
+    }
+
+    public static EducationalGroupRecord toEducationalGroupRecord(GroupInfoDto group) {
+        return new EducationalGroupRecord(
+                group.groupId(),
+                group.name(),
+                group.course(),
+                group.facultyId()
+        );
+    }
+
+    public static FacultyInfoDto toFacultyInfoDto(EducationalGroupRecord educationalGroupRecord) {
+        return new FacultyInfoDto(
+                educationalGroupRecord.getFacultyId(),
+                educationalGroupRecord.getName()
+        );
+    }
+
+    public static FacultyRecord toFacultyRecord(FacultyInfoDto faculty) {
+        return new FacultyRecord(
+                faculty.facultyId(),
+                faculty.name()
+        );
+    }
+
+    public static NotificationInfoDto toNotificationInfoDto(NotificationRecord notificationRecord) {
+        return new NotificationInfoDto(
+                notificationRecord.getId(),
+                notificationRecord.getEnabled()
+        );
+    }
+
+    public static NotificationRecord toNotificationRecord(NotificationInfoDto notification) {
+        return new NotificationRecord(
+                notification.notificationId(),
+                notification.enabled()
+        );
     }
 }

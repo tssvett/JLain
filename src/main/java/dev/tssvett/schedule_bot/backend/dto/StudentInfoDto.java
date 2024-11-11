@@ -11,6 +11,7 @@ public record StudentInfoDto(
         Long course,
         RegistrationState registrationState,
         Long facultyId,
-        Long groupId
+        Long groupId,
+        Long notificationId
 ) {
 }

@@ -30,7 +30,7 @@ admin:
 scheduling:
   notification:
     delay: ${SCHEDULING_DELAY:86400000}
-    enabled: true
+    enabled: false
   group:
     delay: ${SCHEDULING_DELAY:86400000}
     enabled: false

@@ -28,13 +28,13 @@ public class NotificationRepository {
                 .fetchOptional();
     }
 
-    public void save(NotificationRecord notification) {
-        dslContext.insertInto(Notification.NOTIFICATION)
-                //TODO: Почитать как генерировать айдишник
-                .set(Notification.NOTIFICATION.ID, notification.getId())
+    public NotificationRecord save(NotificationRecord notification) {
+        return dslContext.insertInto(Notification.NOTIFICATION)
                 .set(Notification.NOTIFICATION.ENABLED, notification.getEnabled())
-                .execute();
+                .returning(Notification.NOTIFICATION.ID)
+                .fetchOne();
     }
+
 
     public List<NotificationRecord> findAllEnabledNotificationsWithRegisteredStudents() {
         return dslContext.select()

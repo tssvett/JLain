@@ -35,10 +35,11 @@ public class StudentRepository {
                 .set(Student.STUDENT.REGISTRATION_STATE, student.getRegistrationState())
                 .set(Student.STUDENT.FACULTY_ID, student.getFacultyId())
                 .set(Student.STUDENT.GROUP_ID, student.getGroupId())
+                .set(Student.STUDENT.NOTIFICATION_ID, student.getNotificationId())
                 .execute();
     }
 
-    public void updateAll(Long studentId, StudentRecord student) {
+    public void updateAllFields(Long studentId, StudentRecord student) {
         dslContext.update(Student.STUDENT)
                 .set(Student.STUDENT.USER_ID, student.getUserId())
                 .set(Student.STUDENT.CHAT_ID, student.getChatId())
@@ -54,6 +55,13 @@ public class StudentRepository {
         dslContext.update(Student.STUDENT)
                 .set(Student.STUDENT.REGISTRATION_STATE, state)
                 .where(Student.STUDENT.USER_ID.eq(studentId))
+                .execute();
+    }
+
+    public void updateNotificationId(StudentRecord newStudent, Long id) {
+        dslContext.update(Student.STUDENT)
+                .set(Student.STUDENT.NOTIFICATION_ID, id)
+                .where(Student.STUDENT.USER_ID.eq(newStudent.getUserId()))
                 .execute();
     }
 }
