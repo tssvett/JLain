@@ -83,6 +83,13 @@
             <version>${lombok.version}</version>
         </dependency>
 
+        <!-- Database Migration Dependency -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
+        </dependency>
+
         <!--Jooq Dependency -->
         <dependency>
             <groupId>org.jooq</groupId>
