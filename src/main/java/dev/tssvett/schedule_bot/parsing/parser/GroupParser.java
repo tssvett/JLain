@@ -24,8 +24,8 @@ public class GroupParser {
         samaraUniversityClientService.getGroupsHtml(facultyId, course).ifPresentOrElse(
                 groupsHtml -> groupsHtml.select(Selector.GROUP_PAGE_SELECTOR.name())
                         .forEach(element -> {
-                            long groupId = parseGroupId(element.attr("href"));
-                            String groupName = element.select("a.btn-text.group-catalog__group span").first().text();
+                            long groupId = parseGroupId(element.attr(Selector.GROUP_ID_SELECTOR.name()));
+                            String groupName = element.select(Selector.GROUP_NAME_SELECTOR.name()).first().text();
                             educationalGroups.add(new GroupParserDto(groupId, groupName));
                         }),
 
@@ -42,6 +42,7 @@ public class GroupParser {
         if (!matcher.find()) {
             throw new ParseElementException("Ошибка при айди группы");
         }
+
         return Long.parseLong(matcher.group());
     }
 }

@@ -24,8 +24,8 @@ public class FacultyParser {
         samaraUniversityClientService.getFacultiesHtml().ifPresentOrElse(
                 document -> document.select(Selector.FACULTY_PAGE_SELECTOR.getName())
                         .forEach((element -> {
-                            long facultyId = parseFacultyId(element.attr("href"));
-                            String facultyName = element.select("a.h3-text").get(0).text();
+                            long facultyId = parseFacultyId(element.attr(Selector.FACULTY_ID_SELECTOR.getName()));
+                            String facultyName = element.select(Selector.FACULTY_NAME_SELECTOR.getName()).get(0).text();
                             faculties.add(new FacultyParserDto(facultyId, facultyName));
                         })),
 
@@ -41,6 +41,7 @@ public class FacultyParser {
         if (!matcher.find()) {
             throw new ParseElementException("Ошибка при парсинге айди факультета");
         }
+
         return Long.parseLong(matcher.group());
     }
 }

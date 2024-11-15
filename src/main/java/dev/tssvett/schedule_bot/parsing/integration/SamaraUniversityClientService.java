@@ -72,6 +72,7 @@ public class SamaraUniversityClientService {
 
     private Optional<Document> fallbackGetHtml(Throwable throwable) {
         log.error("Circuit breaker triggered for SamaraUniversityClientService. Error message: {}", throwable.getMessage());
+
         return Optional.empty();
     }
 }
