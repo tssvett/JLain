@@ -4,12 +4,11 @@ import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import dev.tssvett.schedule_bot.persistence.model.tables.Notification;
 import dev.tssvett.schedule_bot.persistence.model.tables.Student;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -41,7 +40,8 @@ public class NotificationRepository {
                 .from(Notification.NOTIFICATION)
                 .join(Student.STUDENT)
                 .on(Notification.NOTIFICATION.ID.eq(Student.STUDENT.NOTIFICATION_ID))
-                .where(Notification.NOTIFICATION.ENABLED.isTrue()).and(Student.STUDENT.REGISTRATION_STATE.eq(RegistrationState.SUCCESSFUL_REGISTRATION.name()))
+                .where(Notification.NOTIFICATION.ENABLED.isTrue())
+                .and(Student.STUDENT.REGISTRATION_STATE.eq(RegistrationState.SUCCESSFUL_REGISTRATION.name()))
                 .fetchInto(NotificationRecord.class);
     }
 

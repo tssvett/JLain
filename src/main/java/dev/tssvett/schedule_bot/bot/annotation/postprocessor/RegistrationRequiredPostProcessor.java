@@ -40,7 +40,9 @@ public class RegistrationRequiredPostProcessor implements BeanPostProcessor {
         return Proxy.newProxyInstance(
                 beanClass.getClassLoader(),
                 beanClass.getInterfaces(),
-                (proxy, method, args) -> isExecuteMethod(method) ? handleExecuteMethod(bean, method, args) : method.invoke(bean, args)
+                (proxy, method, args) -> isExecuteMethod(method)
+                        ? handleExecuteMethod(bean, method, args)
+                        : method.invoke(bean, args)
         );
     }
 
@@ -49,7 +51,9 @@ public class RegistrationRequiredPostProcessor implements BeanPostProcessor {
         Long chatId = castToLong(args[1]);
         log.info("Check registration with postBeanProcessor for userId: {} and chatId: {}", userId, chatId);
         try {
-            return studentService.isRegistered(userId) ? (SendMessage) method.invoke(bean, args) : sendNeedToRegisterMessage(chatId);
+            return studentService.isRegistered(userId)
+                    ? (SendMessage) method.invoke(bean, args)
+                    : sendNeedToRegisterMessage(chatId);
         } catch (Exception e) {
             log.error("Error invoking method {}: {}", method.getName(), e.getMessage());
             throw new PostBeanProcessorException(e.getMessage());
