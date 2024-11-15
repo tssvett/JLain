@@ -40,3 +40,6 @@ scheduling:
 
 samara-university:
   semester-start-date: 2024-09-02
+  faculty-url: https://ssau.ru/rasp
+  group-url: https://ssau.ru/rasp/faculty/%d?course=%d
+  lesson-url: https://ssau.ru/rasp?groupId=%d&selectedWeek=%d

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.exception.IntegrityConstraintViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,8 +33,8 @@ public class FacultyRepository {
                         .values(faculty.getFacultyId(), faculty.getName())
                         .execute();
             }
-            catch (IntegrityConstraintViolationException e){
-                log.warn("Faculty with id {} already exists", faculty.getFacultyId());
+            catch (DuplicateKeyException e){
+                log.debug("Faculty with id {} already exists", faculty.getFacultyId());
             }
         }
     }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.exception.IntegrityConstraintViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -47,8 +48,8 @@ public class GroupRepository {
                                 educationalGroup.getFacultyId()
                         )
                         .execute();
-            } catch (IntegrityConstraintViolationException e) {
-                log.warn("Group with id {} already exists", educationalGroup.getGroupId());
+            } catch (DuplicateKeyException e) {
+                log.debug("Group with id {} already exists", educationalGroup.getGroupId());
             }
         }
     }
