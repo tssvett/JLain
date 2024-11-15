@@ -4,17 +4,16 @@ import dev.tssvett.schedule_bot.backend.exception.parse.ParserSourceConnectionEx
 import dev.tssvett.schedule_bot.bot.enums.LessonType;
 import dev.tssvett.schedule_bot.bot.enums.Subgroup;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.IntStream;
 
 @Slf4j
 @Component
@@ -162,5 +161,4 @@ public class SchoolWeekParser {
                 .flatMap(List::stream)
                 .toList();
     }
-
 }

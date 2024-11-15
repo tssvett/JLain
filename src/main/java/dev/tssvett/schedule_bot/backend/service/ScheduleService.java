@@ -5,13 +5,13 @@ import dev.tssvett.schedule_bot.backend.mapper.Mapper;
 import dev.tssvett.schedule_bot.bot.utils.DateUtils;
 import dev.tssvett.schedule_bot.parsing.SchoolWeekParser;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -43,7 +43,7 @@ public class ScheduleService {
     }
 
     private boolean isExist(LessonRecord lesson) {
-        return lesson.getName() != null && !lesson.getName().isEmpty()
-                && lesson.getType() != null && !lesson.getType().isEmpty();
+        return !(StringUtils.isAllEmpty(lesson.getName(), lesson.getType()) &&
+                StringUtils.isAllBlank(lesson.getName(), lesson.getType()));
     }
 }

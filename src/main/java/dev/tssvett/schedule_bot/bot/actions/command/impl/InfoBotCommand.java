@@ -26,15 +26,20 @@ public class InfoBotCommand implements BotCommand {
     @Transactional
     @RegistrationRequired
     public SendMessage execute(Long userId, Long chatId) {
+        String messageText = getMessageText(userId);
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(messageText)
+                .build();
+    }
+
+    private String getMessageText(Long userId) {
         StudentInfoDto studentInfoDto = Mapper.toStudentInfoDto(studentService.getStudentInfoById(userId));
         String facultyName = facultyService.getFacultyById(studentInfoDto.facultyId()).getName();
         String groupName = groupService.getGroupById(studentInfoDto.groupId()).getName();
         boolean notificationStatus = studentService.isNotificationEnabled(userId);
 
-        return SendMessage.builder()
-                .chatId(chatId)
-                .text(MessageCreateUtils.createInfoCommandMessageText(studentInfoDto, facultyName,
-                        groupName, notificationStatus))
-                .build();
+        return MessageCreateUtils.createInfoCommandMessageText(studentInfoDto, facultyName,
+                groupName, notificationStatus);
     }
 }

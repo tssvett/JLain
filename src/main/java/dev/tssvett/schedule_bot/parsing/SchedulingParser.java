@@ -33,22 +33,21 @@ public class SchedulingParser {
     }
 
     private void saveAllGroupsInDatabase(List<FacultyRecord> faculties, List<Integer> courses) {
-        log.info("Staring parsing all groups in all faculties");
-        log.info("Founded " + faculties.size() + " faculties");
+        log.info("Staring parsing all groups in {} faculties", faculties.size());
         for (FacultyRecord faculty : faculties) {
-            log.info("Parsing groups from faculty " + faculty.getName() + " with id " + faculty.getFacultyId());
+            log.debug("Parsing groups from faculty " + faculty.getName() + " with id " + faculty.getFacultyId());
             for (Integer course : courses) {
-                log.info("Parsing groups from course " + course);
+                log.debug("Parsing groups from course " + course);
                 List<EducationalGroupRecord> educationalGroups = groupParser.parse(faculty.getFacultyId(), course);
                 for (EducationalGroupRecord educationalGroup : educationalGroups) {
                     educationalGroup.setFacultyId(faculty.getFacultyId());
                     educationalGroup.setCourse(Long.valueOf(course));
                 }
-                log.info("Parsed " + educationalGroups.size() + " groups");
+                log.debug("Parsed " + educationalGroups.size() + " groups");
                 groupService.saveGroups(educationalGroups);
             }
         }
-        log.info("Total groups in database: " + groupService.findAllGroups().size());
+        log.info("Parsing completed successfully! Total groups in database: " + groupService.findAllGroups().size());
     }
 
     private void saveAllFacultiesInDatabase(List<FacultyRecord> faculties) {

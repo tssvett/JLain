@@ -1,5 +1,6 @@
 package dev.tssvett.schedule_bot.persistence.repository;
 
+import dev.tssvett.schedule_bot.persistence.model.Tables;
 import dev.tssvett.schedule_bot.persistence.model.tables.EducationalGroup;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +33,19 @@ public class GroupRepository {
     public void saveAll(List<EducationalGroupRecord> educationalGroups) {
         for (EducationalGroupRecord educationalGroup : educationalGroups) {
             try {
-                dslContext.insertInto(EducationalGroup.EDUCATIONAL_GROUP)
-                        .columns(EducationalGroup.EDUCATIONAL_GROUP.GROUP_ID, EducationalGroup.EDUCATIONAL_GROUP.NAME,
-                                EducationalGroup.EDUCATIONAL_GROUP.COURSE, EducationalGroup.EDUCATIONAL_GROUP.FACULTY_ID)
-                        .values(educationalGroup.getGroupId(), educationalGroup.getName(), educationalGroup.getCourse(), educationalGroup.getFacultyId())
+                dslContext.insertInto(Tables.EDUCATIONAL_GROUP)
+                        .columns(
+                                Tables.EDUCATIONAL_GROUP.GROUP_ID,
+                                Tables.EDUCATIONAL_GROUP.NAME,
+                                Tables.EDUCATIONAL_GROUP.COURSE,
+                                Tables.EDUCATIONAL_GROUP.FACULTY_ID
+                        )
+                        .values(
+                                educationalGroup.getGroupId(),
+                                educationalGroup.getName(),
+                                educationalGroup.getCourse(),
+                                educationalGroup.getFacultyId()
+                        )
                         .execute();
             } catch (IntegrityConstraintViolationException e) {
                 log.warn("Group with id {} already exists", educationalGroup.getGroupId());

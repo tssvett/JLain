@@ -25,6 +25,7 @@
         <lombok.version>1.18.30</lombok.version>
         <jooq.version>3.19.15</jooq.version>
         <jdbc.version>6.1.14</jdbc.version>
+        <jooq.starter.version>3.3.5</jooq.starter.version>
 
         <!-- Database Properties -->
         <db.url>${DB_URL}</db.url>
@@ -45,6 +46,13 @@
             <scope>test</scope>
             <version>${spring.boot.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jooq</artifactId>
+            <version>${jooq.starter.version}</version>
+        </dependency>
+
 
         <!-- Telegram Bot Dependency -->
         <dependency>
@@ -67,14 +75,6 @@
             <version>${postgresql.version}</version>
         </dependency>
 
-        <!-- JDBC Dependency -->
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${jdbc.version}</version>
-        </dependency>
-
         <!-- Lombok Dependency -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -91,11 +91,6 @@
         </dependency>
 
         <!--Jooq Dependency -->
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
-            <version>${jooq.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-meta</artifactId>

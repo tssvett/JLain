@@ -33,7 +33,7 @@ scheduling:
     enabled: false
   group:
     delay: ${SCHEDULING_DELAY:86400000}
-    enabled: false
+    enabled: true
   faculty:
     delay: ${SCHEDULING_DELAY:86400000}
     enabled: false
