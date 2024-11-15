@@ -4,6 +4,6 @@ public record GroupInfoDto(
         Long groupId,
         String name,
         Long course,
-        FacultyInfoDto faculty
+        Long facultyId
 ) {
 }

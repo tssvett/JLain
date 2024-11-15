@@ -10,8 +10,8 @@ public record StudentInfoDto(
         @NotNull Long chatId,
         Long course,
         RegistrationState registrationState,
-        FacultyInfoDto faculty,
-        GroupInfoDto group,
-        NotificationInfoDto notification
+        Long facultyId,
+        Long groupId,
+        Long notificationId
 ) {
 }

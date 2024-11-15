@@ -5,111 +5,114 @@ import dev.tssvett.schedule_bot.backend.dto.GroupInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.NotificationInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
-import dev.tssvett.schedule_bot.persistence.entity.Faculty;
-import dev.tssvett.schedule_bot.persistence.entity.Group;
-import dev.tssvett.schedule_bot.persistence.entity.Lesson;
-import dev.tssvett.schedule_bot.persistence.entity.Notification;
-import dev.tssvett.schedule_bot.persistence.entity.Student;
+import dev.tssvett.schedule_bot.bot.enums.LessonType;
+import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.bot.enums.Subgroup;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.FacultyRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
+import lombok.experimental.UtilityClass;
 
-import javax.validation.constraints.NotNull;
-
+@UtilityClass
 public class Mapper {
 
-    public static StudentInfoDto toStudentInfoDto(@NotNull Student student) {
+    public static StudentInfoDto toStudentInfoDto(StudentRecord student) {
         return new StudentInfoDto(
                 student.getUserId(),
                 student.getChatId(),
                 student.getCourse(),
-                student.getRegistrationState(),
-                toFacultyInfoDto(student.getFaculty()),
-                toGroupInfoDto(student.getGroup()),
-                toNotificationInfoDto(student.getNotification())
+                RegistrationState.valueOf(student.getRegistrationState()),
+                student.getFacultyId(),
+                student.getGroupId(),
+                student.getNotificationId()
         );
     }
 
-    public static Student toStudent(@NotNull StudentInfoDto studentInfoDto) {
-        return Student.builder()
-                .userId(studentInfoDto.userId())
-                .chatId(studentInfoDto.chatId())
-                .course(studentInfoDto.course())
-                .registrationState(studentInfoDto.registrationState())
-                .faculty(toFaculty(studentInfoDto.faculty()))
-                .group(toGroup(studentInfoDto.group()))
-                .notification(toNotification(studentInfoDto.notification()))
-                .build();
-    }
-
-    public static GroupInfoDto toGroupInfoDto(@NotNull Group group) {
-        return new GroupInfoDto(
-                group.getGroupId(),
-                group.getName(),
-                group.getCourse(),
-                toFacultyInfoDto(group.getFaculty())
+    public static StudentRecord toStudentRecord(StudentInfoDto student) {
+        return new StudentRecord(
+                student.userId(),
+                student.chatId(),
+                student.course(),
+                student.registrationState().name(),
+                student.facultyId(),
+                student.groupId(),
+                student.notificationId()
         );
     }
 
-    public static Group toGroup(@NotNull GroupInfoDto groupInfoDto) {
-        return Group.builder()
-                .groupId(groupInfoDto.groupId())
-                .name(groupInfoDto.name())
-                .course(groupInfoDto.course())
-                .faculty(toFaculty(groupInfoDto.faculty()))
-                .build();
-    }
-
-    public static FacultyInfoDto toFacultyInfoDto(@NotNull Faculty faculty) {
-        return new FacultyInfoDto(
-                faculty.getFacultyId(),
-                faculty.getName()
-        );
-    }
-
-    public static Faculty toFaculty(@NotNull FacultyInfoDto facultyInfoDto) {
-        return Faculty.builder()
-                .facultyId(facultyInfoDto.facultyId())
-                .name(facultyInfoDto.name())
-                .build();
-    }
-
-    public static Notification toNotification(@NotNull NotificationInfoDto notification) {
-        return Notification.builder()
-                .id(notification.notificationId())
-                .enabled(notification.enabled())
-                .build();
-    }
-
-    public static NotificationInfoDto toNotificationInfoDto(@NotNull Notification notification) {
-        return new NotificationInfoDto(
-                notification.getId(),
-                notification.isEnabled()
-        );
-    }
-
-    public static LessonInfoDto toLessonInfoDto(@NotNull Lesson lesson) {
+    public static LessonInfoDto toLessonInfoDto(LessonRecord lesson) {
         return new LessonInfoDto(
                 lesson.getId(),
                 lesson.getName(),
-                lesson.getType(),
+                LessonType.fromName(lesson.getType()),
                 lesson.getPlace(),
                 lesson.getTeacher(),
-                lesson.getSubgroup(),
+                Subgroup.fromName(lesson.getSubgroup()),
                 lesson.getTime(),
                 lesson.getDateDay(),
                 lesson.getDateNumber()
         );
     }
 
-    public static Lesson toLesson(@NotNull LessonInfoDto lessonInfoDto) {
-        return Lesson.builder()
-                .id(lessonInfoDto.lessonId())
-                .name(lessonInfoDto.name())
-                .type(lessonInfoDto.type())
-                .place(lessonInfoDto.place())
-                .teacher(lessonInfoDto.teacher())
-                .subgroup(lessonInfoDto.subgroup())
-                .time(lessonInfoDto.time())
-                .dateDay(lessonInfoDto.dateDay())
-                .dateNumber(lessonInfoDto.dateNumber())
-                .build();
+    public static LessonRecord toLessonRecord(LessonInfoDto lesson) {
+        return new LessonRecord(
+                lesson.lessonId(),
+                lesson.name(),
+                lesson.type().name(),
+                lesson.place(),
+                lesson.teacher(),
+                lesson.subgroup().name(),
+                lesson.time(),
+                lesson.dateDay(),
+                lesson.dateNumber()
+        );
+    }
+
+    public static GroupInfoDto toGroupInfoDto(EducationalGroupRecord educationalGroupRecord) {
+        return new GroupInfoDto(
+                educationalGroupRecord.getGroupId(),
+                educationalGroupRecord.getName(),
+                educationalGroupRecord.getCourse(),
+                educationalGroupRecord.getFacultyId()
+        );
+    }
+
+    public static EducationalGroupRecord toEducationalGroupRecord(GroupInfoDto group) {
+        return new EducationalGroupRecord(
+                group.groupId(),
+                group.name(),
+                group.course(),
+                group.facultyId()
+        );
+    }
+
+    public static FacultyInfoDto toFacultyInfoDto(EducationalGroupRecord educationalGroupRecord) {
+        return new FacultyInfoDto(
+                educationalGroupRecord.getFacultyId(),
+                educationalGroupRecord.getName()
+        );
+    }
+
+    public static FacultyRecord toFacultyRecord(FacultyInfoDto faculty) {
+        return new FacultyRecord(
+                faculty.facultyId(),
+                faculty.name()
+        );
+    }
+
+    public static NotificationInfoDto toNotificationInfoDto(NotificationRecord notificationRecord) {
+        return new NotificationInfoDto(
+                notificationRecord.getId(),
+                notificationRecord.getEnabled()
+        );
+    }
+
+    public static NotificationRecord toNotificationRecord(NotificationInfoDto notification) {
+        return new NotificationRecord(
+                notification.notificationId(),
+                notification.enabled()
+        );
     }
 }

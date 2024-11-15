@@ -3,12 +3,11 @@ package dev.tssvett.schedule_bot.bot.annotation.postprocessor;
 import dev.tssvett.schedule_bot.backend.exception.annotation.PostBeanProcessorException;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.lang.reflect.Method;
@@ -16,14 +15,9 @@ import java.lang.reflect.Proxy;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class RegistrationRequiredPostProcessor implements BeanPostProcessor {
     private final StudentService studentService;
-    private final TransactionTemplate transactionTemplate;
-
-    public RegistrationRequiredPostProcessor(StudentService studentService, PlatformTransactionManager transactionManager) {
-        this.studentService = studentService;
-        this.transactionTemplate = new TransactionTemplate(transactionManager);
-    }
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -54,16 +48,12 @@ public class RegistrationRequiredPostProcessor implements BeanPostProcessor {
         Long userId = castToLong(args[0]);
         Long chatId = castToLong(args[1]);
         log.info("Check registration with postBeanProcessor for userId: {} and chatId: {}", userId, chatId);
-        //Проксирование теряет транзакцию, используем transactionTemplate
-        return transactionTemplate.execute(status -> {
-            try {
-                return studentService.isRegistered(userId) ? (SendMessage) method.invoke(bean, args) : sendNeedToRegisterMessage(chatId);
-            } catch (Exception e) {
-                log.error("Error invoking method {}: {}", method.getName(), e.getMessage());
-                status.setRollbackOnly();
-                throw new PostBeanProcessorException(e.getMessage());
-            }
-        });
+        try {
+            return studentService.isRegistered(userId) ? (SendMessage) method.invoke(bean, args) : sendNeedToRegisterMessage(chatId);
+        } catch (Exception e) {
+            log.error("Error invoking method {}: {}", method.getName(), e.getMessage());
+            throw new PostBeanProcessorException(e.getMessage());
+        }
     }
 
     private SendMessage sendNeedToRegisterMessage(Long chatId) {

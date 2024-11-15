@@ -11,7 +11,8 @@ import static dev.tssvett.schedule_bot.bot.utils.StringUtils.capitalizeFirstLett
 @UtilityClass
 public class MessageCreateUtils {
 
-    public static String createInfoCommandMessageText(StudentInfoDto studentInfoDto) {
+    public static String createInfoCommandMessageText(StudentInfoDto studentInfoDto, String facultyName,
+                                                      String groupName, boolean isNotificationEnabled) {
         return """
                 ℹ️ **Информация о пользователе:**
                 👤 **ID пользователя:** %d
@@ -23,12 +24,15 @@ public class MessageCreateUtils {
                 🔔 **Уведомления:** %s""".formatted(
                 studentInfoDto.userId(),
                 studentInfoDto.chatId(),
-                studentInfoDto.faculty().name(),
+                facultyName,
                 studentInfoDto.course(),
-                studentInfoDto.group().name(),
-                (studentInfoDto.registrationState().equals(RegistrationState.SUCCESSFUL_REGISTRATION) ? "✅ Успешно пройдена" : "❌ Не завершена"),
-                (studentInfoDto.notification().enabled() ? "✅ Включены" : "❌ Отключены")
-        );
+                groupName,
+                studentInfoDto.registrationState().equals(RegistrationState.SUCCESSFUL_REGISTRATION)
+                        ? "✅ Успешно пройдена"
+                        : "❌ Не завершена",
+                isNotificationEnabled
+                        ? "✅ Включены"
+                        : "❌ Отключены");
     }
 
     public static String createDayHeader(String day, String lessonDate) {

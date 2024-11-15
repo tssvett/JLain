@@ -18,13 +18,18 @@
 
         <!-- Library Versions -->
         <spring.boot.version>3.3.2</spring.boot.version>
-        <spring.boot.data.jpa.version>3.3.4</spring.boot.data.jpa.version>
         <telegrambots.version>6.9.7.1</telegrambots.version>
         <jsoup.version>1.18.1</jsoup.version>
         <liquibase.version>4.29.1</liquibase.version>
         <postgresql.version>42.7.3</postgresql.version>
-        <hibernate.version>6.5.2.Final</hibernate.version>
         <lombok.version>1.18.30</lombok.version>
+        <jooq.version>3.19.15</jooq.version>
+        <jdbc.version>6.1.14</jdbc.version>
+
+        <!-- Database Properties -->
+        <db.url>${DB_URL}</db.url>
+        <db.user>${DB_USERNAME}</db.user>
+        <db.password>${DB_PASSWORD}</db.password>
     </properties>
 
     <dependencies>
@@ -33,11 +38,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring.boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>${spring.boot.data.jpa.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -60,13 +60,6 @@
             <version>${jsoup.version}</version>
         </dependency>
 
-        <!-- Database Migration Dependency -->
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <version>${liquibase.version}</version>
-        </dependency>
-
         <!-- PostgreSQL Driver Dependency -->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -74,11 +67,12 @@
             <version>${postgresql.version}</version>
         </dependency>
 
-        <!-- Hibernate Core Dependency -->
+        <!-- JDBC Dependency -->
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
         <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${jdbc.version}</version>
         </dependency>
 
         <!-- Lombok Dependency -->
@@ -87,6 +81,30 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
             <version>${lombok.version}</version>
+        </dependency>
+
+        <!-- Database Migration Dependency -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
+        </dependency>
+
+        <!--Jooq Dependency -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>${jooq.version}</version>
         </dependency>
 
     </dependencies>
@@ -143,6 +161,47 @@
                             <mainClass>dev.tssvett.schedule_bot.ScheduleBotApplication</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+
+            <!-- JOOQ Code Generation Plugin -->
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>${jooq.version}</version>
+
+                <!-- The plugin should hook into the generate goal -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+
+                    <!-- JDBC connection parameters -->
+                    <jdbc>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>${db.url}</url>
+                        <user>${db.user}</user>
+                        <password>${db.password}</password>
+                    </jdbc>
+
+                    <!-- Generator parameters -->
+                    <generator>
+                        <database>
+                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+                            <includes>.*</includes>
+                            <excludes>Databasechangelog.*</excludes>
+                            <inputSchema>public</inputSchema>
+                        </database>
+                        <target>
+                            <directory>src/main/java</directory>
+                            <packageName>dev.tssvett.schedule_bot.persistence.model</packageName>
+                        </target>
+                    </generator>
                 </configuration>
             </plugin>
 

@@ -1,8 +1,9 @@
 package dev.tssvett.schedule_bot.backend.service;
 
 import dev.tssvett.schedule_bot.backend.exception.database.StudentNotExistsException;
-import dev.tssvett.schedule_bot.persistence.entity.Group;
-import dev.tssvett.schedule_bot.persistence.entity.Student;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
 import dev.tssvett.schedule_bot.persistence.repository.GroupRepository;
 import dev.tssvett.schedule_bot.persistence.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +19,24 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final StudentRepository studentRepository;
 
-    public List<Group> getFilteredByCourseAndFacultyGroups(Long userId) {
-        Student user = studentRepository.findById(userId)
+    public List<EducationalGroupRecord> getFilteredByCourseAndFacultyGroups(Long userId) {
+        StudentRecord student = studentRepository.findById(userId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + userId));
 
-        return groupRepository.findAll()
-                .stream()
-                .filter(group -> group.getCourse().equals(user.getCourse()))
-                .filter(group -> group.getFaculty().getName().equals(user.getFaculty().getName()))
-                .toList();
+        return groupRepository.findAllByFacultyIdAndCourse(student.getFacultyId(), student.getCourse());
 
     }
 
-
-    public void saveGroups(List<Group> groups) {
-        groupRepository.saveAll(groups);
+    public void saveGroups(List<EducationalGroupRecord> educationalGroups) {
+        groupRepository.saveAll(educationalGroups);
     }
 
-    public List<Group> findAllGroups() {
+    public List<EducationalGroupRecord> findAllGroups() {
         return groupRepository.findAll();
+    }
+
+    public EducationalGroupRecord getGroupById(Long aLong) {
+        return groupRepository.findById(aLong)
+                .orElseThrow(() -> new StudentNotExistsException("No group with id: " + aLong));
     }
 }
