@@ -18,7 +18,7 @@ public class SamaraUniversityClientService {
 
     public Document getFacultiesHtml() {
         try {
-            String url = properties.getFacultyUrl();
+            String url = properties.facultyUrl();
 
             return Jsoup.connect(url)
                     .userAgent(Connection.USER_AGENT.getName())
@@ -30,7 +30,7 @@ public class SamaraUniversityClientService {
 
     public Document getGroupsHtml(long facultyId, long course) {
         try {
-            String url = String.format(properties.getGroupUrl(), facultyId, course);
+            String url = String.format(properties.groupUrl(), facultyId, course);
 
             return Jsoup.connect(url)
                     .userAgent(Connection.USER_AGENT.getName())
@@ -42,7 +42,7 @@ public class SamaraUniversityClientService {
 
     public Document getLessonsHtml(Long groupId, Integer week) {
         try {
-            String url = String.format(properties.getLessonUrl(), groupId, week);
+            String url = String.format(properties.lessonUrl(), groupId, week);
 
             return Jsoup.connect(url)
                     .userAgent(Connection.USER_AGENT.getName())

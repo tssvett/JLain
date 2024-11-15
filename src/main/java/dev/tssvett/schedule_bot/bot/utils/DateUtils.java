@@ -19,7 +19,7 @@ public class DateUtils {
 
     public Integer calculateCurrentUniversityEducationalWeek() {
         LocalDate now = LocalDate.now();
-        LocalDate semesterStart = properties.getSemesterStartDate();
+        LocalDate semesterStart = properties.semesterStartDate();
         log.debug("Current Week number: {}", (int) (now.toEpochDay() - semesterStart.toEpochDay()) / 7 + 1);
 
         return (int) (now.toEpochDay() - semesterStart.toEpochDay()) / 7 + 1;

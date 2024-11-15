@@ -80,6 +80,6 @@ public class AdminRequiredPostProcessor implements BeanPostProcessor {
     }
 
     private boolean isAdmin(Long userId) {
-        return adminProperties.getId().equals(userId);
+        return adminProperties.id().equals(userId);
     }
 }
