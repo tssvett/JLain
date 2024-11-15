@@ -26,6 +26,8 @@
         <jooq.version>3.19.15</jooq.version>
         <jdbc.version>6.1.14</jdbc.version>
         <jooq.starter.version>3.3.5</jooq.starter.version>
+        <retry.version>2.0.10</retry.version>
+        <citcuitbreaker.version>3.1.2</citcuitbreaker.version>
 
         <!-- Database Properties -->
         <db.url>${DB_URL}</db.url>
@@ -52,6 +54,13 @@
             <artifactId>spring-boot-starter-jooq</artifactId>
             <version>${jooq.starter.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+
 
 
         <!-- Telegram Bot Dependency -->
@@ -101,6 +110,22 @@
             <artifactId>jooq-codegen</artifactId>
             <version>${jooq.version}</version>
         </dependency>
+
+        <!-- Retry dependency -->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+            <version>${retry.version}</version>
+        </dependency>
+
+        <!-- CircuitBreaker dependency -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+            <version>${citcuitbreaker.version}</version>
+        </dependency>
+
+
 
     </dependencies>
 

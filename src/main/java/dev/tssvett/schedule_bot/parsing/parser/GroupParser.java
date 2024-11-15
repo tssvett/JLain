@@ -21,13 +21,16 @@ public class GroupParser {
     public List<GroupParserDto> parse(Long facultyId, Integer course) {
         List<GroupParserDto> educationalGroups = new ArrayList<>();
 
-        samaraUniversityClientService.getGroupsHtml(facultyId, course)
-                .select(Selector.GROUP_PAGE_SELECTOR.name())
-                .forEach(element -> {
-                    long groupId = parseGroupId(element.attr("href"));
-                    String groupName = element.select("a.btn-text.group-catalog__group span").first().text();
-                    educationalGroups.add(new GroupParserDto(groupId, groupName));
-                });
+        samaraUniversityClientService.getGroupsHtml(facultyId, course).ifPresentOrElse(
+                groupsHtml -> groupsHtml.select(Selector.GROUP_PAGE_SELECTOR.name())
+                        .forEach(element -> {
+                            long groupId = parseGroupId(element.attr("href"));
+                            String groupName = element.select("a.btn-text.group-catalog__group span").first().text();
+                            educationalGroups.add(new GroupParserDto(groupId, groupName));
+                        }),
+
+                () -> log.error("Ошибка при парсинге групп")
+        );
 
         return educationalGroups;
     }

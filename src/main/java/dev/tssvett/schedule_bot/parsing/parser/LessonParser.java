@@ -5,8 +5,10 @@ import dev.tssvett.schedule_bot.bot.enums.Subgroup;
 import dev.tssvett.schedule_bot.parsing.dto.LessonParserDto;
 import dev.tssvett.schedule_bot.parsing.enums.Selector;
 import dev.tssvett.schedule_bot.parsing.integration.SamaraUniversityClientService;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +25,18 @@ public class LessonParser {
     private final SamaraUniversityClientService samaraUniversityClientService;
 
     public List<LessonParserDto> parse(Long groupId, Integer week) {
-        Document lessonsHtml = samaraUniversityClientService.getLessonsHtml(groupId, week);
+        Optional<Document> optionalLessonDocument = samaraUniversityClientService.getLessonsHtml(groupId, week);
 
-        List<String> lessonTimes = getLessonTimesFromHtml(lessonsHtml);
-        List<String> lessonDates = getLessonDatesFromHtml(lessonsHtml);
+        if (optionalLessonDocument.isEmpty()) {
+            return new ArrayList<>();
+        }
 
-        List<LessonParserDto> lessons = createLessonRecords(lessonsHtml, lessonTimes, lessonDates);
+        Document lessonsHtmlDocument = optionalLessonDocument.get();
+
+        List<String> lessonTimes = getLessonTimesFromHtml(lessonsHtmlDocument);
+        List<String> lessonDates = getLessonDatesFromHtml(lessonsHtmlDocument);
+
+        List<LessonParserDto> lessons = createLessonRecords(lessonsHtmlDocument, lessonTimes, lessonDates);
 
         return sortLessonsByDay(lessons, lessonDates);
     }

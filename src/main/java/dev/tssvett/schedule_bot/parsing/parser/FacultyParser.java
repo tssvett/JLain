@@ -21,13 +21,16 @@ public class FacultyParser {
     public List<FacultyParserDto> parse() {
         List<FacultyParserDto> faculties = new ArrayList<>();
 
-        samaraUniversityClientService.getFacultiesHtml()
-                .select(Selector.FACULTY_PAGE_SELECTOR.getName())
-                .forEach((element -> {
-                    Long facultyId = parseFacultyId(element.attr("href"));
-                    String facultyName = element.select("a.h3-text").get(0).text();
-                    faculties.add(new FacultyParserDto(facultyId, facultyName));
-                }));
+        samaraUniversityClientService.getFacultiesHtml().ifPresentOrElse(
+                document -> document.select(Selector.FACULTY_PAGE_SELECTOR.getName())
+                        .forEach((element -> {
+                            long facultyId = parseFacultyId(element.attr("href"));
+                            String facultyName = element.select("a.h3-text").get(0).text();
+                            faculties.add(new FacultyParserDto(facultyId, facultyName));
+                        })),
+
+                () -> log.error("Факультеты не найдены")
+        );
 
         return faculties;
     }
