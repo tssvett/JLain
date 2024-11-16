@@ -1,17 +1,19 @@
-package dev.tssvett.schedule_bot.parsing;
+package dev.tssvett.schedule_bot.scheduling;
 
+import dev.tssvett.schedule_bot.backend.mapper.Mapper;
 import dev.tssvett.schedule_bot.backend.service.FacultyService;
 import dev.tssvett.schedule_bot.backend.service.GroupService;
+import dev.tssvett.schedule_bot.parsing.parser.FacultyParser;
+import dev.tssvett.schedule_bot.parsing.parser.GroupParser;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.FacultyRecord;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -27,7 +29,10 @@ public class SchedulingParser {
     @Scheduled(fixedDelayString = "${scheduling.group.delay}")
     public void updateGroupsInDatabase() {
         List<Integer> courses = List.of(1, 2, 3, 4, 5);
-        List<FacultyRecord> faculties = facultyParser.parse();
+        List<FacultyRecord> faculties = facultyParser.parse()
+                .stream()
+                .map(Mapper::toFacultyRecord)
+                .toList();
         saveAllFacultiesInDatabase(faculties);
         saveAllGroupsInDatabase(faculties, courses);
     }
@@ -38,7 +43,10 @@ public class SchedulingParser {
             log.debug("Parsing groups from faculty " + faculty.getName() + " with id " + faculty.getFacultyId());
             for (Integer course : courses) {
                 log.debug("Parsing groups from course " + course);
-                List<EducationalGroupRecord> educationalGroups = groupParser.parse(faculty.getFacultyId(), course);
+                List<EducationalGroupRecord> educationalGroups = groupParser.parse(faculty.getFacultyId(), course)
+                        .stream()
+                        .map(Mapper::toEducationalGroupRecord)
+                        .toList();
                 for (EducationalGroupRecord educationalGroup : educationalGroups) {
                     educationalGroup.setFacultyId(faculty.getFacultyId());
                     educationalGroup.setCourse(Long.valueOf(course));

@@ -1,15 +1,18 @@
-package dev.tssvett.schedule_bot.parsing;
+package dev.tssvett.schedule_bot.parsing.parser;
 
-import dev.tssvett.schedule_bot.backend.exception.parse.ParserSourceConnectionException;
 import dev.tssvett.schedule_bot.bot.enums.LessonType;
 import dev.tssvett.schedule_bot.bot.enums.Subgroup;
-import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
-import java.io.IOException;
+import dev.tssvett.schedule_bot.parsing.dto.LessonParserDto;
+import dev.tssvett.schedule_bot.parsing.enums.Selector;
+import dev.tssvett.schedule_bot.parsing.integration.SamaraUniversityClientService;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.stream.IntStream;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -17,32 +20,30 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class SchoolWeekParser {
-    private static final String URL = "https://ssau.ru/rasp?groupId=%d&selectedWeek=%d";
-    private static final String USER_AGENT = "Mozilla/5.0";
-    private static final String SCHOOL_WEEK_SELECTOR = ".schedule__item";
-    private static final String TIME_SELECTOR = ".schedule__time";
+@RequiredArgsConstructor
+public class LessonParser {
+    private final SamaraUniversityClientService samaraUniversityClientService;
 
-    public List<LessonRecord> parse(Long groupId, Integer week) {
-        Document document = fetchDocument(groupId, week);
-        Elements rawSchoolWeek = document.select(SCHOOL_WEEK_SELECTOR);
-        List<String> lessonTimes = parseLessonTimes(document);
-        List<String> lessonDates = parseLessonDates(document);
-        List<LessonRecord> lessons = parseAll(rawSchoolWeek, lessonTimes, lessonDates);
+    public List<LessonParserDto> parse(Long groupId, Integer week) {
+        Optional<Document> optionalLessonDocument = samaraUniversityClientService.getLessonsHtml(groupId, week);
+
+        if (optionalLessonDocument.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Document lessonsHtmlDocument = optionalLessonDocument.get();
+
+        List<String> lessonTimes = getLessonTimesFromHtml(lessonsHtmlDocument);
+        List<String> lessonDates = getLessonDatesFromHtml(lessonsHtmlDocument);
+
+        List<LessonParserDto> lessons = createLessonRecords(lessonsHtmlDocument, lessonTimes, lessonDates);
 
         return sortLessonsByDay(lessons, lessonDates);
     }
 
-    private Document fetchDocument(Long groupId, Integer week) {
-        try {
-            return Jsoup.connect(String.format(URL, groupId, week)).userAgent(USER_AGENT).get();
-        } catch (IOException e) {
-            throw new ParserSourceConnectionException(e.getMessage());
-        }
-    }
-
-    private List<String> parseLessonTimes(Document document) {
-        return document.select(TIME_SELECTOR).stream()
+    private List<String> getLessonTimesFromHtml(Document elements) {
+        return elements.select(Selector.TIME_SELECTOR.getName())
+                .stream()
                 .map(timeElement -> {
                     String[] timeParts = timeElement.text().split(" ");
                     return (timeParts.length == 2) ? timeParts[0] + " - " + timeParts[1] : "";
@@ -51,30 +52,36 @@ public class SchoolWeekParser {
                 .toList();
     }
 
-    private List<String> parseLessonDates(Document document) {
-        Elements rawDates = document.select(SCHOOL_WEEK_SELECTOR);
+    private List<String> getLessonDatesFromHtml(Document document) {
+        Elements rawDates = document.select(Selector.SCHOOL_WEEK_SELECTOR.getName());
         return IntStream.range(1, Math.min(7, rawDates.size())) // Пропускаем первый элемент
                 .mapToObj(rawDates::get)
                 .map(Element::text)
                 .toList();
     }
 
-    private List<LessonRecord> parseAll(Elements schoolWeek, List<String> lessonTimes, List<String> dates) {
-        List<LessonRecord> lessonsList = new LinkedList<>();
-        Elements potentialLessons = removeFirstNElements(schoolWeek, 7);
-        for (int i = 0; i < potentialLessons.size(); i++) {
-            Elements lessons = potentialLessons.get(i).select(".schedule__lesson");
+    private List<LessonParserDto> createLessonRecords(Document schoolWeek, List<String> lessonTimes,
+                                                      List<String> dates) {
+        List<LessonParserDto> lessonsList = new LinkedList<>();
+
+        Elements lessonsElements = removeFirstNElements(
+                schoolWeek.select(Selector.SCHOOL_WEEK_SELECTOR.getName()), 7
+        );
+
+        for (int i = 0; i < lessonsElements.size(); i++) {
+            Elements lessons = lessonsElements.get(i).select(Selector.LESSON_SELECTOR.getName());
             for (Element lessonElement : lessons) {
                 if (!lessons.isEmpty()) {
                     lessonsList.add(buildLesson(lessonTimes, dates, lessonElement, i));
                 }
             }
         }
+
         return lessonsList;
     }
 
-    private LessonRecord buildLesson(List<String> lessonTimes, List<String> dates, Element lessonElement, int i) {
-        return new LessonRecord(null,
+    private LessonParserDto buildLesson(List<String> lessonTimes, List<String> dates, Element lessonElement, int i) {
+        return new dev.tssvett.schedule_bot.parsing.dto.LessonParserDto(
                 getName(lessonElement),
                 getType(lessonElement).getName(),
                 getPlace(lessonElement),
@@ -82,7 +89,8 @@ public class SchoolWeekParser {
                 getSubgroupString(lessonElement).getName(),
                 getTime(lessonTimes, dates, i),
                 getDateDay(dates, i),
-                getDateNumber(dates, i));
+                getDateNumber(dates, i)
+        );
     }
 
     private static String getDateNumber(List<String> dates, int i) {
@@ -98,22 +106,20 @@ public class SchoolWeekParser {
     }
 
     private static Subgroup getSubgroupString(Element lessonElement) {
-        String subgroupText = extractSubgroupText(lessonElement);
-        return getSubgroupFromText(subgroupText);
+        return getSubgroupFromText(extractSubgroupText(lessonElement));
     }
 
     private static String extractSubgroupText(Element lessonElement) {
-        String subgroup = lessonElement.select(".schedule__groups").text().toLowerCase();
+        String subgroup = lessonElement.select(Selector.GROUPS_SELECTOR.getName()).text().toLowerCase();
 
-        // Use regex to find the subgroup after "подгруппы:"
         String regex = "подгруппы:\\s*(\\S+)";
-        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile(regex).matcher(subgroup);
+        Matcher matcher = java.util.regex.Pattern.compile(regex).matcher(subgroup);
 
         if (matcher.find()) {
-            return matcher.group(1); // Return the first captured group
+            return matcher.group(1);
         }
 
-        return ""; // Return an empty string if no subgroup found
+        return "";
     }
 
     private static Subgroup getSubgroupFromText(String subgroupText) {
@@ -125,15 +131,15 @@ public class SchoolWeekParser {
     }
 
     private static String getTeacher(Element lessonElement) {
-        return lessonElement.select(".schedule__teacher").text().toLowerCase();
+        return lessonElement.select(Selector.TEACHER_SELECTOR.getName()).text().toLowerCase();
     }
 
     private static String getPlace(Element lessonElement) {
-        return lessonElement.select(".schedule__place").text().toLowerCase();
+        return lessonElement.select(Selector.PLACE_SELECTOR.getName()).text().toLowerCase();
     }
 
     private static LessonType getType(Element lessonElement) {
-        String type = lessonElement.select(".schedule__lesson-type").text().toLowerCase();
+        String type = lessonElement.select(Selector.LESSON_TYPE_SELECTOR.getName()).text().toLowerCase();
         try {
             return LessonType.fromName(type);
         } catch (IllegalArgumentException e) {
@@ -142,20 +148,22 @@ public class SchoolWeekParser {
     }
 
     private static String getName(Element lessonElement) {
-        return lessonElement.select(".schedule__discipline").text().toLowerCase();
+        return lessonElement.select(Selector.DISCIPLINE_SELECTOR.getName()).text().toLowerCase();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static Elements removeFirstNElements(Elements elements, int n) {
         return new Elements(IntStream.range(n, elements.size())
                 .mapToObj(elements::get)
                 .toList());
     }
 
-    private List<LessonRecord> sortLessonsByDay(List<LessonRecord> lessons, List<String> dates) {
-        return dates.stream().map(date -> {
+    private List<LessonParserDto> sortLessonsByDay(List<LessonParserDto> lessons, List<String> dates) {
+        return dates.stream()
+                .map(date -> {
                     String dayOfWeek = date.split(" ")[0];
                     return lessons.stream()
-                            .filter(lesson -> lesson.getDateDay().equals(dayOfWeek))
+                            .filter(lesson -> lesson.dateDay().equals(dayOfWeek))
                             .toList();
                 })
                 .flatMap(List::stream)

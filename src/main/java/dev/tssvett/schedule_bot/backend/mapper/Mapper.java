@@ -8,6 +8,9 @@ import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.LessonType;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import dev.tssvett.schedule_bot.bot.enums.Subgroup;
+import dev.tssvett.schedule_bot.parsing.dto.FacultyParserDto;
+import dev.tssvett.schedule_bot.parsing.dto.GroupParserDto;
+import dev.tssvett.schedule_bot.parsing.dto.LessonParserDto;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.FacultyRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
@@ -70,6 +73,20 @@ public class Mapper {
         );
     }
 
+    public static LessonRecord toLessonRecord(LessonParserDto lesson) {
+        return new LessonRecord(
+                null,
+                lesson.name(),
+                lesson.type(),
+                lesson.place(),
+                lesson.teacher(),
+                lesson.subgroup(),
+                lesson.time(),
+                lesson.dateDay(),
+                lesson.dateNumber()
+        );
+    }
+
     public static GroupInfoDto toGroupInfoDto(EducationalGroupRecord educationalGroupRecord) {
         return new GroupInfoDto(
                 educationalGroupRecord.getGroupId(),
@@ -88,6 +105,15 @@ public class Mapper {
         );
     }
 
+    public static EducationalGroupRecord toEducationalGroupRecord(GroupParserDto groupParserDto) {
+        return new EducationalGroupRecord(
+                groupParserDto.groupId(),
+                groupParserDto.groupName(),
+                null,
+                null
+        );
+    }
+
     public static FacultyInfoDto toFacultyInfoDto(EducationalGroupRecord educationalGroupRecord) {
         return new FacultyInfoDto(
                 educationalGroupRecord.getFacultyId(),
@@ -99,6 +125,13 @@ public class Mapper {
         return new FacultyRecord(
                 faculty.facultyId(),
                 faculty.name()
+        );
+    }
+
+    public static FacultyRecord toFacultyRecord(FacultyParserDto facultyParserDto) {
+        return new FacultyRecord(
+                facultyParserDto.facultyId(),
+                facultyParserDto.facultyName()
         );
     }
 

@@ -40,3 +40,20 @@ scheduling:
 
 samara-university:
   semester-start-date: 2024-09-02
+  faculty-url: https://ssau.ru/rasp
+  group-url: https://ssau.ru/rasp/faculty/%d?course=%d
+  lesson-url: https://ssau.ru/rasp?groupId=%d&selectedWeek=%d
+
+integration:
+  max-retries: 5
+  retry-delay: 1000
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      samaraUniversityClientService:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000 # 10 секунд
+        permittedNumberOfCallsInHalfOpenState: 3

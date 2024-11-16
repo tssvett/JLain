@@ -19,12 +19,12 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return botProperties.getName();
+        return botProperties.name();
     }
 
     @Override
     public String getBotToken() {
-        return botProperties.getToken();
+        return botProperties.token();
     }
 
     @Override
