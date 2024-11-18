@@ -2,15 +2,13 @@ package dev.tssvett.schedule_bot.persistence.repository;
 
 import dev.tssvett.schedule_bot.persistence.model.tables.Faculty;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.FacultyRecord;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
-import org.jooq.exception.IntegrityConstraintViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -25,15 +23,15 @@ public class FacultyRepository {
     }
 
     public void saveAll(List<FacultyRecord> faculties) {
-
         for (FacultyRecord faculty : faculties) {
             try {
                 dslContext.insertInto(Faculty.FACULTY)
-                        .columns(Faculty.FACULTY.FACULTY_ID, Faculty.FACULTY.NAME)
-                        .values(faculty.getFacultyId(), faculty.getName())
+                        .set(Faculty.FACULTY.FACULTY_ID, faculty.getFacultyId())
+                        .set(Faculty.FACULTY.NAME, faculty.getName())
+                        .onDuplicateKeyUpdate()
+                        .set(Faculty.FACULTY.NAME, faculty.getName())
                         .execute();
-            }
-            catch (DuplicateKeyException e){
+            } catch (DuplicateKeyException e) {
                 log.debug("Faculty with id {} already exists", faculty.getFacultyId());
             }
         }

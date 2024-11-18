@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot.actions.command.impl.schedule;
 
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
-import dev.tssvett.schedule_bot.backend.service.ScheduleService;
+import dev.tssvett.schedule_bot.backend.service.LessonService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
@@ -19,7 +19,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class TodayScheduleBotCommand implements BotCommand {
-    private final ScheduleService scheduleService;
+    private final LessonService lessonService;
     private final ScheduleStringFormatter scheduleStringFormatter;
     private final DateUtils dateUtils;
 
@@ -27,7 +27,7 @@ public class TodayScheduleBotCommand implements BotCommand {
     @RegistrationRequired
     @Transactional
     public SendMessage execute(Long userId, Long chatId) {
-        Map<String, List<LessonInfoDto>> weekSchedule = scheduleService.getWeekScheduleMapByDate(userId);
+        Map<String, List<LessonInfoDto>> weekSchedule = lessonService.getWeekScheduleMapByDate(userId);
         String stringLessons = scheduleStringFormatter.formatDay(weekSchedule, dateUtils.calculateCurrentDayName());
 
         return SendMessage.builder()

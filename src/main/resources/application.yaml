@@ -19,6 +19,8 @@ spring:
     change-log: db/changelog/changelog-master.yaml
     enabled: true
 
+  jackson:
+    time-zone: Europe/Samara
 
 bot:
   name: ${BOT_NAME}
@@ -28,14 +30,18 @@ admin:
   id: ${ADMIN_ID}
 
 scheduling:
-  notification:
-    delay: ${SCHEDULING_DELAY:86400000}
-    enabled: false
-  group:
-    delay: ${SCHEDULING_DELAY:86400000}
-    enabled: true
   faculty:
-    delay: ${SCHEDULING_DELAY:86400000}
+    cron: "0 0 22 * * *" #Каждый день в 22:00
+    enabled: true
+  group:
+    cron: "0 10 22 * * *" #Каждый день в 22:00
+    enabled: true
+  lesson:
+    cron: "0 30 22 * * *" #Каждый день в 22:00
+    delay: 1000000
+    enabled: true
+  notification:
+    cron: "0 0 23 * * *" #Каждый день в 23:00
     enabled: false
 
 samara-university:
@@ -47,6 +53,8 @@ samara-university:
 integration:
   max-retries: 5
   retry-delay: 1000
+  timeout: 5000
+
 
 resilience4j:
   circuitbreaker:
@@ -55,5 +63,12 @@ resilience4j:
         slidingWindowSize: 10
         minimumNumberOfCalls: 5
         failureRateThreshold: 50
-        waitDurationInOpenState: 10000 # 10 секунд
+        waitDurationInOpenState: 10000
         permittedNumberOfCallsInHalfOpenState: 3
+
+  ratelimiter:
+    instances:
+      samaraUniversityClientService:
+        limitForPeriod: 10
+        limitRefreshPeriod: 1s
+        timeoutDuration: 5s
