@@ -16,10 +16,16 @@ public class LessonRepository {
     private final DSLContext dslContext;
 
     public void saveAll(List<LessonRecord> lessons) {
-        try{
-            dslContext.batchInsert(lessons).execute();
+        try {
+            dslContext.batchInsert(lessons)
+                    .execute();
         } catch (DuplicateKeyException e) {
             log.error("Error while saving lessons: {}", e.getMessage());
         }
+    }
+
+    public List<LessonRecord> findAllLessons() {
+        return dslContext.selectFrom(Lesson.LESSON)
+                .fetchInto(LessonRecord.class);
     }
 }

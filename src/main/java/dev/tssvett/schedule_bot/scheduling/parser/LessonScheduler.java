@@ -16,11 +16,10 @@ import org.springframework.stereotype.Component;
 public class LessonScheduler {
     private final LessonService lessonService;
 
-    @Scheduled(fixedDelayString = "${scheduling.lesson.delay}")
+    @Scheduled(cron = "${scheduling.lesson.cron}")
     public void startParsingAndSavingFacultiesToDatabase() {
         log.info("Lesson Scheduler started");
 
-        //TODO: подумай, что будет когда парсер опять будет работать
         lessonService.parseAndSaveLessonsFromAllGroupsCompletableFuture();
 
         log.info("Lesson Scheduler finished");

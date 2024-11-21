@@ -9,13 +9,11 @@ import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGrou
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import dev.tssvett.schedule_bot.persistence.repository.LessonRepository;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.swing.text.html.Option;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +33,6 @@ public class LessonService {
     public List<LessonInfoDto> getWeekScheduleList(Long userId) {
         Long groupId = Mapper.toStudentInfoDto(studentService.getStudentInfoById(userId)).groupId();
 
-        /*
         List<LessonRecord> lessonsInWeek = lessonParser.parse(
                         groupId, dateUtils.calculateCurrentUniversityEducationalWeek()
                 )
@@ -47,15 +44,11 @@ public class LessonService {
                 .stream()
                 .map(Mapper::toLessonInfoDto)
                 .toList();
-
-         */
-        return new ArrayList<>();
     }
 
     public Map<String, List<LessonInfoDto>> getWeekScheduleMapByDate(Long userId) {
         Long groupId = Mapper.toStudentInfoDto(studentService.getStudentInfoById(userId)).groupId();
 
-        /*
         List<LessonRecord> lessons = lessonParser.parse(
                         groupId, dateUtils.calculateCurrentUniversityEducationalWeek()
                 )
@@ -67,14 +60,8 @@ public class LessonService {
                 .filter(this::isExist)
                 .map(Mapper::toLessonInfoDto)
                 .collect(Collectors.groupingBy(LessonInfoDto::dateDay));
-
-
-         */
-
-        return new HashMap<>();
     }
 
-    /*
     public List<LessonRecord> parseLessonsFromAllGroups() {
         int currentGroup = 0;
         int groupsCount = groupService.findAllGroups().size();
@@ -93,8 +80,6 @@ public class LessonService {
         return lessonsToSave;
     }
 
-     */
-
     public void parseAndSaveLessonsFromAllGroupsCompletableFuture() {
         AtomicInteger currentGroupCounter = new AtomicInteger();
         List<LessonRecord> lessonsToSave = new ArrayList<>();
@@ -106,8 +91,8 @@ public class LessonService {
         for (EducationalGroupRecord educationalGroupRecord : allGroups) {
             futures.add(CompletableFuture.supplyAsync(() -> {
                 List<LessonRecord> list = getCurrentWeekLessonsFromGroup(educationalGroupRecord, currentEducationalWeek);
-                log.info("[{}] Parsed {} lessons from group {}", String.format("%d/%d", currentGroupCounter.incrementAndGet(), groupsCount)
-                , list.size(), educationalGroupRecord.getName());
+                log.info("[{}] Parsed {} lessons from group {}", String.format("%d/%d", currentGroupCounter.incrementAndGet(), groupsCount),
+                        list.size(), educationalGroupRecord.getName());
                 return list;
             }));
         }
@@ -126,11 +111,11 @@ public class LessonService {
             }
         }
 
-        this.saveLessons(lessonsToSave);
+        this.saveLessonsWithoutDuplication(lessonsToSave);
         log.info("Lessons saved successfully");
     }
 
-    private List<LessonRecord>getCurrentWeekLessonsFromGroup(EducationalGroupRecord educationalGroupRecord, int currentEducationalWeek) {
+    private List<LessonRecord> getCurrentWeekLessonsFromGroup(EducationalGroupRecord educationalGroupRecord, int currentEducationalWeek) {
         List<LessonParserDto> list = lessonParser.parse(educationalGroupRecord.getGroupId(), currentEducationalWeek);
         List<LessonRecord> weekLessonsList = list
                 .stream()
@@ -146,8 +131,23 @@ public class LessonService {
                 lesson.setGroupId(educationalGroupRecord.getGroupId()));
     }
 
-    public void saveLessons(List<LessonRecord> lessonsToSave) {
+    public void saveAllLessons(List<LessonRecord> lessonsToSave) {
         lessonRepository.saveAll(lessonsToSave);
+    }
+
+    public void saveLessonsWithoutDuplication(List<LessonRecord> lessonsToSave) {
+        List<LessonRecord> currentLessons = lessonRepository.findAllLessons();
+        for (LessonRecord lesson : currentLessons) {
+            lessonsToSave.removeIf(lessonToSave -> isNewLesson(lesson, lessonToSave));
+        }
+        log.info("Total NEW lessons to save: {}", lessonsToSave.size());
+        lessonRepository.saveAll(lessonsToSave);
+    }
+
+    private static boolean isNewLesson(LessonRecord lesson, LessonRecord lessonToSave) {
+        return lessonToSave.getName().equals(lesson.getName()) && lessonToSave.getDateNumber().equals(lesson.getDateNumber())
+                && lessonToSave.getTime().equals(lesson.getTime()) && lessonToSave.getType().equals(lesson.getType()) &&
+                lessonToSave.getGroupId().equals(lesson.getGroupId());
     }
 
 

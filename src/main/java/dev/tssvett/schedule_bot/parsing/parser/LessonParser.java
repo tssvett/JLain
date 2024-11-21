@@ -6,7 +6,6 @@ import dev.tssvett.schedule_bot.parsing.dto.LessonParserDto;
 import dev.tssvett.schedule_bot.parsing.enums.Selector;
 import dev.tssvett.schedule_bot.parsing.integration.SamaraUniversityClientService;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;

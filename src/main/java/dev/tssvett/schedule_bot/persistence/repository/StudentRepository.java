@@ -2,12 +2,11 @@ package dev.tssvett.schedule_bot.persistence.repository;
 
 import dev.tssvett.schedule_bot.persistence.model.tables.Student;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
