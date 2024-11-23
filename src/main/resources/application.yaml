@@ -32,10 +32,11 @@ admin:
 scheduling:
   notification:
     cron: "0 0 23 * * *" #Каждый день в 23:00
-    enabled: false
+    delay: 1000000
+    enabled: true
   parser:
     cron: "0 0 22 * * *" #Каждый день в 22:00
-    enabled: true
+    enabled: false
 
 samara-university:
   semester-start-date: 2024-09-02

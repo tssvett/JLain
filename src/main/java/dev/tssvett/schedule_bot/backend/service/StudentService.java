@@ -110,7 +110,7 @@ public class StudentService {
 
         studentRepository.save(newStudent);
 
-        NotificationRecord notification = new NotificationRecord(null, true);
+        NotificationRecord notification = new NotificationRecord(null, true, studentId);
         NotificationRecord savedNotification = notificationRepository.save(notification);
 
         studentRepository.updateNotificationId(newStudent, savedNotification.getId());

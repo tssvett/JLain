@@ -140,14 +140,16 @@ public class Mapper {
     public static NotificationInfoDto toNotificationInfoDto(NotificationRecord notificationRecord) {
         return new NotificationInfoDto(
                 notificationRecord.getId(),
-                notificationRecord.getEnabled()
+                notificationRecord.getEnabled(),
+                notificationRecord.getStudentId()
         );
     }
 
     public static NotificationRecord toNotificationRecord(NotificationInfoDto notification) {
         return new NotificationRecord(
                 notification.notificationId(),
-                notification.enabled()
+                notification.enabled(),
+                notification.studentId()
         );
     }
 }

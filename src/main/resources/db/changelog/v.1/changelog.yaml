@@ -29,3 +29,7 @@ databaseChangeLog:
   - include:
       file: table-student-column-notification_id-add.sql
       relativeToChangelogFile: true
+
+  - include:
+      file: table-notification-column-student_id-add.sql
+      relativeToChangelogFile: true

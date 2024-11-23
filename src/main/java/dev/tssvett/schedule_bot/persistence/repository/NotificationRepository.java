@@ -30,6 +30,7 @@ public class NotificationRepository {
     public NotificationRecord save(NotificationRecord notification) {
         return dslContext.insertInto(Notification.NOTIFICATION)
                 .set(Notification.NOTIFICATION.ENABLED, notification.getEnabled())
+                .set(Notification.NOTIFICATION.STUDENT_ID, notification.getStudentId())
                 .returning(Notification.NOTIFICATION.ID)
                 .fetchOne();
     }
