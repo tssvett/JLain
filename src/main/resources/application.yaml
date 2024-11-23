@@ -30,18 +30,12 @@ admin:
   id: ${ADMIN_ID}
 
 scheduling:
-  faculty:
-    cron: "0 0 22 * * *" #Каждый день в 22:00
-    enabled: false
-  group:
-    cron: "0 10 22 * * *" #Каждый день в 22:10
-    enabled: false
-  lesson:
-    cron: "0 30 22 * * *" #Каждый день в 22:30
-    enabled: false
   notification:
     cron: "0 0 23 * * *" #Каждый день в 23:00
     enabled: false
+  parser:
+    cron: "0 0 22 * * *" #Каждый день в 22:00
+    enabled: true
 
 samara-university:
   semester-start-date: 2024-09-02
