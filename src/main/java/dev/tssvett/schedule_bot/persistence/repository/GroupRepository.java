@@ -7,7 +7,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
@@ -31,11 +30,15 @@ public class GroupRepository {
     public void saveAll(List<EducationalGroupRecord> educationalGroups) {
         for (EducationalGroupRecord educationalGroup : educationalGroups) {
             try {
-                dslContext.insertInto(EducationalGroup.EDUCATIONAL_GROUP)
-                        .set(EducationalGroup.EDUCATIONAL_GROUP.GROUP_ID, educationalGroup.getGroupId())
-                        .set(EducationalGroup.EDUCATIONAL_GROUP.NAME, educationalGroup.getName())
-                        .set(EducationalGroup.EDUCATIONAL_GROUP.COURSE, educationalGroup.getCourse())
-                        .set(EducationalGroup.EDUCATIONAL_GROUP.FACULTY_ID, educationalGroup.getFacultyId())
+                dslContext.insertInto(EducationalGroup.EDUCATIONAL_GROUP,
+                                EducationalGroup.EDUCATIONAL_GROUP.GROUP_ID,
+                                EducationalGroup.EDUCATIONAL_GROUP.NAME,
+                                EducationalGroup.EDUCATIONAL_GROUP.COURSE,
+                                EducationalGroup.EDUCATIONAL_GROUP.FACULTY_ID)
+                        .values(educationalGroup.getGroupId(),
+                                educationalGroup.getName(),
+                                educationalGroup.getCourse(),
+                                educationalGroup.getFacultyId())
                         .execute();
             } catch (Exception e) {
                 log.debug("Error with saving group {}", e.getMessage());

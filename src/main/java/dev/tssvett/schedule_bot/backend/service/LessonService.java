@@ -63,18 +63,19 @@ public class LessonService {
     }
 
     public List<LessonRecord> parseLessonsFromAllGroups() {
-        int currentGroup = 0;
+        AtomicInteger currentGroup = new AtomicInteger();
         int groupsCount = groupService.findAllGroups().size();
 
         List<LessonRecord> lessonsToSave = new ArrayList<>();
         int currentEducationalWeek = dateUtils.calculateCurrentUniversityEducationalWeek();
 
-        for (EducationalGroupRecord educationalGroupRecord : groupService.findAllGroups()) {
+        groupService.findAllGroups().forEach(educationalGroupRecord -> {
             List<LessonRecord> list = getCurrentWeekLessonsFromGroup(educationalGroupRecord, currentEducationalWeek);
             lessonsToSave.addAll(list);
-            log.info("[{}] Parsed {} lessons from group {}", String.format("%d/%d", ++currentGroup, groupsCount),
-                    list.size(), educationalGroupRecord.getName());
-        }
+            log.info("[{}] Parsed {} lessons from group {}",
+                    String.format("%d/%d", currentGroup.incrementAndGet(), groupsCount), list.size(),
+                    educationalGroupRecord.getName());
+        });
         log.info("Total lessons to save: {}", lessonsToSave.size());
 
         return lessonsToSave;
@@ -88,18 +89,19 @@ public class LessonService {
         int currentEducationalWeek = dateUtils.calculateCurrentUniversityEducationalWeek();
 
         List<CompletableFuture<List<LessonRecord>>> futures = new ArrayList<>();
-        for (EducationalGroupRecord educationalGroupRecord : allGroups) {
-            futures.add(CompletableFuture.supplyAsync(() -> {
-                List<LessonRecord> list = getCurrentWeekLessonsFromGroup(educationalGroupRecord, currentEducationalWeek);
-                log.info("[{}] Parsed {} lessons from group {}", String.format("%d/%d", currentGroupCounter.incrementAndGet(), groupsCount),
-                        list.size(), educationalGroupRecord.getName());
-                return list;
-            }));
-        }
+        allGroups.forEach(educationalGroupRecord ->
+                futures.add(CompletableFuture.supplyAsync(() -> {
+                    List<LessonRecord> list = getCurrentWeekLessonsFromGroup(educationalGroupRecord, currentEducationalWeek);
+                    log.info("[{}] Parsed {} lessons from group {}",
+                            String.format("%d/%d", currentGroupCounter.incrementAndGet(), groupsCount), list.size(),
+                            educationalGroupRecord.getName());
+                    return list;
+                }))
+        );
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
-        for (CompletableFuture<List<LessonRecord>> future : futures) {
+        futures.forEach(future -> {
             try {
                 List<LessonRecord> list = future.get();
                 if (list != null) {
@@ -109,7 +111,7 @@ public class LessonService {
             } catch (Exception e) {
                 log.error("Error while parsing lessons: {}", e.getMessage());
             }
-        }
+        });
 
         this.saveLessonsWithoutDuplication(lessonsToSave);
         log.info("Lessons saved successfully");
@@ -145,14 +147,15 @@ public class LessonService {
     }
 
     private static boolean isNewLesson(LessonRecord lesson, LessonRecord lessonToSave) {
-        return lessonToSave.getName().equals(lesson.getName()) && lessonToSave.getDateNumber().equals(lesson.getDateNumber())
-                && lessonToSave.getTime().equals(lesson.getTime()) && lessonToSave.getType().equals(lesson.getType()) &&
-                lessonToSave.getGroupId().equals(lesson.getGroupId());
+        return lessonToSave.getName().equals(lesson.getName())
+                && lessonToSave.getDateNumber().equals(lesson.getDateNumber())
+                && lessonToSave.getTime().equals(lesson.getTime())
+                && lessonToSave.getType().equals(lesson.getType())
+                && lessonToSave.getGroupId().equals(lesson.getGroupId());
     }
 
 
     private boolean isExist(LessonRecord lesson) {
-        return !(StringUtils.isAllEmpty(lesson.getName(), lesson.getType()) &&
-                StringUtils.isAllBlank(lesson.getName(), lesson.getType()));
+        return !StringUtils.isAllBlank(lesson.getName(), lesson.getType());
     }
 }
