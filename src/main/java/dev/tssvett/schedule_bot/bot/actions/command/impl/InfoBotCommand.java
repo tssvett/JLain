@@ -37,9 +37,10 @@ public class InfoBotCommand implements BotCommand {
         StudentInfoDto studentInfoDto = Mapper.toStudentInfoDto(studentService.getStudentInfoById(userId));
         String facultyName = facultyService.getFacultyById(studentInfoDto.facultyId()).getName();
         String groupName = groupService.getGroupById(studentInfoDto.groupId()).getName();
-        boolean notificationStatus = studentService.isNotificationEnabled(userId);
+        boolean tomorrowScheduleNotificationStatus = studentService.isTomorrowScheduleNotificationEnabled(userId);
+        boolean scheduleDifferenceNotificationStatus = studentService.isScheduleDifferenceNotificationEnabled(userId);
 
         return MessageCreateUtils.createInfoCommandMessageText(studentInfoDto, facultyName,
-                groupName, notificationStatus);
+                groupName, tomorrowScheduleNotificationStatus, scheduleDifferenceNotificationStatus);
     }
 }

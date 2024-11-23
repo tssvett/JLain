@@ -33,6 +33,10 @@ scheduling:
   tomorrow-schedule-notification:
     cron: "0 0 23 * * *" #Каждый день в 23:00
     enabled: true
+  schedule-difference-notification:
+    cron: "0 0 23 * * *" #Каждый день в 23:00
+    delay: 10000
+    enabled: true
   parser:
     cron: "0 0 22 * * *" #Каждый день в 22:00
     enabled: false

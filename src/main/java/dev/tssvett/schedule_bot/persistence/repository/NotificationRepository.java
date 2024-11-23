@@ -29,26 +29,44 @@ public class NotificationRepository {
 
     public NotificationRecord save(NotificationRecord notification) {
         return dslContext.insertInto(Notification.NOTIFICATION)
-                .set(Notification.NOTIFICATION.ENABLED, notification.getEnabled())
+                .set(Notification.NOTIFICATION.SCHEDULE_DIFFERENCE_ENABLED, notification.getScheduleDifferenceEnabled())
+                .set(Notification.NOTIFICATION.TOMORROW_SCHEDULE_ENABLED, notification.getTomorrowScheduleEnabled())
                 .set(Notification.NOTIFICATION.STUDENT_ID, notification.getStudentId())
                 .returning(Notification.NOTIFICATION.ID)
                 .fetchOne();
     }
 
 
-    public List<NotificationRecord> findAllEnabledNotificationsWithRegisteredStudents() {
+    public List<NotificationRecord> findAllEnabledTomorrowScheduleWithRegisteredStudents() {
         return dslContext.select()
                 .from(Notification.NOTIFICATION)
                 .join(Student.STUDENT)
                 .on(Notification.NOTIFICATION.ID.eq(Student.STUDENT.NOTIFICATION_ID))
-                .where(Notification.NOTIFICATION.ENABLED.isTrue())
+                .where(Notification.NOTIFICATION.TOMORROW_SCHEDULE_ENABLED.isTrue())
                 .and(Student.STUDENT.REGISTRATION_STATE.eq(RegistrationState.SUCCESSFUL_REGISTRATION.name()))
                 .fetchInto(NotificationRecord.class);
     }
 
-    public void update(Long notificationId, Boolean enabled) {
+    public List<NotificationRecord> findAllEnabledScheduleDifferenceWithRegisteredStudents() {
+        return dslContext.select()
+                .from(Notification.NOTIFICATION)
+                .join(Student.STUDENT)
+                .on(Notification.NOTIFICATION.ID.eq(Student.STUDENT.NOTIFICATION_ID))
+                .where(Notification.NOTIFICATION.SCHEDULE_DIFFERENCE_ENABLED.isTrue())
+                .and(Student.STUDENT.REGISTRATION_STATE.eq(RegistrationState.SUCCESSFUL_REGISTRATION.name()))
+                .fetchInto(NotificationRecord.class);
+    }
+
+    public void updateTomorrowScheduleStatus(Long notificationId, Boolean enabled) {
         dslContext.update(Notification.NOTIFICATION)
-                .set(Notification.NOTIFICATION.ENABLED, enabled)
+                .set(Notification.NOTIFICATION.TOMORROW_SCHEDULE_ENABLED, enabled)
+                .where(Notification.NOTIFICATION.ID.eq(notificationId))
+                .execute();
+    }
+
+    public void updateScheduleDifferenceStatus(Long notificationId, Boolean enabled) {
+        dslContext.update(Notification.NOTIFICATION)
+                .set(Notification.NOTIFICATION.SCHEDULE_DIFFERENCE_ENABLED, enabled)
                 .where(Notification.NOTIFICATION.ID.eq(notificationId))
                 .execute();
     }

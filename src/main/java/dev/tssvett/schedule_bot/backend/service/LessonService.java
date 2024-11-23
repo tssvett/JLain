@@ -9,6 +9,7 @@ import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGrou
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import dev.tssvett.schedule_bot.persistence.repository.LessonRepository;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -140,22 +141,62 @@ public class LessonService {
     public void saveLessonsWithoutDuplication(List<LessonRecord> lessonsToSave) {
         List<LessonRecord> currentLessons = lessonRepository.findAllLessons();
         for (LessonRecord lesson : currentLessons) {
-            lessonsToSave.removeIf(lessonToSave -> isNewLesson(lesson, lessonToSave));
+            lessonsToSave.removeIf(lessonToSave -> isEqualsLesson(lesson, lessonToSave));
         }
         log.info("Total NEW lessons to save: {}", lessonsToSave.size());
         lessonRepository.saveAll(lessonsToSave);
     }
 
-    private static boolean isNewLesson(LessonRecord lesson, LessonRecord lessonToSave) {
-        return lessonToSave.getName().equals(lesson.getName())
-                && lessonToSave.getDateNumber().equals(lesson.getDateNumber())
-                && lessonToSave.getTime().equals(lesson.getTime())
-                && lessonToSave.getType().equals(lesson.getType())
-                && lessonToSave.getGroupId().equals(lesson.getGroupId());
+    private static boolean isEqualsLesson(LessonRecord firstLesson, LessonRecord secondLesson) {
+        return secondLesson.getName().equals(firstLesson.getName())
+                && secondLesson.getDateNumber().equals(firstLesson.getDateNumber())
+                && secondLesson.getTime().equals(firstLesson.getTime())
+                && secondLesson.getType().equals(firstLesson.getType())
+                && secondLesson.getGroupId().equals(firstLesson.getGroupId());
     }
 
 
     private boolean isExist(LessonRecord lesson) {
         return !StringUtils.isAllBlank(lesson.getName(), lesson.getType());
+    }
+
+    public Map<LessonRecord, LessonRecord> findScheduleDifference(Long userId) {
+        Map<LessonRecord, LessonRecord> result = new HashMap<>();
+
+        Long groupId = studentService.getStudentInfoById(userId).getGroupId();
+
+        List<LessonRecord> dbLessons = lessonRepository.findLessonsByGroupIdAndEducationalDay(
+                groupId,
+                dateUtils.getYesterdayDate()
+        );
+
+        List<LessonRecord> parsedLessons = lessonParser.parse(groupId,
+                        dateUtils.calculateCurrentUniversityEducationalWeek())
+                .stream()
+                .map(Mapper::toLessonRecord)
+                .toList();
+
+        //TODO: Переделать механизм вывода разницы
+        // Сейчас он умеет выводить разницу в формате было: стало через мапу
+        // Надо придумать так, чтоб корректно обрабатывался случай когда пара удалилась
+        //LessonRecord lessonRecord = dbLessons.get(0);
+        //lessonRecord.setName("SDGDSHGSFHFH");
+        //List<LessonRecord> parsedLessons = List.of(lessonRecord);
+
+        if(dbLessons.size() != parsedLessons.size()) {
+            parsedLessons.forEach(
+                    lesson -> {
+                        result.put(lesson, lesson);
+                    });
+            return result;
+        }
+
+        for (int i = 0; i < dbLessons.size(); i++) {
+            if (!isEqualsLesson(dbLessons.get(i), parsedLessons.get(i))) {
+                result.put(dbLessons.get(i), parsedLessons.get(i));
+            }
+        }
+
+        return result;
     }
 }

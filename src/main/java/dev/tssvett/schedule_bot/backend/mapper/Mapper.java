@@ -140,7 +140,8 @@ public class Mapper {
     public static NotificationInfoDto toNotificationInfoDto(NotificationRecord notificationRecord) {
         return new NotificationInfoDto(
                 notificationRecord.getId(),
-                notificationRecord.getEnabled(),
+                notificationRecord.getTomorrowScheduleEnabled(),
+                notificationRecord.getScheduleDifferenceEnabled(),
                 notificationRecord.getStudentId()
         );
     }
@@ -148,8 +149,9 @@ public class Mapper {
     public static NotificationRecord toNotificationRecord(NotificationInfoDto notification) {
         return new NotificationRecord(
                 notification.notificationId(),
-                notification.enabled(),
-                notification.studentId()
+                notification.tomorrowScheduleEnabled(),
+                notification.studentId(),
+                notification.scheduleDifferenceEnabled()
         );
     }
 }

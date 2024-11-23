@@ -4,6 +4,7 @@ import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.DaysOfWeek;
 import dev.tssvett.schedule_bot.bot.utils.DateUtils;
 import dev.tssvett.schedule_bot.bot.utils.message.MessageCreateUtils;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -63,5 +64,13 @@ public class ScheduleStringFormatter {
 
     private boolean dayHasLessons(List<LessonInfoDto> dayLessons) {
         return dayLessons != null && !dayLessons.isEmpty();
+    }
+
+    public String formatToScheduleDifference(Map<LessonRecord, LessonRecord> difference) {
+        StringBuilder scheduleDifferenceStringBuilder = new StringBuilder();
+        for(Map.Entry<LessonRecord, LessonRecord> entry : difference.entrySet()) {
+            scheduleDifferenceStringBuilder.append(String.format("Пара %s изменилась на %s\n", entry.getKey().getName(), entry.getValue().getName()));
+        }
+        return scheduleDifferenceStringBuilder.toString();
     }
 }

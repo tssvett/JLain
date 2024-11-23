@@ -19,13 +19,17 @@ public class NotificationService {
     private final LessonService lessonService;
     private final ScheduleStringFormatter scheduleStringFormatter;
 
-    public List<NotificationRecord> findAllEnabledNotificationsWithRegisteredStudents() {
-        return notificationRepository.findAllEnabledNotificationsWithRegisteredStudents();
+    public List<NotificationRecord> findAllTomorrowScheduleWithRegisteredStudents() {
+        return notificationRepository.findAllEnabledTomorrowScheduleWithRegisteredStudents();
+    }
+
+    public List<NotificationRecord> findAllEnabledScheduleDifferenceWithRegisteredStudents() {
+        return notificationRepository.findAllEnabledScheduleDifferenceWithRegisteredStudents();
     }
 
     public List<BotApiMethod<?>> createTomorrowScheduleNotificationsMessages() {
         List<BotApiMethod<?>> messages = new ArrayList<>();
-        this.findAllEnabledNotificationsWithRegisteredStudents()
+        this.findAllTomorrowScheduleWithRegisteredStudents()
                 .forEach(notification -> {
                     Long userId = notification.getStudentId();
                     log.debug("Start to send notification to user: {}", userId);
@@ -33,6 +37,23 @@ public class NotificationService {
                     messages.add(SendMessage.builder()
                             .chatId(userId)
                             .text(scheduleStringFormatter.formatToTomorrowNotificationMessage(weekSchedule))
+                            .build());
+                });
+        log.info("Total notifications to send: {}", messages.size());
+
+        return messages;
+    }
+
+    public List<BotApiMethod<?>> createScheduleDifferenceNotificationsMessages() {
+        List<BotApiMethod<?>> messages = new ArrayList<>();
+        this.findAllEnabledScheduleDifferenceWithRegisteredStudents()
+                .forEach(notification -> {
+                    Long userId = notification.getStudentId();
+                    log.debug("Start to send notification to user: {}", userId);
+                    var difference = lessonService.findScheduleDifference(userId);
+                    messages.add(SendMessage.builder()
+                            .chatId(userId)
+                            .text(scheduleStringFormatter.formatToScheduleDifference(difference))
                             .build());
                 });
         log.info("Total notifications to send: {}", messages.size());

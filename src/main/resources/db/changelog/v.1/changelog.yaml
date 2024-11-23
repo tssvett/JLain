@@ -33,3 +33,11 @@ databaseChangeLog:
   - include:
       file: table-notification-column-student_id-add.sql
       relativeToChangelogFile: true
+
+  - include:
+      file: table-notification-column-enabled-rename.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: table-notification-column-tomorrow-add.sql
+      relativeToChangelogFile: true

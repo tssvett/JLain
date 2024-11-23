@@ -43,4 +43,13 @@ public class DateUtils {
     public String getCurrentDate() {
         return LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN));
     }
+
+    public String getTomorrowDate() {
+        return LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern(DATE_PATTERN));
+    }
+
+    public String getYesterdayDate() {
+        return LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern(DATE_PATTERN));
+    }
+
 }
