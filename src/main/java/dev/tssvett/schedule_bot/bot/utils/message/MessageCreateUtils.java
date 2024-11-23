@@ -4,9 +4,8 @@ import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import dev.tssvett.schedule_bot.bot.enums.Subgroup;
-import lombok.experimental.UtilityClass;
-
 import static dev.tssvett.schedule_bot.bot.utils.StringUtils.capitalizeFirstLetter;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class MessageCreateUtils {
@@ -49,6 +48,14 @@ public class MessageCreateUtils {
                         """, getEmojiForLesson(lesson), lesson.time(), capitalizeFirstLetter(lesson.name()),
                 lesson.place(),
                 lesson.subgroup().equals(Subgroup.EMPTY) ? "" : "\nПодгруппа: " + lesson.subgroup().getName());
+    }
+
+    public static String createNotificationMessage(String formattedDay) {
+        return String.format("""
+                Уведомление! Расписание на завтра
+                            
+                %s
+                """, formattedDay);
     }
 
     public static String createNotExistingDayMessage(String weekDayName, String currentDate) {

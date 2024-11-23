@@ -4,13 +4,12 @@ import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.DaysOfWeek;
 import dev.tssvett.schedule_bot.bot.utils.DateUtils;
 import dev.tssvett.schedule_bot.bot.utils.message.MessageCreateUtils;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -44,13 +43,8 @@ public class ScheduleStringFormatter {
 
     public String formatNotificationMessage(Map<String, List<LessonInfoDto>> lessonsInWeek) {
         String tomorrowDayName = dateUtils.calculateTomorrowDayName();
-        String formattedDay = this.formatDay(lessonsInWeek, tomorrowDayName);
 
-        return String.format("""
-                Уведомление! Расписание на завтра
-                            
-                %s
-                """, formattedDay);
+        return MessageCreateUtils.createNotificationMessage(this.formatDay(lessonsInWeek, tomorrowDayName));
     }
 
     private String existingEducationalDayToString(String weekDayName, List<LessonInfoDto> dayLessons) {

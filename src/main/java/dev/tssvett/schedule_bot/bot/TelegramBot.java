@@ -30,10 +30,10 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        executeBotMethod(callbackProvider.handleMessage(update));
+        sendMessage(callbackProvider.handleMessage(update));
     }
 
-    public void executeBotMethod(BotApiMethod<?> botApiMethod) {
+    public void sendMessage(BotApiMethod<?> botApiMethod) {
         try {
             this.execute(botApiMethod);
         } catch (TelegramApiException e) {
@@ -41,7 +41,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    public void executeBotMethod(List<BotApiMethod<?>> botApiMethods) {
-        botApiMethods.forEach(this::executeBotMethod);
+    public void sendMessage(List<BotApiMethod<?>> botApiMethods) {
+        botApiMethods.forEach(this::sendMessage);
     }
 }
