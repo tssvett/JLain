@@ -23,13 +23,9 @@ public class ParserFlowScheduler {
     @Scheduled(cron = "${scheduling.parser.cron}")
     public void startParsingFlow() {
         log.info("Starting parsing flow");
-
         facultyService.parseAndSaveFaculties();
-
         groupService.parseAndSaveGroups();
-
         lessonService.parseAndSaveLessonsFromAllGroupsCompletableFuture();
-
         log.info("Parsing flow finished");
     }
 }
