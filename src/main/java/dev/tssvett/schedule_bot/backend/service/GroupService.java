@@ -57,6 +57,10 @@ public class GroupService {
         return groupsToSave;
     }
 
+    public void parseAndSaveGroups() {
+        this.saveGroups(this.parseGroupsFromAllFaculties());
+    }
+
     private List<EducationalGroupRecord> parseGroupsFromFaculty(FacultyRecord faculty) {
         List<EducationalGroupRecord> educationalGroups = new ArrayList<>();
 
