@@ -69,13 +69,14 @@ public class Mapper {
                 lesson.subgroup().name(),
                 lesson.time(),
                 lesson.dateDay(),
-                lesson.dateNumber()
+                lesson.dateNumber(),
+                null
         );
     }
 
     public static LessonRecord toLessonRecord(LessonParserDto lesson) {
         return new LessonRecord(
-                null,
+                lesson.id(),
                 lesson.name(),
                 lesson.type(),
                 lesson.place(),
@@ -83,7 +84,8 @@ public class Mapper {
                 lesson.subgroup(),
                 lesson.time(),
                 lesson.dateDay(),
-                lesson.dateNumber()
+                lesson.dateNumber(),
+                null
         );
     }
 

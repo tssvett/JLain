@@ -1,8 +1,8 @@
-package dev.tssvett.schedule_bot.scheduling;
+package dev.tssvett.schedule_bot.scheduling.notification;
 
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.service.NotificationService;
-import dev.tssvett.schedule_bot.backend.service.ScheduleService;
+import dev.tssvett.schedule_bot.backend.service.LessonService;
 import dev.tssvett.schedule_bot.bot.TelegramBot;
 import dev.tssvett.schedule_bot.bot.formatter.ScheduleStringFormatter;
 import dev.tssvett.schedule_bot.bot.utils.DateUtils;
@@ -26,11 +26,11 @@ import java.util.Map;
 public class SchedulingNotification {
     private final TelegramBot telegramBot;
     private final NotificationService notificationService;
-    private final ScheduleService scheduleService;
+    private final LessonService lessonService;
     private final ScheduleStringFormatter scheduleStringFormatter;
     private final DateUtils dateUtils;
 
-    @Scheduled(fixedDelayString = "${scheduling.notification.delay}")
+    @Scheduled(cron = "${scheduling.notification.cron}")
     public void sendScheduleNotificationsToUsers() {
         log.info("Staring sending notifications to users");
         /*TODO: 1) сделать специальный запрос в бд, который будет вытаскивать только те уведомления, которые включены

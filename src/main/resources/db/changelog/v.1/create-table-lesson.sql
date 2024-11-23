@@ -11,5 +11,7 @@ CREATE TABLE IF NOT EXISTS lesson(
     subgroup TEXT NOT NULL,
     time TEXT NOT NULL,
     date_day TEXT NOT NULL,
-    date_number TEXT NOT NULL
+    date_number TEXT NOT NULL,
+    group_id BIGINT NOT NULL,
+    FOREIGN KEY (group_id) REFERENCES educational_group(group_id)
 );

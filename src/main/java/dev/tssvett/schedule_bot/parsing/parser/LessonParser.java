@@ -2,6 +2,7 @@ package dev.tssvett.schedule_bot.parsing.parser;
 
 import dev.tssvett.schedule_bot.bot.enums.LessonType;
 import dev.tssvett.schedule_bot.bot.enums.Subgroup;
+import dev.tssvett.schedule_bot.bot.utils.StringUtils;
 import dev.tssvett.schedule_bot.parsing.dto.LessonParserDto;
 import dev.tssvett.schedule_bot.parsing.enums.Selector;
 import dev.tssvett.schedule_bot.parsing.integration.SamaraUniversityClientService;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LessonParser {
     private final SamaraUniversityClientService samaraUniversityClientService;
+    private static final int TIME_ELEMENTS_NUMBER = 7;
+    private static final int UNIFIED_TIME_PARTS_NUMBER = 2;
 
     public List<LessonParserDto> parse(Long groupId, Integer week) {
         Optional<Document> optionalLessonDocument = samaraUniversityClientService.getLessonsHtml(groupId, week);
@@ -36,6 +40,10 @@ public class LessonParser {
         List<String> lessonTimes = getLessonTimesFromHtml(lessonsHtmlDocument);
         List<String> lessonDates = getLessonDatesFromHtml(lessonsHtmlDocument);
 
+        if (lessonTimes.isEmpty() || lessonDates.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         List<LessonParserDto> lessons = createLessonRecords(lessonsHtmlDocument, lessonTimes, lessonDates);
 
         return sortLessonsByDay(lessons, lessonDates);
@@ -46,7 +54,9 @@ public class LessonParser {
                 .stream()
                 .map(timeElement -> {
                     String[] timeParts = timeElement.text().split(" ");
-                    return (timeParts.length == 2) ? timeParts[0] + " - " + timeParts[1] : "";
+                    return timeParts.length == UNIFIED_TIME_PARTS_NUMBER
+                            ? StringUtils.extractUnifiedTime(timeParts)
+                            : StringUtils.extractNotUnifiedTime(timeParts);
                 })
                 .filter(time -> !time.isEmpty())
                 .toList();
@@ -54,7 +64,8 @@ public class LessonParser {
 
     private List<String> getLessonDatesFromHtml(Document document) {
         Elements rawDates = document.select(Selector.SCHOOL_WEEK_SELECTOR.getName());
-        return IntStream.range(1, Math.min(7, rawDates.size())) // Пропускаем первый элемент
+
+        return IntStream.range(1, Math.min(TIME_ELEMENTS_NUMBER, rawDates.size())) // Пропускаем первый элемент
                 .mapToObj(rawDates::get)
                 .map(Element::text)
                 .toList();
@@ -65,15 +76,13 @@ public class LessonParser {
         List<LessonParserDto> lessonsList = new LinkedList<>();
 
         Elements lessonsElements = removeFirstNElements(
-                schoolWeek.select(Selector.SCHOOL_WEEK_SELECTOR.getName()), 7
+                schoolWeek.select(Selector.SCHOOL_WEEK_SELECTOR.getName()), TIME_ELEMENTS_NUMBER
         );
 
         for (int i = 0; i < lessonsElements.size(); i++) {
             Elements lessons = lessonsElements.get(i).select(Selector.LESSON_SELECTOR.getName());
             for (Element lessonElement : lessons) {
-                if (!lessons.isEmpty()) {
-                    lessonsList.add(buildLesson(lessonTimes, dates, lessonElement, i));
-                }
+                lessonsList.add(buildLesson(lessonTimes, dates, lessonElement, i));
             }
         }
 
@@ -82,6 +91,7 @@ public class LessonParser {
 
     private LessonParserDto buildLesson(List<String> lessonTimes, List<String> dates, Element lessonElement, int i) {
         return new dev.tssvett.schedule_bot.parsing.dto.LessonParserDto(
+                UUID.randomUUID(),
                 getName(lessonElement),
                 getType(lessonElement).getName(),
                 getPlace(lessonElement),

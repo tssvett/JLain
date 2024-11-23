@@ -14,6 +14,10 @@ public enum LessonType {
     PRACTICE("практика"),
     EXAM("экзамен"),
     EMPTY(""),
+    CONSULTATION("консультация"),
+    COURSEWORK("курсовые"),
+    TEST("зачет"),
+    INDUSTRIAL("производственная"),
     ANOTHER("другое");
 
     private final String name;

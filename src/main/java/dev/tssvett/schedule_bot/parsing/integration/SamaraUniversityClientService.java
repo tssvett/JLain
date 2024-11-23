@@ -1,9 +1,11 @@
 package dev.tssvett.schedule_bot.parsing.integration;
 
 import dev.tssvett.schedule_bot.backend.exception.parse.SamaraUniversityConnectionException;
+import dev.tssvett.schedule_bot.bot.properties.IntegrationProperties;
 import dev.tssvett.schedule_bot.bot.properties.SamaraUniversityProperties;
 import dev.tssvett.schedule_bot.parsing.enums.Connection;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SamaraUniversityClientService {
     private final SamaraUniversityProperties samaraUniversityProperties;
+    private final IntegrationProperties integrationProperties;
 
     @Retryable(
             maxAttemptsExpression = "${integration.max-retries}",
@@ -28,6 +31,7 @@ public class SamaraUniversityClientService {
             retryFor = {SamaraUniversityConnectionException.class}
     )
     @CircuitBreaker(name = "samaraUniversityClientService", fallbackMethod = "fallbackGetHtml")
+    @RateLimiter(name = "samaraUniversityClientService", fallbackMethod = "fallbackGetHtml")
     public Optional<Document> getFacultiesHtml() {
         String url = samaraUniversityProperties.facultyUrl();
 
@@ -40,6 +44,7 @@ public class SamaraUniversityClientService {
             retryFor = {SamaraUniversityConnectionException.class}
     )
     @CircuitBreaker(name = "samaraUniversityClientService", fallbackMethod = "fallbackGetHtml")
+    @RateLimiter(name = "samaraUniversityClientService", fallbackMethod = "fallbackGetHtml")
     public Optional<Document> getGroupsHtml(long facultyId, long course) {
         String url = String.format(samaraUniversityProperties.groupUrl(), facultyId, course);
 
@@ -52,6 +57,7 @@ public class SamaraUniversityClientService {
             retryFor = {SamaraUniversityConnectionException.class}
     )
     @CircuitBreaker(name = "samaraUniversityClientService", fallbackMethod = "fallbackGetHtml")
+    @RateLimiter(name = "samaraUniversityClientService", fallbackMethod = "fallbackGetHtml")
     public Optional<Document> getLessonsHtml(Long groupId, Integer week) {
         String url = String.format(samaraUniversityProperties.lessonUrl(), groupId, week);
 
@@ -63,6 +69,7 @@ public class SamaraUniversityClientService {
             return Optional.ofNullable(
                     Jsoup.connect(url)
                             .userAgent(Connection.USER_AGENT.getName())
+                            .timeout(integrationProperties.timeout())
                             .get()
             );
         } catch (IOException e) {

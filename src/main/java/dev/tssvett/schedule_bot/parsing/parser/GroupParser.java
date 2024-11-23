@@ -21,11 +21,12 @@ public class GroupParser {
     public List<GroupParserDto> parse(Long facultyId, Integer course) {
         List<GroupParserDto> educationalGroups = new ArrayList<>();
 
-        samaraUniversityClientService.getGroupsHtml(facultyId, course).ifPresentOrElse(
-                groupsHtml -> groupsHtml.select(Selector.GROUP_PAGE_SELECTOR.name())
+        samaraUniversityClientService.getGroupsHtml(facultyId, course)
+                .ifPresentOrElse(
+                groupsHtml -> groupsHtml.select(Selector.GROUP_PAGE_SELECTOR.getName())
                         .forEach(element -> {
-                            long groupId = parseGroupId(element.attr(Selector.GROUP_ID_SELECTOR.name()));
-                            String groupName = element.select(Selector.GROUP_NAME_SELECTOR.name()).first().text();
+                            long groupId = parseGroupId(element.attr(Selector.GROUP_ID_SELECTOR.getName()));
+                            String groupName = element.select(Selector.GROUP_NAME_SELECTOR.getName()).first().text();
                             educationalGroups.add(new GroupParserDto(groupId, groupName));
                         }),
 
