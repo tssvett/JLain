@@ -23,7 +23,7 @@ public class NotificationService {
         return notificationRepository.findAllEnabledNotificationsWithRegisteredStudents();
     }
 
-    public List<BotApiMethod<?>> createNotificationsMessages() {
+    public List<BotApiMethod<?>> createTomorrowScheduleNotificationsMessages() {
         List<BotApiMethod<?>> messages = new ArrayList<>();
         this.findAllEnabledNotificationsWithRegisteredStudents()
                 .forEach(notification -> {
@@ -32,7 +32,7 @@ public class NotificationService {
                     var weekSchedule = lessonService.getWeekScheduleMapByDate(userId);
                     messages.add(SendMessage.builder()
                             .chatId(userId)
-                            .text(scheduleStringFormatter.formatNotificationMessage(weekSchedule))
+                            .text(scheduleStringFormatter.formatToTomorrowNotificationMessage(weekSchedule))
                             .build());
                 });
         log.info("Total notifications to send: {}", messages.size());

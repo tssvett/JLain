@@ -41,7 +41,7 @@ public class ScheduleStringFormatter {
         return dayStringBuilder.toString();
     }
 
-    public String formatNotificationMessage(Map<String, List<LessonInfoDto>> lessonsInWeek) {
+    public String formatToTomorrowNotificationMessage(Map<String, List<LessonInfoDto>> lessonsInWeek) {
         String tomorrowDayName = dateUtils.calculateTomorrowDayName();
 
         return MessageCreateUtils.createNotificationMessage(this.formatDay(lessonsInWeek, tomorrowDayName));

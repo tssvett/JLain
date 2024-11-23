@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @EnableScheduling
-@ConditionalOnProperty(name = "scheduling.notification.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "scheduling.tomorrow-schedule-notification.enabled", havingValue = "true")
 public class TomorrowScheduleNotificationScheduler {
     private final NotificationService notificationService;
     private final TelegramBot telegramBot;
 
-    @Scheduled(cron = "${scheduling.notification.cron}")
+    @Scheduled(cron = "${scheduling.tomorrow-schedule-notification.cron}")
     public void sendScheduleNotificationsToUsers() {
-        log.info("Staring sending notifications to users");
-        telegramBot.sendMessage(notificationService.createNotificationsMessages());
-        log.info("Sending notifications to users finished");
+        log.info("Staring sending tomorrow schedule notifications to users");
+        telegramBot.sendMessage(notificationService.createTomorrowScheduleNotificationsMessages());
+        log.info("Sending tomorrow schedule notifications to users finished");
     }
 }
