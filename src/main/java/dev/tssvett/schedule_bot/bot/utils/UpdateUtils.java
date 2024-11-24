@@ -43,7 +43,12 @@ public class UpdateUtils {
         return Long.parseLong(CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation());
     }
 
-    public static boolean getNotificationStatus(Update update) {
+    public static boolean getTomorrowScheduleNotificationStatus(Update update) {
+        String answer = CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
+        return answer.equals("Включить");
+    }
+
+    public static boolean getScheduleDifferenceNotificationStatus(Update update) {
         String answer = CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
         return answer.equals("Включить");
     }

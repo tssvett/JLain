@@ -32,13 +32,13 @@ admin:
 scheduling:
   tomorrow-schedule-notification:
     cron: "0 20 22 * * *" #Каждый день в 22:20
-    enabled: false
+    enabled: true
   schedule-difference-notification:
-    cron: "0 * * * *" #Каждый час в :00 мин
+    cron: "0 0 * * * *" #Каждый час в :00 мин
     enabled: true
   parser:
     cron: "0 20 21 * * *" #Каждый день в 21:20
-    enabled: false
+    enabled: true
 
 samara-university:
   semester-start-date: 2024-09-02

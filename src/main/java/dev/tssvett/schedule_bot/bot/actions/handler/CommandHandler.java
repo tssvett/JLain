@@ -3,13 +3,12 @@ package dev.tssvett.schedule_bot.bot.actions.handler;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.enums.constants.CommandNames;
 import dev.tssvett.schedule_bot.bot.utils.UpdateUtils;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.util.Optional;
 
 
 @Slf4j
@@ -25,7 +24,8 @@ public class CommandHandler {
     private final BotCommand registerBotCommand;
     private final BotCommand unknownBotCommand;
     private final BotCommand infoBotCommand;
-    private final BotCommand notificationBotCommand;
+    private final BotCommand tomorrowScheduleNotificationSettingsCommand;
+    private final BotCommand differenceScheduleNotificationSettingsCommand;
 
     public BotApiMethod<?> handleCommands(Update update) {
         Long userId = UpdateUtils.getUserIdFromMessage(update);
@@ -51,7 +51,10 @@ public class CommandHandler {
             case PICTURE_COMMAND -> pictureBotCommand.execute(userId, chatId);
             case REGISTER_COMMAND -> registerBotCommand.execute(userId, chatId);
             case INFO_COMMAND -> infoBotCommand.execute(userId, chatId);
-            case NOTIFICATION_COMMAND -> notificationBotCommand.execute(userId, chatId);
+            case TOMORROW_SCHEDULE_NOTIFICATION_COMMAND ->
+                    tomorrowScheduleNotificationSettingsCommand.execute(userId, chatId);
+            case DIFFERENCE_SCHEDULE_NOTIFICATION_COMMAND ->
+                    differenceScheduleNotificationSettingsCommand.execute(userId, chatId);
         };
     }
 }

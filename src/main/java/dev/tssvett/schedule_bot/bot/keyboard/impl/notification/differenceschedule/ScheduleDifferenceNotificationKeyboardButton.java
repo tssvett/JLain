@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.bot.keyboard.impl.notification;
+package dev.tssvett.schedule_bot.bot.keyboard.impl.notification.differenceschedule;
 
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
@@ -12,20 +12,20 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class NotificationSelectionKeyboardButton implements KeyboardButton {
+public class ScheduleDifferenceNotificationKeyboardButton implements KeyboardButton {
     private final StudentService studentService;
 
     @Override
     public SendMessage onButtonClick(Update update) {
         long userId = UpdateUtils.getUserIdFromCallbackQuery(update);
         long chatId = UpdateUtils.getChatIdFromCallbackQuery(update);
-        boolean notificationStatus = UpdateUtils.getNotificationStatus(update);
+        boolean notificationStatus = UpdateUtils.getTomorrowScheduleNotificationStatus(update);
 
         return processNotificationSelectionOnButtonClick(userId, chatId, notificationStatus);
     }
 
     private SendMessage processNotificationSelectionOnButtonClick(long userId, long chatId, boolean notificationStatus) {
-        studentService.updateStudentNotification(userId, notificationStatus);
+        studentService.updateScheduleDifferenceNotificationStatus(userId, notificationStatus);
 
         return sendCurrentNotificationStatusMessage(chatId, notificationStatus);
     }
@@ -33,7 +33,7 @@ public class NotificationSelectionKeyboardButton implements KeyboardButton {
     private SendMessage sendCurrentNotificationStatusMessage(long chatId, boolean notificationStatus) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text("Уведомления " + (notificationStatus ? "включены" : "отключены"))
+                .text("Уведомления для разницы " + (notificationStatus ? "включены" : "отключены"))
                 .build();
     }
 }

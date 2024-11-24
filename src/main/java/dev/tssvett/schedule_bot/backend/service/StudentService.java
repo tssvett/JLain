@@ -43,12 +43,23 @@ public class StudentService {
                 RegistrationState.SUCCESSFUL_REGISTRATION, student -> student.setGroupId(groupId));
     }
 
-    public void updateStudentNotification(Long studentId, Boolean notificationStatus) {
+    public void updateTomorrowScheduleNotificationStatus(Long studentId, Boolean notificationStatus) {
         Long notificationId = studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId))
                 .getNotificationId();
 
         notificationRepository.updateTomorrowScheduleStatus(notificationId, notificationStatus);
+
+        proceedRegistrationState(studentId, RegistrationState.SUCCESSFUL_REGISTRATION,
+                RegistrationState.SUCCESSFUL_REGISTRATION, student -> student.setNotificationId(notificationId));
+    }
+
+    public void updateScheduleDifferenceNotificationStatus(Long studentId, Boolean notificationStatus) {
+        Long notificationId = studentRepository.findById(studentId)
+                .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId))
+                .getNotificationId();
+
+        notificationRepository.updateScheduleDifferenceStatus(notificationId, notificationStatus);
 
         proceedRegistrationState(studentId, RegistrationState.SUCCESSFUL_REGISTRATION,
                 RegistrationState.SUCCESSFUL_REGISTRATION, student -> student.setNotificationId(notificationId));

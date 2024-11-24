@@ -10,7 +10,8 @@ public enum Action {
     COURSE_CHOOSE("course"),
     GROUP_CHOOSE("group"),
     REFRESH_REGISTRATION("refresh_registration"),
-    NOTIFICATION("notification");
+    TOMORROW_SCHEDULE_NOTIFICATION("notification"),
+    SCHEDULE_DIFFERENCE_NOTIFICATION("schedule_difference_notification");
 
     private final String actionName;
 }
