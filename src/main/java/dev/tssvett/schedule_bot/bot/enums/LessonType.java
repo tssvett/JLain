@@ -1,10 +1,9 @@
 package dev.tssvett.schedule_bot.bot.enums;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor

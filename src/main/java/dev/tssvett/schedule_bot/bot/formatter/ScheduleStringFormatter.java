@@ -1,10 +1,11 @@
 package dev.tssvett.schedule_bot.bot.formatter;
 
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
+import dev.tssvett.schedule_bot.backend.mapper.Mapper;
+import dev.tssvett.schedule_bot.backend.service.ScheduleDifference;
 import dev.tssvett.schedule_bot.bot.enums.DaysOfWeek;
 import dev.tssvett.schedule_bot.bot.utils.DateUtils;
 import dev.tssvett.schedule_bot.bot.utils.message.MessageCreateUtils;
-import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -66,11 +67,20 @@ public class ScheduleStringFormatter {
         return dayLessons != null && !dayLessons.isEmpty();
     }
 
-    public String formatToScheduleDifference(Map<LessonRecord, LessonRecord> difference) {
+    public String formatToScheduleDifference(ScheduleDifference difference) {
         StringBuilder scheduleDifferenceStringBuilder = new StringBuilder();
-        for(Map.Entry<LessonRecord, LessonRecord> entry : difference.entrySet()) {
-            scheduleDifferenceStringBuilder.append(String.format("Пара %s изменилась на %s\n", entry.getKey().getName(), entry.getValue().getName()));
-        }
+        //TODO: Придумать как нормально отображать разницу(помогите....)
+        scheduleDifferenceStringBuilder.append("Добавленные пары:\n");
+        difference.addedLessons().forEach(
+                lesson -> scheduleDifferenceStringBuilder
+                        .append(MessageCreateUtils.createStringLesson(Mapper.toLessonInfoDto(lesson)))
+        );
+        scheduleDifferenceStringBuilder.append("\n");
+        scheduleDifferenceStringBuilder.append("\nУдаленные пары:\n");
+        difference.removedLessons().forEach(
+                lesson -> scheduleDifferenceStringBuilder
+                        .append(MessageCreateUtils.createStringLesson(Mapper.toLessonInfoDto(lesson)))
+        );
         return scheduleDifferenceStringBuilder.toString();
     }
 }

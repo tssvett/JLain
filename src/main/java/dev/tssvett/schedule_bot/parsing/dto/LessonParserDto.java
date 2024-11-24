@@ -11,6 +11,7 @@ public record LessonParserDto(
         String subgroup,
         String time,
         String dateDay,
-        String dateNumber
+        String dateNumber,
+        Long groupId
 ) {
 }

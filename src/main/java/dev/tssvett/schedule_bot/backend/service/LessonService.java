@@ -9,9 +9,11 @@ import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGrou
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import dev.tssvett.schedule_bot.persistence.repository.LessonRepository;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -160,43 +162,49 @@ public class LessonService {
         return !StringUtils.isAllBlank(lesson.getName(), lesson.getType());
     }
 
-    public Map<LessonRecord, LessonRecord> findScheduleDifference(Long userId) {
-        Map<LessonRecord, LessonRecord> result = new HashMap<>();
-
+    public Optional<ScheduleDifference> findScheduleDifference(Long userId) {
         Long groupId = studentService.getStudentInfoById(userId).getGroupId();
+        String date = dateUtils.getCurrentDate();
 
-        List<LessonRecord> dbLessons = lessonRepository.findLessonsByGroupIdAndEducationalDay(
+        List<LessonRecord> savedDayLessons = lessonRepository.findLessonsByGroupIdAndEducationalDay(
                 groupId,
-                dateUtils.getYesterdayDate()
+                date
         );
+        log.debug("Total db lessons: {}", savedDayLessons.size());
 
-        List<LessonRecord> parsedLessons = lessonParser.parse(groupId,
+        List<LessonRecord> parsedDayLessons = lessonParser.parse(
+                        groupId,
                         dateUtils.calculateCurrentUniversityEducationalWeek())
                 .stream()
+                .filter(lesson -> lesson.dateNumber().equals(date))
                 .map(Mapper::toLessonRecord)
                 .toList();
+        log.debug("Total parsed lessons: {}", parsedDayLessons.size());
 
-        //TODO: Переделать механизм вывода разницы
-        // Сейчас он умеет выводить разницу в формате было: стало через мапу
-        // Надо придумать так, чтоб корректно обрабатывался случай когда пара удалилась
-        //LessonRecord lessonRecord = dbLessons.get(0);
-        //lessonRecord.setName("SDGDSHGSFHFH");
-        //List<LessonRecord> parsedLessons = List.of(lessonRecord);
+        return findScheduleDifference(savedDayLessons, parsedDayLessons);
+    }
 
-        if(dbLessons.size() != parsedLessons.size()) {
-            parsedLessons.forEach(
-                    lesson -> {
-                        result.put(lesson, lesson);
-                    });
-            return result;
+    private Optional<ScheduleDifference> findScheduleDifference(List<LessonRecord> dbLessons, List<LessonRecord> parsedLessons) {
+        if (dbLessons.size() == parsedLessons.size()) {
+            return Optional.empty();
         }
 
-        for (int i = 0; i < dbLessons.size(); i++) {
-            if (!isEqualsLesson(dbLessons.get(i), parsedLessons.get(i))) {
-                result.put(dbLessons.get(i), parsedLessons.get(i));
-            }
-        }
+        Set<LessonInfoDto> dbSet = new HashSet<>(dbLessons.stream().map(Mapper::toLessonInfoDto).toList());
+        Set<LessonInfoDto> parsedSet = new HashSet<>(parsedLessons.stream().map(Mapper::toLessonInfoDto).toList());
 
-        return result;
+        // Находим элементы, которые есть в parsedLessons, но нет в dbLessons
+        Set<LessonInfoDto> addedLessons = new HashSet<>(parsedSet);
+        addedLessons.removeAll(dbSet);
+
+        // Находим элементы, которые есть в dbLessons, но нет в parsedLessons
+        Set<LessonInfoDto> removedLessons = new HashSet<>(dbSet);
+        removedLessons.removeAll(parsedSet);
+
+        return Optional.of(new ScheduleDifference(
+                dbLessons,
+                parsedLessons,
+                new ArrayList<>(addedLessons.stream().map(Mapper::toLessonRecord).toList()),
+                new ArrayList<>(removedLessons.stream().map(Mapper::toLessonRecord).toList())
+        ));
     }
 }

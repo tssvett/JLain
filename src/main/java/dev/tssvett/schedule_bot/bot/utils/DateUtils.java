@@ -25,6 +25,14 @@ public class DateUtils {
         return (int) (now.toEpochDay() - semesterStart.toEpochDay()) / 7 + 1;
     }
 
+    public Integer calculateCurrentUniversityEducationalWeek(int deltaWeek) {
+        LocalDate now = LocalDate.now();
+        LocalDate semesterStart = properties.semesterStartDate();
+        log.debug("Current Week number: {}", (int) (now.toEpochDay() - semesterStart.toEpochDay()) / 7 + 1);
+
+        return ((int) (now.toEpochDay() - semesterStart.toEpochDay()) / 7 + 1) + deltaWeek;
+    }
+
     public String calculateCurrentDayName() {
         LocalDate now = LocalDate.now();
         String dayName = now.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("ru")).toLowerCase();
