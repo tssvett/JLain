@@ -30,11 +30,14 @@ admin:
   id: ${ADMIN_ID}
 
 scheduling:
-  notification:
-    cron: "0 0 23 * * *" #Каждый день в 23:00
-    enabled: false
+  tomorrow-schedule-notification:
+    cron: "0 20 22 * * *" #Каждый день в 22:20
+    enabled: true
+  schedule-difference-notification:
+    cron: "0 0 * * * *" #Каждый час в :00 мин
+    enabled: true
   parser:
-    cron: "0 0 22 * * *" #Каждый день в 22:00
+    cron: "0 20 21 * * *" #Каждый день в 21:20
     enabled: true
 
 samara-university:

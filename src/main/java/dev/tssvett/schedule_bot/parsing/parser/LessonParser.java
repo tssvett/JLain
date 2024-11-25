@@ -44,7 +44,7 @@ public class LessonParser {
             return new ArrayList<>();
         }
 
-        List<LessonParserDto> lessons = createLessonRecords(lessonsHtmlDocument, lessonTimes, lessonDates);
+        List<LessonParserDto> lessons = createLessonRecords(lessonsHtmlDocument, lessonTimes, lessonDates, groupId);
 
         return sortLessonsByDay(lessons, lessonDates);
     }
@@ -72,7 +72,7 @@ public class LessonParser {
     }
 
     private List<LessonParserDto> createLessonRecords(Document schoolWeek, List<String> lessonTimes,
-                                                      List<String> dates) {
+                                                      List<String> dates, Long groupId) {
         List<LessonParserDto> lessonsList = new LinkedList<>();
 
         Elements lessonsElements = removeFirstNElements(
@@ -82,15 +82,16 @@ public class LessonParser {
         for (int i = 0; i < lessonsElements.size(); i++) {
             Elements lessons = lessonsElements.get(i).select(Selector.LESSON_SELECTOR.getName());
             for (Element lessonElement : lessons) {
-                lessonsList.add(buildLesson(lessonTimes, dates, lessonElement, i));
+                lessonsList.add(buildLesson(lessonTimes, dates, lessonElement, i, groupId));
             }
         }
 
         return lessonsList;
     }
 
-    private LessonParserDto buildLesson(List<String> lessonTimes, List<String> dates, Element lessonElement, int i) {
-        return new dev.tssvett.schedule_bot.parsing.dto.LessonParserDto(
+    private LessonParserDto buildLesson(List<String> lessonTimes, List<String> dates, Element lessonElement, int i,
+                                        Long groupId) {
+        return new LessonParserDto(
                 UUID.randomUUID(),
                 getName(lessonElement),
                 getType(lessonElement).getName(),
@@ -99,7 +100,8 @@ public class LessonParser {
                 getSubgroupString(lessonElement).getName(),
                 getTime(lessonTimes, dates, i),
                 getDateDay(dates, i),
-                getDateNumber(dates, i)
+                getDateNumber(dates, i),
+                groupId
         );
     }
 

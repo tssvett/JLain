@@ -28,4 +28,11 @@ public class LessonRepository {
         return dslContext.selectFrom(Lesson.LESSON)
                 .fetchInto(LessonRecord.class);
     }
+
+    public List<LessonRecord> findLessonsByGroupIdAndEducationalDay(Long groupId, String educationalDay) {
+        return dslContext.selectFrom(Lesson.LESSON)
+                .where(Lesson.LESSON.GROUP_ID.eq(groupId))
+                .and(Lesson.LESSON.DATE_NUMBER.eq(educationalDay))
+                .fetchInto(LessonRecord.class);
+    }
 }

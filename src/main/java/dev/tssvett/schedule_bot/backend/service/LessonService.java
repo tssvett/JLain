@@ -9,8 +9,11 @@ import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGrou
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import dev.tssvett.schedule_bot.persistence.repository.LessonRepository;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -140,22 +143,68 @@ public class LessonService {
     public void saveLessonsWithoutDuplication(List<LessonRecord> lessonsToSave) {
         List<LessonRecord> currentLessons = lessonRepository.findAllLessons();
         for (LessonRecord lesson : currentLessons) {
-            lessonsToSave.removeIf(lessonToSave -> isNewLesson(lesson, lessonToSave));
+            lessonsToSave.removeIf(lessonToSave -> isEqualsLesson(lesson, lessonToSave));
         }
         log.info("Total NEW lessons to save: {}", lessonsToSave.size());
         lessonRepository.saveAll(lessonsToSave);
     }
 
-    private static boolean isNewLesson(LessonRecord lesson, LessonRecord lessonToSave) {
-        return lessonToSave.getName().equals(lesson.getName())
-                && lessonToSave.getDateNumber().equals(lesson.getDateNumber())
-                && lessonToSave.getTime().equals(lesson.getTime())
-                && lessonToSave.getType().equals(lesson.getType())
-                && lessonToSave.getGroupId().equals(lesson.getGroupId());
+    private static boolean isEqualsLesson(LessonRecord firstLesson, LessonRecord secondLesson) {
+        return secondLesson.getName().equals(firstLesson.getName())
+                && secondLesson.getDateNumber().equals(firstLesson.getDateNumber())
+                && secondLesson.getTime().equals(firstLesson.getTime())
+                && secondLesson.getType().equals(firstLesson.getType())
+                && secondLesson.getGroupId().equals(firstLesson.getGroupId());
     }
 
 
     private boolean isExist(LessonRecord lesson) {
         return !StringUtils.isAllBlank(lesson.getName(), lesson.getType());
+    }
+
+    public Optional<ScheduleDifference> findScheduleDifference(Long userId) {
+        Long groupId = studentService.getStudentInfoById(userId).getGroupId();
+        String date = dateUtils.getCurrentDate();
+
+        List<LessonRecord> savedDayLessons = lessonRepository.findLessonsByGroupIdAndEducationalDay(
+                groupId,
+                date
+        );
+        log.debug("Total db lessons: {}", savedDayLessons.size());
+
+        List<LessonRecord> parsedDayLessons = lessonParser.parse(
+                        groupId,
+                        dateUtils.calculateCurrentUniversityEducationalWeek())
+                .stream()
+                .filter(lesson -> lesson.dateNumber().equals(date))
+                .map(Mapper::toLessonRecord)
+                .toList();
+        log.debug("Total parsed lessons: {}", parsedDayLessons.size());
+
+        return findScheduleDifference(savedDayLessons, parsedDayLessons);
+    }
+
+    private Optional<ScheduleDifference> findScheduleDifference(List<LessonRecord> dbLessons, List<LessonRecord> parsedLessons) {
+        if (dbLessons.size() == parsedLessons.size()) {
+            return Optional.empty();
+        }
+
+        Set<LessonInfoDto> dbSet = new HashSet<>(dbLessons.stream().map(Mapper::toLessonInfoDto).toList());
+        Set<LessonInfoDto> parsedSet = new HashSet<>(parsedLessons.stream().map(Mapper::toLessonInfoDto).toList());
+
+        // Находим элементы, которые есть в parsedLessons, но нет в dbLessons
+        Set<LessonInfoDto> addedLessons = new HashSet<>(parsedSet);
+        addedLessons.removeAll(dbSet);
+
+        // Находим элементы, которые есть в dbLessons, но нет в parsedLessons
+        Set<LessonInfoDto> removedLessons = new HashSet<>(dbSet);
+        removedLessons.removeAll(parsedSet);
+
+        return Optional.of(new ScheduleDifference(
+                dbLessons,
+                parsedLessons,
+                new ArrayList<>(addedLessons.stream().map(Mapper::toLessonRecord).toList()),
+                new ArrayList<>(removedLessons.stream().map(Mapper::toLessonRecord).toList())
+        ));
     }
 }

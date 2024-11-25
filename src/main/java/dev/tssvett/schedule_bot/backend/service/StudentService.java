@@ -4,18 +4,16 @@ import dev.tssvett.schedule_bot.backend.exception.NotificationNotExistsException
 import dev.tssvett.schedule_bot.backend.exception.database.StudentNotExistsException;
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.START_REGISTER;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
 import dev.tssvett.schedule_bot.persistence.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.persistence.repository.StudentRepository;
+import java.util.Optional;
+import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-import java.util.function.Consumer;
-
-import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.START_REGISTER;
 
 @Slf4j
 @Service
@@ -45,12 +43,23 @@ public class StudentService {
                 RegistrationState.SUCCESSFUL_REGISTRATION, student -> student.setGroupId(groupId));
     }
 
-    public void updateStudentNotification(Long studentId, Boolean notificationStatus) {
+    public void updateTomorrowScheduleNotificationStatus(Long studentId, Boolean notificationStatus) {
         Long notificationId = studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId))
                 .getNotificationId();
 
-        notificationRepository.update(notificationId, notificationStatus);
+        notificationRepository.updateTomorrowScheduleStatus(notificationId, notificationStatus);
+
+        proceedRegistrationState(studentId, RegistrationState.SUCCESSFUL_REGISTRATION,
+                RegistrationState.SUCCESSFUL_REGISTRATION, student -> student.setNotificationId(notificationId));
+    }
+
+    public void updateScheduleDifferenceNotificationStatus(Long studentId, Boolean notificationStatus) {
+        Long notificationId = studentRepository.findById(studentId)
+                .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId))
+                .getNotificationId();
+
+        notificationRepository.updateScheduleDifferenceStatus(notificationId, notificationStatus);
 
         proceedRegistrationState(studentId, RegistrationState.SUCCESSFUL_REGISTRATION,
                 RegistrationState.SUCCESSFUL_REGISTRATION, student -> student.setNotificationId(notificationId));
@@ -110,18 +119,26 @@ public class StudentService {
 
         studentRepository.save(newStudent);
 
-        NotificationRecord notification = new NotificationRecord(null, true);
+        NotificationRecord notification = new NotificationRecord(null, true, studentId, true);
         NotificationRecord savedNotification = notificationRepository.save(notification);
 
         studentRepository.updateNotificationId(newStudent, savedNotification.getId());
 
     }
 
-    public boolean isNotificationEnabled(Long userId) {
+    public boolean isTomorrowScheduleNotificationEnabled(Long userId) {
         StudentRecord studentRecord = this.getStudentInfoById(userId);
 
         return notificationRepository.findById(studentRecord.getNotificationId())
                 .orElseThrow(() -> new NotificationNotExistsException("No notification with id: " + studentRecord.getNotificationId()))
-                .getEnabled();
+                .getTomorrowScheduleEnabled();
+    }
+
+    public boolean isScheduleDifferenceNotificationEnabled(Long userId) {
+        StudentRecord studentRecord = this.getStudentInfoById(userId);
+
+        return notificationRepository.findById(studentRecord.getNotificationId())
+                .orElseThrow(() -> new NotificationNotExistsException("No notification with id: " + studentRecord.getNotificationId()))
+                .getScheduleDifferenceEnabled();
     }
 }

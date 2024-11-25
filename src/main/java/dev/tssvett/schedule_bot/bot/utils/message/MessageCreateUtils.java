@@ -4,15 +4,20 @@ import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import dev.tssvett.schedule_bot.bot.enums.Subgroup;
-import lombok.experimental.UtilityClass;
-
 import static dev.tssvett.schedule_bot.bot.utils.StringUtils.capitalizeFirstLetter;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
+import java.util.Map;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class MessageCreateUtils {
 
-    public static String createInfoCommandMessageText(StudentInfoDto studentInfoDto, String facultyName,
-                                                      String groupName, boolean isNotificationEnabled) {
+    public static String createInfoCommandMessageText
+            (StudentInfoDto studentInfoDto,
+             String facultyName,
+             String groupName,
+             boolean tomorrowNotification,
+             boolean differenceNotification) {
         return """
                 ℹ️ **Информация о пользователе:**
                 👤 **ID пользователя:** %d
@@ -21,7 +26,8 @@ public class MessageCreateUtils {
                 📚 **Курс:** %s
                 👥 **Группа:** %s
                 📝 **Статус регистрации:** %s
-                🔔 **Уведомления:** %s""".formatted(
+                🔔 **Уведомления на завтра:** %s
+                🔔 **Уведомления на изменения:** %s""".formatted(
                 studentInfoDto.userId(),
                 studentInfoDto.chatId(),
                 facultyName,
@@ -30,7 +36,10 @@ public class MessageCreateUtils {
                 studentInfoDto.registrationState().equals(RegistrationState.SUCCESSFUL_REGISTRATION)
                         ? "✅ Успешно пройдена"
                         : "❌ Не завершена",
-                isNotificationEnabled
+                tomorrowNotification
+                        ? "✅ Включены"
+                        : "❌ Отключены",
+                differenceNotification
                         ? "✅ Включены"
                         : "❌ Отключены");
     }
@@ -51,6 +60,14 @@ public class MessageCreateUtils {
                 lesson.subgroup().equals(Subgroup.EMPTY) ? "" : "\nПодгруппа: " + lesson.subgroup().getName());
     }
 
+    public static String createNotificationMessage(String formattedDay) {
+        return String.format("""
+                Уведомление! Расписание на завтра
+                            
+                %s
+                """, formattedDay);
+    }
+
     public static String createNotExistingDayMessage(String weekDayName, String currentDate) {
         return String.format("""
                 %s %s (%s):
@@ -68,5 +85,12 @@ public class MessageCreateUtils {
             case EXAM -> MessageTextConstantsUtils.EXAM_EMOJI;
             default -> "";
         };
+    }
+
+    public static String createScheduleDifferenceMessage(Map<LessonRecord, LessonRecord> difference) {
+
+        return String.format("""
+                %s
+                """, difference);
     }
 }

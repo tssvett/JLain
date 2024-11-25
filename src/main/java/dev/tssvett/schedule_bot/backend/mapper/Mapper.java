@@ -63,10 +63,10 @@ public class Mapper {
         return new LessonRecord(
                 lesson.lessonId(),
                 lesson.name(),
-                lesson.type().name(),
+                lesson.type().getName(),
                 lesson.place(),
                 lesson.teacher(),
-                lesson.subgroup().name(),
+                lesson.subgroup().getName(),
                 lesson.time(),
                 lesson.dateDay(),
                 lesson.dateNumber(),
@@ -78,14 +78,14 @@ public class Mapper {
         return new LessonRecord(
                 lesson.id(),
                 lesson.name(),
-                lesson.type(),
+                LessonType.fromName(lesson.type()).name(),
                 lesson.place(),
                 lesson.teacher(),
-                lesson.subgroup(),
+                Subgroup.fromName(lesson.subgroup()).name(),
                 lesson.time(),
                 lesson.dateDay(),
                 lesson.dateNumber(),
-                null
+                lesson.groupId()
         );
     }
 
@@ -140,14 +140,18 @@ public class Mapper {
     public static NotificationInfoDto toNotificationInfoDto(NotificationRecord notificationRecord) {
         return new NotificationInfoDto(
                 notificationRecord.getId(),
-                notificationRecord.getEnabled()
+                notificationRecord.getTomorrowScheduleEnabled(),
+                notificationRecord.getScheduleDifferenceEnabled(),
+                notificationRecord.getStudentId()
         );
     }
 
     public static NotificationRecord toNotificationRecord(NotificationInfoDto notification) {
         return new NotificationRecord(
                 notification.notificationId(),
-                notification.enabled()
+                notification.tomorrowScheduleEnabled(),
+                notification.studentId(),
+                notification.scheduleDifferenceEnabled()
         );
     }
 }

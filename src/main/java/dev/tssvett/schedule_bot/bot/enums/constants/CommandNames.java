@@ -18,7 +18,8 @@ public enum CommandNames {
     REGISTER_COMMAND("/register"),
     PICTURE_COMMAND("/picture"),
     INFO_COMMAND("/info"),
-    NOTIFICATION_COMMAND("/notification");
+    TOMORROW_SCHEDULE_NOTIFICATION_COMMAND("/tomorrow_notification"),
+    DIFFERENCE_SCHEDULE_NOTIFICATION_COMMAND("/difference_notification");
 
     private final String commandName;
 

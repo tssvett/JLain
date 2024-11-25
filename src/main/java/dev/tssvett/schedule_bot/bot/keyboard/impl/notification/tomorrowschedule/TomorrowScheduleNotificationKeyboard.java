@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.bot.keyboard.impl.notification;
+package dev.tssvett.schedule_bot.bot.keyboard.impl.notification.tomorrowschedule;
 
 import dev.tssvett.schedule_bot.bot.enums.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.Keyboard;
@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class NotificationKeyboard extends Keyboard {
+public class TomorrowScheduleNotificationKeyboard extends Keyboard {
     private static final int NOTIFICATION_ROW_SIZE = 2;
 
     @Override

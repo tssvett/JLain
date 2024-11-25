@@ -2,6 +2,7 @@ package dev.tssvett.schedule_bot.bot;
 
 import dev.tssvett.schedule_bot.bot.actions.provider.CallbackProvider;
 import dev.tssvett.schedule_bot.bot.properties.BotProperties;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,14 +30,18 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        executeBotMethod(callbackProvider.handleMessage(update));
+        sendMessage(callbackProvider.handleMessage(update));
     }
 
-    public void executeBotMethod(BotApiMethod<?> botApiMethod) {
+    public void sendMessage(BotApiMethod<?> botApiMethod) {
         try {
             this.execute(botApiMethod);
         } catch (TelegramApiException e) {
             log.error(e.getMessage());
         }
+    }
+
+    public void sendMessage(List<BotApiMethod<?>> botApiMethods) {
+        botApiMethods.forEach(this::sendMessage);
     }
 }
