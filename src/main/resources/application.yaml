@@ -34,6 +34,7 @@ scheduling:
     cron: "0 20 22 * * *" #Каждый день в 22:20
     enabled: true
   schedule-difference-notification:
+    delay: 100000
     cron: "0 0 * * * *" #Каждый час в :00 мин
     enabled: true
   parser:

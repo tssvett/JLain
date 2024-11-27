@@ -170,7 +170,7 @@ public class LessonService {
                 groupId,
                 date
         );
-        log.debug("Total db lessons: {}", savedDayLessons.size());
+        log.info("Total db lessons: {}", savedDayLessons.size());
 
         List<LessonRecord> parsedDayLessons = lessonParser.parse(
                         groupId,
@@ -179,7 +179,7 @@ public class LessonService {
                 .filter(lesson -> lesson.dateNumber().equals(date))
                 .map(Mapper::toLessonRecord)
                 .toList();
-        log.debug("Total parsed lessons: {}", parsedDayLessons.size());
+        log.info("Total parsed lessons: {}", parsedDayLessons.size());
 
         return findScheduleDifference(savedDayLessons, parsedDayLessons);
     }
@@ -195,10 +195,13 @@ public class LessonService {
         // Находим элементы, которые есть в parsedLessons, но нет в dbLessons
         Set<LessonInfoDto> addedLessons = new HashSet<>(parsedSet);
         addedLessons.removeAll(dbSet);
+        saveLessonsWithoutDuplication(addedLessons.stream().map(Mapper::toLessonRecord).toList());
+
 
         // Находим элементы, которые есть в dbLessons, но нет в parsedLessons
         Set<LessonInfoDto> removedLessons = new HashSet<>(dbSet);
         removedLessons.removeAll(parsedSet);
+        lessonRepository.deleteAll(removedLessons.stream().map(Mapper::toLessonRecord).toList());
 
         return Optional.of(new ScheduleDifference(
                 dbLessons,
@@ -207,4 +210,5 @@ public class LessonService {
                 new ArrayList<>(removedLessons.stream().map(Mapper::toLessonRecord).toList())
         ));
     }
+
 }
