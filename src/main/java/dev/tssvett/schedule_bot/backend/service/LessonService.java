@@ -9,11 +9,9 @@ import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGrou
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import dev.tssvett.schedule_bot.persistence.repository.LessonRepository;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -141,19 +139,30 @@ public class LessonService {
     }
 
     public void saveLessonsWithoutDuplication(List<LessonRecord> lessonsToSave) {
-        List<LessonRecord> currentLessons = lessonRepository.findAllLessons();
-        for (LessonRecord lesson : currentLessons) {
-            lessonsToSave.removeIf(lessonToSave -> isEqualsLesson(lesson, lessonToSave));
+        if (lessonsToSave.isEmpty()) {
+            return;
         }
-        log.info("Total NEW lessons to save: {}", lessonsToSave.size());
-        lessonRepository.saveAll(lessonsToSave);
+
+        List<LessonRecord> currentLessons = lessonRepository.findAllLessons();
+        List<LessonRecord> mutableLessonsToSave = new ArrayList<>(lessonsToSave); // Create a mutable copy
+
+        for (LessonRecord lesson : currentLessons) {
+            mutableLessonsToSave.removeIf(lessonToSave -> isEqualsLesson(lesson, lessonToSave));
+        }
+
+        log.info("Total NEW lessons to save: {}", mutableLessonsToSave.size());
+        lessonRepository.saveAll(mutableLessonsToSave);
     }
 
     private static boolean isEqualsLesson(LessonRecord firstLesson, LessonRecord secondLesson) {
         return secondLesson.getName().equals(firstLesson.getName())
-                && secondLesson.getDateNumber().equals(firstLesson.getDateNumber())
-                && secondLesson.getTime().equals(firstLesson.getTime())
                 && secondLesson.getType().equals(firstLesson.getType())
+                && secondLesson.getPlace().equals(firstLesson.getPlace())
+                && secondLesson.getTeacher().equals(firstLesson.getTeacher())
+                && secondLesson.getSubgroup().equals(firstLesson.getSubgroup())
+                && secondLesson.getTime().equals(firstLesson.getTime())
+                && secondLesson.getDateDay().equals(firstLesson.getDateDay())
+                && secondLesson.getDateNumber().equals(firstLesson.getDateNumber())
                 && secondLesson.getGroupId().equals(firstLesson.getGroupId());
     }
 
@@ -174,7 +183,8 @@ public class LessonService {
 
         List<LessonRecord> parsedDayLessons = lessonParser.parse(
                         groupId,
-                        dateUtils.calculateCurrentUniversityEducationalWeek())
+                        dateUtils.calculateCurrentUniversityEducationalWeek()
+                )
                 .stream()
                 .filter(lesson -> lesson.dateNumber().equals(date))
                 .map(Mapper::toLessonRecord)
@@ -185,29 +195,31 @@ public class LessonService {
     }
 
     private Optional<ScheduleDifference> findScheduleDifference(List<LessonRecord> dbLessons, List<LessonRecord> parsedLessons) {
-        if (dbLessons.size() == parsedLessons.size()) {
-            return Optional.empty();
+        // Находим элементы, которые есть в dbLessons, но нет в parsedLessons
+        List<LessonRecord> removedLessons = new ArrayList<>();
+        for (LessonRecord dbLesson : dbLessons) {
+            boolean found = parsedLessons.stream().anyMatch(parsedLesson -> isEqualsLesson(dbLesson, parsedLesson));
+            if (!found) {
+                removedLessons.add(dbLesson);
+            }
         }
-
-        Set<LessonInfoDto> dbSet = new HashSet<>(dbLessons.stream().map(Mapper::toLessonInfoDto).toList());
-        Set<LessonInfoDto> parsedSet = new HashSet<>(parsedLessons.stream().map(Mapper::toLessonInfoDto).toList());
+        lessonRepository.deleteAll(removedLessons);
 
         // Находим элементы, которые есть в parsedLessons, но нет в dbLessons
-        Set<LessonInfoDto> addedLessons = new HashSet<>(parsedSet);
-        addedLessons.removeAll(dbSet);
-        saveLessonsWithoutDuplication(addedLessons.stream().map(Mapper::toLessonRecord).toList());
-
-
-        // Находим элементы, которые есть в dbLessons, но нет в parsedLessons
-        Set<LessonInfoDto> removedLessons = new HashSet<>(dbSet);
-        removedLessons.removeAll(parsedSet);
-        lessonRepository.deleteAll(removedLessons.stream().map(Mapper::toLessonRecord).toList());
+        List<LessonRecord> addedLessons = new ArrayList<>();
+        for (LessonRecord parsedLesson : parsedLessons) {
+            boolean found = dbLessons.stream().anyMatch(dbLesson -> isEqualsLesson(parsedLesson, dbLesson));
+            if (!found) {
+                addedLessons.add(parsedLesson);
+            }
+        }
+        saveLessonsWithoutDuplication(addedLessons);
 
         return Optional.of(new ScheduleDifference(
                 dbLessons,
                 parsedLessons,
-                new ArrayList<>(addedLessons.stream().map(Mapper::toLessonRecord).toList()),
-                new ArrayList<>(removedLessons.stream().map(Mapper::toLessonRecord).toList())
+                addedLessons,
+                removedLessons
         ));
     }
 
