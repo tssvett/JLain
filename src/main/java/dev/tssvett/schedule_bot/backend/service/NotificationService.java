@@ -57,7 +57,6 @@ public class NotificationService {
                         }
                     }
             );
-
         }
         log.info("Total notifications to send: {}", messages.size());
 

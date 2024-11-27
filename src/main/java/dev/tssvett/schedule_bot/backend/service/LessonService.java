@@ -9,6 +9,7 @@ import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGrou
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import dev.tssvett.schedule_bot.persistence.repository.LessonRepository;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -195,7 +196,6 @@ public class LessonService {
     }
 
     private Optional<ScheduleDifference> findScheduleDifference(List<LessonRecord> dbLessons, List<LessonRecord> parsedLessons) {
-        // Находим элементы, которые есть в dbLessons, но нет в parsedLessons
         List<LessonRecord> removedLessons = new ArrayList<>();
         for (LessonRecord dbLesson : dbLessons) {
             boolean found = parsedLessons.stream().anyMatch(parsedLesson -> isEqualsLesson(dbLesson, parsedLesson));
@@ -205,7 +205,6 @@ public class LessonService {
         }
         lessonRepository.deleteAll(removedLessons);
 
-        // Находим элементы, которые есть в parsedLessons, но нет в dbLessons
         List<LessonRecord> addedLessons = new ArrayList<>();
         for (LessonRecord parsedLesson : parsedLessons) {
             boolean found = dbLessons.stream().anyMatch(dbLesson -> isEqualsLesson(parsedLesson, dbLesson));

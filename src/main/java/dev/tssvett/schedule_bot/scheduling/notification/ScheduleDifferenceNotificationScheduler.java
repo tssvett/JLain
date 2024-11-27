@@ -18,8 +18,7 @@ public class ScheduleDifferenceNotificationScheduler {
     private final NotificationService notificationService;
     private final TelegramBot telegramBot;
 
-    //@Scheduled(cron = "${scheduling.schedule-difference-notification.cron}")
-    @Scheduled(fixedDelayString = "${scheduling.schedule-difference-notification.delay}")
+    @Scheduled(cron = "${scheduling.schedule-difference-notification.cron}")
     public void sendScheduleNotificationsToUsers() {
         log.info("Staring sending schedule difference notifications to users");
         telegramBot.sendMessage(notificationService.createScheduleDifferenceNotificationsMessages());
