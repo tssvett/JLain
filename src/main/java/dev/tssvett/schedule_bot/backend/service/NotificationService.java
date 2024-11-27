@@ -48,12 +48,16 @@ public class NotificationService {
         for (NotificationRecord notification : notifications) {
             Long userId = notification.getStudentId();
             log.debug("Start to send notification to user: {}", userId);
-            lessonService.findScheduleDifference(userId)
-                    .ifPresent(difference ->
+            lessonService.findScheduleDifference(userId).ifPresent(
+                    difference -> {
+                        if (!(difference.removedLessons().isEmpty() && difference.addedLessons().isEmpty())) {
                             messages.add(buildDifferenceMessage(userId,
                                     scheduleStringFormatter.formatToScheduleDifference(difference))
-                            )
-                    );
+                            );
+                        }
+                    }
+            );
+
         }
         log.info("Total notifications to send: {}", messages.size());
 

@@ -69,18 +69,22 @@ public class ScheduleStringFormatter {
 
     public String formatToScheduleDifference(ScheduleDifference difference) {
         StringBuilder scheduleDifferenceStringBuilder = new StringBuilder();
-        //TODO: Придумать как нормально отображать разницу(помогите....)
-        scheduleDifferenceStringBuilder.append("Добавленные пары:\n");
-        difference.addedLessons().forEach(
-                lesson -> scheduleDifferenceStringBuilder
-                        .append(MessageCreateUtils.createStringLesson(Mapper.toLessonInfoDto(lesson)))
-        );
-        scheduleDifferenceStringBuilder.append("\n");
-        scheduleDifferenceStringBuilder.append("\nУдаленные пары:\n");
-        difference.removedLessons().forEach(
-                lesson -> scheduleDifferenceStringBuilder
-                        .append(MessageCreateUtils.createStringLesson(Mapper.toLessonInfoDto(lesson)))
-        );
+        scheduleDifferenceStringBuilder.append("Обнаружено изменение в расписании(!)\n\n");
+        if (!difference.addedLessons().isEmpty()) {
+            scheduleDifferenceStringBuilder.append("Добавленные пары:\n");
+            difference.addedLessons().forEach(
+                    lesson -> scheduleDifferenceStringBuilder
+                            .append(MessageCreateUtils.createStringLesson(Mapper.toLessonInfoDto(lesson)))
+            );
+            scheduleDifferenceStringBuilder.append("\n");
+        }
+        if (!difference.removedLessons().isEmpty()) {
+            scheduleDifferenceStringBuilder.append("\nУдаленные пары:\n");
+            difference.removedLessons().forEach(
+                    lesson -> scheduleDifferenceStringBuilder
+                            .append(MessageCreateUtils.createStringLesson(Mapper.toLessonInfoDto(lesson)))
+            );
+        }
         return scheduleDifferenceStringBuilder.toString();
     }
 }
