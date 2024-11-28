@@ -11,6 +11,7 @@ import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRec
 import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
 import dev.tssvett.schedule_bot.persistence.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.persistence.repository.StudentRepository;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,10 @@ public class StudentService {
     public StudentRecord getStudentInfoById(Long studentId) {
         return studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
+    }
+
+    public List<StudentRecord> findAll() {
+        return studentRepository.findAll();
     }
 
     public void updateStudentFaculty(Long studentId, Long facultyId) {
@@ -145,5 +150,9 @@ public class StudentService {
         return notificationRepository.findById(studentRecord.getNotificationId())
                 .orElseThrow(() -> new NotificationNotExistsException("No notification with id: " + studentRecord.getNotificationId()))
                 .getScheduleDifferenceEnabled();
+    }
+
+    public boolean isAdmin(Long userId) {
+        return this.getStudentInfoById(userId).getRole().equals(Role.ADMIN.name());
     }
 }

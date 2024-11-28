@@ -1,8 +1,11 @@
 package dev.tssvett.schedule_bot.bot.annotation.postprocessor;
 
 import dev.tssvett.schedule_bot.backend.exception.annotation.PostBeanProcessorException;
+import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.annotation.AdminRequired;
-import dev.tssvett.schedule_bot.bot.properties.AdminProperties;
+import static dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils.NOT_ADMIN_MESSAGE;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -10,16 +13,11 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-
-import static dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils.NOT_ADMIN_MESSAGE;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class AdminRequiredPostProcessor implements BeanPostProcessor {
-    private final AdminProperties adminProperties;
+    private final StudentService studentService;
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -50,7 +48,7 @@ public class AdminRequiredPostProcessor implements BeanPostProcessor {
         Long chatId = castToLong(args[1]);
         log.info("Check registration with postBeanProcessor for userId: {} and chatId: {}", userId, chatId);
         try {
-            return isAdmin(userId) ? (SendMessage) method.invoke(bean, args) : sendNotAdminMessage(chatId);
+            return studentService.isAdmin(userId) ? (SendMessage) method.invoke(bean, args) : sendNotAdminMessage(chatId);
         } catch (Exception e) {
             log.error("Error invoking method {}: {}", method.getName(), e.getMessage());
             throw new PostBeanProcessorException(e.getMessage());
@@ -77,9 +75,5 @@ public class AdminRequiredPostProcessor implements BeanPostProcessor {
 
     private boolean isInterface(Object bean) {
         return bean.getClass().getInterfaces().length > 0;
-    }
-
-    private boolean isAdmin(Long userId) {
-        return adminProperties.id().equals(userId);
     }
 }

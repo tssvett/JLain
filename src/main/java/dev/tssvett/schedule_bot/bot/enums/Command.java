@@ -5,6 +5,7 @@ import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.HELP_COM
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.INFO_COMMAND;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.PICTURE_COMMAND;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.REGISTER_COMMAND;
+import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.SHOW_REGISTERED_USERS_COMMAND;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.START_COMMAND;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.TODAY_COMMAND;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.TOMORROW_COMMAND;
@@ -28,7 +29,9 @@ public enum Command {
     TOMORROW_SCHEDULE_NOTIFICATION_SETTINGS(TOMORROW_SCHEDULE_NOTIFICATION_COMMAND.getCommandName(),
             "Настройка ежедневной рассылки расписания"),
     DIFFERENCE_SCHEDULE_NOTIFICATION_SETTINGS(DIFFERENCE_SCHEDULE_NOTIFICATION_COMMAND.getCommandName(),
-            "Настройка проверки на изменения в расписании");
+            "Настройка проверки на изменения в расписании"),
+    SHOW_STUDENTS_COMMAND(SHOW_REGISTERED_USERS_COMMAND.getCommandName(),
+            "Показать список зарегистрированных пользователей");
 
     private final String commandName;
     private final String description;

@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.bot.actions.command.impl;
+package dev.tssvett.schedule_bot.bot.actions.command.impl.register;
 
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;

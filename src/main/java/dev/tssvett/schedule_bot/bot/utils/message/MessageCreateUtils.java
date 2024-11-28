@@ -7,6 +7,7 @@ import dev.tssvett.schedule_bot.bot.enums.Role;
 import dev.tssvett.schedule_bot.bot.enums.Subgroup;
 import static dev.tssvett.schedule_bot.bot.utils.StringUtils.capitalizeFirstLetter;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
+import java.util.List;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
 
@@ -93,9 +94,14 @@ public class MessageCreateUtils {
     }
 
     public static String createScheduleDifferenceMessage(Map<LessonRecord, LessonRecord> difference) {
-
         return String.format("""
                 %s
                 """, difference);
+    }
+
+    public static String createRegisteredStudentsMessage(List<StudentInfoDto> studentsInfoList) {
+        return String.format("""
+                Количество зарегестрированных пользователей: %s
+                """, studentsInfoList.size());
     }
 }

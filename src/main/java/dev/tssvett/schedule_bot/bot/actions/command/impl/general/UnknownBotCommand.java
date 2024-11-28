@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.bot.actions.command.impl;
+package dev.tssvett.schedule_bot.bot.actions.command.impl.general;
 
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.NoneRequired;
@@ -9,14 +9,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 @Slf4j
 @Component
-public class HelpBotCommand implements BotCommand {
-
+public class UnknownBotCommand implements BotCommand {
     @Override
     @NoneRequired
     public SendMessage execute(Long userId, Long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageTextConstantsUtils.HELP_COMMAND)
+                .text(MessageTextConstantsUtils.UNAVAILABLE_COMMAND)
                 .build();
     }
 }

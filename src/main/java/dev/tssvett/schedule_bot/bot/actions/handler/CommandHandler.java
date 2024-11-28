@@ -26,6 +26,7 @@ public class CommandHandler {
     private final BotCommand infoBotCommand;
     private final BotCommand tomorrowScheduleNotificationSettingsCommand;
     private final BotCommand differenceScheduleNotificationSettingsCommand;
+    private final BotCommand showRegisteredStudentsCommand;
 
     public BotApiMethod<?> handleCommands(Update update) {
         Long userId = UpdateUtils.getUserIdFromMessage(update);
@@ -55,6 +56,7 @@ public class CommandHandler {
                     tomorrowScheduleNotificationSettingsCommand.execute(userId, chatId);
             case DIFFERENCE_SCHEDULE_NOTIFICATION_COMMAND ->
                     differenceScheduleNotificationSettingsCommand.execute(userId, chatId);
+            case SHOW_REGISTERED_USERS_COMMAND -> showRegisteredStudentsCommand.execute(userId, chatId);
         };
     }
 }

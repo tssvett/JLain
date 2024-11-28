@@ -1,4 +1,4 @@
-package dev.tssvett.schedule_bot.bot.actions.command.impl;
+package dev.tssvett.schedule_bot.bot.actions.command.impl.general;
 
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
