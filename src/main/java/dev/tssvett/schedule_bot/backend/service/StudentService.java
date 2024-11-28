@@ -6,6 +6,7 @@ import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrat
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.START_REGISTER;
 import dev.tssvett.schedule_bot.bot.enums.Role;
+import dev.tssvett.schedule_bot.bot.properties.AdminProperties;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
 import dev.tssvett.schedule_bot.persistence.repository.NotificationRepository;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final NotificationRepository notificationRepository;
+    private final AdminProperties adminProperties;
 
 
     public StudentRecord getStudentInfoById(Long studentId) {
@@ -108,6 +110,7 @@ public class StudentService {
     private void createStudent(Long studentId, Long chatId) {
         log.debug("Student {} is not in database. Adding them to database", studentId);
 
+        String userRole = adminProperties.id().equals(studentId) ? Role.ADMIN.name() : Role.STUDENT.name();
         StudentRecord newStudent = new StudentRecord(
                 studentId,
                 chatId,
@@ -116,7 +119,7 @@ public class StudentService {
                 null,
                 null,
                 null,
-                Role.STUDENT.name()
+                userRole
         );
 
         studentRepository.save(newStudent);

@@ -7,6 +7,7 @@ import dev.tssvett.schedule_bot.backend.service.GroupService;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.actions.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
+import dev.tssvett.schedule_bot.bot.enums.Role;
 import dev.tssvett.schedule_bot.bot.utils.message.MessageCreateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +40,9 @@ public class InfoBotCommand implements BotCommand {
         String groupName = groupService.getGroupById(studentInfoDto.groupId()).getName();
         boolean tomorrowScheduleNotificationStatus = studentService.isTomorrowScheduleNotificationEnabled(userId);
         boolean scheduleDifferenceNotificationStatus = studentService.isScheduleDifferenceNotificationEnabled(userId);
+        Role role = studentInfoDto.role();
 
         return MessageCreateUtils.createInfoCommandMessageText(studentInfoDto, facultyName,
-                groupName, tomorrowScheduleNotificationStatus, scheduleDifferenceNotificationStatus);
+                groupName, tomorrowScheduleNotificationStatus, scheduleDifferenceNotificationStatus, role);
     }
 }

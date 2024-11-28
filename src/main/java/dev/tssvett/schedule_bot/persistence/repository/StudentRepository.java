@@ -35,6 +35,7 @@ public class StudentRepository {
                 .set(Student.STUDENT.FACULTY_ID, student.getFacultyId())
                 .set(Student.STUDENT.GROUP_ID, student.getGroupId())
                 .set(Student.STUDENT.NOTIFICATION_ID, student.getNotificationId())
+                .set(Student.STUDENT.ROLE, student.getRole())
                 .execute();
     }
 
@@ -46,6 +47,8 @@ public class StudentRepository {
                 .set(Student.STUDENT.REGISTRATION_STATE, student.getRegistrationState())
                 .set(Student.STUDENT.FACULTY_ID, student.getFacultyId())
                 .set(Student.STUDENT.GROUP_ID, student.getGroupId())
+                .set(Student.STUDENT.NOTIFICATION_ID, student.getNotificationId())
+                .set(Student.STUDENT.ROLE, student.getRole())
                 .where(Student.STUDENT.USER_ID.eq(studentId))
                 .execute();
     }

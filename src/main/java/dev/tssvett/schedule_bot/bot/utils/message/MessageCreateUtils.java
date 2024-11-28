@@ -3,6 +3,7 @@ package dev.tssvett.schedule_bot.bot.utils.message;
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.bot.enums.Role;
 import dev.tssvett.schedule_bot.bot.enums.Subgroup;
 import static dev.tssvett.schedule_bot.bot.utils.StringUtils.capitalizeFirstLetter;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
@@ -17,7 +18,8 @@ public class MessageCreateUtils {
              String facultyName,
              String groupName,
              boolean tomorrowNotification,
-             boolean differenceNotification) {
+             boolean differenceNotification,
+             Role role) {
         return """
                 ℹ️ **Информация о пользователе:**
                 👤 **ID пользователя:** %d
@@ -27,7 +29,8 @@ public class MessageCreateUtils {
                 👥 **Группа:** %s
                 📝 **Статус регистрации:** %s
                 🔔 **Уведомления на завтра:** %s
-                🔔 **Уведомления на изменения:** %s""".formatted(
+                🔔 **Уведомления на изменения:** %s
+                👤 **Роль:** %s""".formatted(
                 studentInfoDto.userId(),
                 studentInfoDto.chatId(),
                 facultyName,
@@ -41,7 +44,9 @@ public class MessageCreateUtils {
                         : "❌ Отключены",
                 differenceNotification
                         ? "✅ Включены"
-                        : "❌ Отключены");
+                        : "❌ Отключены",
+                role.getValue()
+        );
     }
 
     public static String createDayHeader(String day, String lessonDate) {
