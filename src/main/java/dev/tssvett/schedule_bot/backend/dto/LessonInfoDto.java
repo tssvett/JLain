@@ -14,7 +14,8 @@ public record LessonInfoDto(
         Subgroup subgroup,
         String time,
         String dateDay,
-        String dateNumber
+        String dateNumber,
+        Long groupId
 ) {
     public boolean isExist() {
         return name != null && !name.isEmpty() && type != null && !type.getName().isEmpty();

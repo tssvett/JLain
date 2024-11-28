@@ -35,4 +35,10 @@ public class LessonRepository {
                 .and(Lesson.LESSON.DATE_NUMBER.eq(educationalDay))
                 .fetchInto(LessonRecord.class);
     }
+  
+    public void deleteAll(List<LessonRecord> list) {
+        dslContext.deleteFrom(Lesson.LESSON)
+                .where(Lesson.LESSON.ID.in(list.stream().map(LessonRecord::getId).toList()))
+                .execute();
+    }
 }

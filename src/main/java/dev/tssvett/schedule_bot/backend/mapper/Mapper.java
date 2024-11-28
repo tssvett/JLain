@@ -55,7 +55,8 @@ public class Mapper {
                 Subgroup.fromName(lesson.getSubgroup()),
                 lesson.getTime(),
                 lesson.getDateDay(),
-                lesson.getDateNumber()
+                lesson.getDateNumber(),
+                lesson.getGroupId()
         );
     }
 
@@ -70,7 +71,7 @@ public class Mapper {
                 lesson.time(),
                 lesson.dateDay(),
                 lesson.dateNumber(),
-                null
+                lesson.groupId()
         );
     }
 
@@ -78,10 +79,10 @@ public class Mapper {
         return new LessonRecord(
                 lesson.id(),
                 lesson.name(),
-                LessonType.fromName(lesson.type()).name(),
+                LessonType.fromName(lesson.type()).getName(),
                 lesson.place(),
                 lesson.teacher(),
-                Subgroup.fromName(lesson.subgroup()).name(),
+                Subgroup.fromName(lesson.subgroup()).getName(),
                 lesson.time(),
                 lesson.dateDay(),
                 lesson.dateNumber(),
