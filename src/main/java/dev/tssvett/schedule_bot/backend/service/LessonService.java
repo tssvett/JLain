@@ -96,6 +96,7 @@ public class LessonService {
                     log.info("[{}] Parsed {} lessons from group {}",
                             String.format("%d/%d", currentGroupCounter.incrementAndGet(), groupsCount), list.size(),
                             educationalGroupRecord.getName());
+
                     return list;
                 }))
         );
@@ -120,8 +121,7 @@ public class LessonService {
 
     private List<LessonRecord> getCurrentWeekLessonsFromGroup(EducationalGroupRecord educationalGroupRecord, int currentEducationalWeek) {
         List<LessonParserDto> list = lessonParser.parse(educationalGroupRecord.getGroupId(), currentEducationalWeek);
-        List<LessonRecord> weekLessonsList = list
-                .stream()
+        List<LessonRecord> weekLessonsList = list.stream()
                 .map(Mapper::toLessonRecord)
                 .toList();
         setLessonsRelations(educationalGroupRecord, weekLessonsList);
@@ -144,14 +144,18 @@ public class LessonService {
         }
 
         List<LessonRecord> currentLessons = lessonRepository.findAllLessons();
-        List<LessonRecord> mutableLessonsToSave = new ArrayList<>(lessonsToSave); // Create a mutable copy
 
-        for (LessonRecord lesson : currentLessons) {
-            mutableLessonsToSave.removeIf(lessonToSave -> isEqualsLesson(lesson, lessonToSave));
-        }
+        List<LessonRecord> newLessons = lessonsToSave.stream()
+                .filter(lessonToSave ->
+                        currentLessons.stream()
+                                .noneMatch(lesson ->
+                                        isEqualsLesson(lesson, lessonToSave)
+                                )
+                )
+                .toList();
 
-        log.info("Total NEW lessons to save: {}", mutableLessonsToSave.size());
-        lessonRepository.saveAll(mutableLessonsToSave);
+        log.info("Total NEW lessons to save: {}", newLessons.size());
+        lessonRepository.saveAll(newLessons);
     }
 
     private static boolean isEqualsLesson(LessonRecord firstLesson, LessonRecord secondLesson) {
@@ -184,8 +188,7 @@ public class LessonService {
         List<LessonRecord> parsedDayLessons = lessonParser.parse(
                         groupId,
                         dateUtils.calculateCurrentUniversityEducationalWeek()
-                )
-                .stream()
+                ).stream()
                 .filter(lesson -> lesson.dateNumber().equals(date))
                 .map(Mapper::toLessonRecord)
                 .toList();
@@ -195,24 +198,22 @@ public class LessonService {
     }
 
     private Optional<ScheduleDifference> findScheduleDifference(List<LessonRecord> dbLessons, List<LessonRecord> parsedLessons) {
-        // Находим элементы, которые есть в dbLessons, но нет в parsedLessons
-        List<LessonRecord> removedLessons = new ArrayList<>();
-        for (LessonRecord dbLesson : dbLessons) {
-            boolean found = parsedLessons.stream().anyMatch(parsedLesson -> isEqualsLesson(dbLesson, parsedLesson));
-            if (!found) {
-                removedLessons.add(dbLesson);
-            }
-        }
+        List<LessonRecord> removedLessons = dbLessons.stream()
+                .filter(dbLesson ->
+                        parsedLessons.stream()
+                                .noneMatch(parsedLesson ->
+                                        isEqualsLesson(parsedLesson, dbLesson)
+                                )
+                )
+                .toList();
         lessonRepository.deleteAll(removedLessons);
 
-        // Находим элементы, которые есть в parsedLessons, но нет в dbLessons
-        List<LessonRecord> addedLessons = new ArrayList<>();
-        for (LessonRecord parsedLesson : parsedLessons) {
-            boolean found = dbLessons.stream().anyMatch(dbLesson -> isEqualsLesson(parsedLesson, dbLesson));
-            if (!found) {
-                addedLessons.add(parsedLesson);
-            }
-        }
+        List<LessonRecord> addedLessons = parsedLessons
+                .stream()
+                .filter(parsedLesson ->
+                        dbLessons.stream()
+                                .noneMatch(dbLesson -> isEqualsLesson(dbLesson, parsedLesson)))
+                .toList();
         saveLessonsWithoutDuplication(addedLessons);
 
         return Optional.of(new ScheduleDifference(
@@ -222,5 +223,4 @@ public class LessonService {
                 removedLessons
         ));
     }
-
 }
