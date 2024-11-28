@@ -5,6 +5,7 @@ import dev.tssvett.schedule_bot.backend.exception.database.StudentNotExistsExcep
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
 import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.START_REGISTER;
+import dev.tssvett.schedule_bot.bot.enums.Role;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
 import dev.tssvett.schedule_bot.persistence.repository.NotificationRepository;
@@ -114,7 +115,8 @@ public class StudentService {
                 START_REGISTER.name(),
                 null,
                 null,
-                null
+                null,
+                Role.STUDENT.name()
         );
 
         studentRepository.save(newStudent);

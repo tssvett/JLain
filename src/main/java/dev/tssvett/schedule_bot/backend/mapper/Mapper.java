@@ -7,6 +7,7 @@ import dev.tssvett.schedule_bot.backend.dto.NotificationInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.LessonType;
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.bot.enums.Role;
 import dev.tssvett.schedule_bot.bot.enums.Subgroup;
 import dev.tssvett.schedule_bot.parsing.dto.FacultyParserDto;
 import dev.tssvett.schedule_bot.parsing.dto.GroupParserDto;
@@ -29,7 +30,8 @@ public class Mapper {
                 RegistrationState.valueOf(student.getRegistrationState()),
                 student.getFacultyId(),
                 student.getGroupId(),
-                student.getNotificationId()
+                student.getNotificationId(),
+                Role.valueOf(student.getRole())
         );
     }
 
@@ -41,7 +43,8 @@ public class Mapper {
                 student.registrationState().name(),
                 student.facultyId(),
                 student.groupId(),
-                student.notificationId()
+                student.notificationId(),
+                student.role().name()
         );
     }
 

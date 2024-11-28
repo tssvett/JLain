@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.backend.dto;
 
 import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
-
+import dev.tssvett.schedule_bot.bot.enums.Role;
 import javax.validation.constraints.NotNull;
 
 
@@ -12,6 +12,7 @@ public record StudentInfoDto(
         RegistrationState registrationState,
         Long facultyId,
         Long groupId,
-        Long notificationId
+        Long notificationId,
+        Role role
 ) {
 }
