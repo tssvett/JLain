@@ -27,10 +27,9 @@ public class InfoBotCommand implements BotCommand {
     @Transactional
     @RegistrationRequired
     public SendMessage execute(Long userId, Long chatId) {
-        String messageText = getMessageText(userId);
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(messageText)
+                .text(getMessageText(userId))
                 .build();
     }
 
