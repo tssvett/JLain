@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.bot;
 
-import dev.tssvett.schedule_bot.bot.actions.provider.CallbackProvider;
+import dev.tssvett.schedule_bot.bot.handler.provider.CallbackProvider;
 import dev.tssvett.schedule_bot.bot.properties.BotProperties;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

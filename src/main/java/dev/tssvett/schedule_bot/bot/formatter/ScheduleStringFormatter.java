@@ -3,7 +3,7 @@ package dev.tssvett.schedule_bot.bot.formatter;
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.mapper.Mapper;
 import dev.tssvett.schedule_bot.backend.service.ScheduleDifference;
-import dev.tssvett.schedule_bot.bot.enums.DaysOfWeek;
+import dev.tssvett.schedule_bot.bot.enums.util.DaysOfWeek;
 import dev.tssvett.schedule_bot.bot.utils.DateUtils;
 import dev.tssvett.schedule_bot.bot.utils.message.MessageCreateUtils;
 import java.util.Arrays;

@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.refresh;
 
-import dev.tssvett.schedule_bot.bot.enums.Action;
+import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.Keyboard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

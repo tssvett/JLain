@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.parsing.parser;
 
-import dev.tssvett.schedule_bot.bot.enums.LessonType;
-import dev.tssvett.schedule_bot.bot.enums.Subgroup;
+import dev.tssvett.schedule_bot.bot.enums.persistense.LessonType;
+import dev.tssvett.schedule_bot.bot.enums.persistense.Subgroup;
 import dev.tssvett.schedule_bot.bot.utils.StringUtils;
 import dev.tssvett.schedule_bot.parsing.dto.LessonParserDto;
 import dev.tssvett.schedule_bot.parsing.enums.Selector;

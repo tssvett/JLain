@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.backend.dto;
 
-import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
-import dev.tssvett.schedule_bot.bot.enums.Role;
+import dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState;
+import dev.tssvett.schedule_bot.bot.enums.persistense.Role;
 import javax.validation.constraints.NotNull;
 
 

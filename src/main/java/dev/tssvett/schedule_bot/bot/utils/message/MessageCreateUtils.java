@@ -2,9 +2,9 @@ package dev.tssvett.schedule_bot.bot.utils.message;
 
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
-import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
-import dev.tssvett.schedule_bot.bot.enums.Role;
-import dev.tssvett.schedule_bot.bot.enums.Subgroup;
+import dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState;
+import dev.tssvett.schedule_bot.bot.enums.persistense.Role;
+import dev.tssvett.schedule_bot.bot.enums.persistense.Subgroup;
 import static dev.tssvett.schedule_bot.bot.utils.StringUtils.capitalizeFirstLetter;
 import java.util.List;
 import lombok.experimental.UtilityClass;
