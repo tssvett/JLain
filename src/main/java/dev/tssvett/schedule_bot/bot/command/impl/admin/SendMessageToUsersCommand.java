@@ -15,8 +15,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @RequiredArgsConstructor
 public class SendMessageToUsersCommand implements BotCommand {
     private final StudentService studentService;
-    //private final TelegramClientService telegramClientService;
-
+    private final TelegramClientService telegramClientService;
 
     @Override
     @AdminRequired
@@ -30,15 +29,7 @@ public class SendMessageToUsersCommand implements BotCommand {
     }
 
     private SendMessage processSendMessageToUsers(List<Long> studentIds, Long chatId) {
-        /*
-        telegramClientService.sendMessageList(studentIds.stream()
-                .map(userId -> SendMessage.builder()
-                        .chatId(userId)
-                        .text("darova")
-                        .build())
-                .toList());
-
-         */
+        telegramClientService.sendMessageList(MessageCreateUtils.createSendMessageToUsersMessages(studentIds));
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageCreateUtils.createSendMessageToUsersMessage(studentIds))

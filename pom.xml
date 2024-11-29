@@ -18,7 +18,8 @@
 
         <!-- Library Versions -->
         <spring.boot.version>3.3.2</spring.boot.version>
-        <telegrambots.version>6.9.7.1</telegrambots.version>
+        <telegrambots.version>7.11.0</telegrambots.version>
+        <telegrambots.client.version>7.11.0</telegrambots.client.version>
         <jsoup.version>1.18.1</jsoup.version>
         <liquibase.version>4.29.1</liquibase.version>
         <postgresql.version>42.7.3</postgresql.version>
@@ -62,13 +63,22 @@
         </dependency>
 
 
-
-        <!-- Telegram Bot Dependency -->
+        <!-- https://mvnrepository.com/artifact/org.telegram/telegrambots-client -->
         <dependency>
             <groupId>org.telegram</groupId>
-            <artifactId>telegrambots</artifactId>
+            <artifactId>telegrambots-client</artifactId>
+            <version>${telegrambots.client.version}</version>
+        </dependency>
+
+        <!-- Telegram Bot Dependency -->
+        <!-- https://mvnrepository.com/artifact/org.telegram/telegrambots-springboot-longpolling-starter -->
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-springboot-longpolling-starter</artifactId>
             <version>${telegrambots.version}</version>
         </dependency>
+
+
 
         <!-- HTML Parsing Dependency -->
         <dependency>

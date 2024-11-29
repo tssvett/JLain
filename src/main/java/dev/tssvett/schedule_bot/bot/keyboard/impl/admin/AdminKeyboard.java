@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
 @Component
 public class AdminKeyboard extends Keyboard {
@@ -15,16 +15,16 @@ public class AdminKeyboard extends Keyboard {
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard(Action action, Long userId) {
-        List<List<InlineKeyboardButton>> rows = createRows(AdminAllowedCommands.values(), action);
+        List<InlineKeyboardRow> rows = createRows(AdminAllowedCommands.values(), action);
 
         return new InlineKeyboardMarkup(rows);
     }
 
-    private List<List<InlineKeyboardButton>> createRows(AdminAllowedCommands[] values, Action action) {
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+    private List<InlineKeyboardRow> createRows(AdminAllowedCommands[] values, Action action) {
+        List<InlineKeyboardRow> rows = new ArrayList<>();
 
         for (int i = 0; i < values.length; i += ADMIN_KEYS_IN_ROW) {
-            List<InlineKeyboardButton> keyboardButtonRow = createRow(i, values, action);
+            InlineKeyboardRow keyboardButtonRow = createRow(i, values, action);
             if (!keyboardButtonRow.isEmpty()) {
                 rows.add(keyboardButtonRow);
             }
@@ -33,8 +33,8 @@ public class AdminKeyboard extends Keyboard {
         return rows;
     }
 
-    private List<InlineKeyboardButton> createRow(int startIndex, AdminAllowedCommands[] values, Action action) {
-        List<InlineKeyboardButton> keyboardButtonRow = new ArrayList<>();
+    private InlineKeyboardRow createRow(int startIndex, AdminAllowedCommands[] values, Action action) {
+        InlineKeyboardRow keyboardButtonRow = new InlineKeyboardRow();
 
         for (int j = 0; j < ADMIN_KEYS_IN_ROW && (startIndex + j) < values.length; j++) {
             AdminAllowedCommands adminCommand = values[startIndex + j];

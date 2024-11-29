@@ -7,7 +7,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 
@@ -30,7 +30,7 @@ public class CommandHandler {
     private final BotCommand adminCommand;
     private final BotCommand sendMessageToUsersCommand;
 
-    public BotApiMethod<?> handleCommands(Update update) {
+    public SendMessage handleCommands(Update update) {
         Long userId = UpdateUtils.getUserIdFromMessage(update);
         Long chatId = UpdateUtils.getChatIdFromMessage(update);
 
