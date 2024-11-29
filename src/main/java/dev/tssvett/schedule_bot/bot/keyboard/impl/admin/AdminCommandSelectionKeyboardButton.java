@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @RequiredArgsConstructor
 public class AdminCommandSelectionKeyboardButton implements KeyboardButton {
     private final BotCommand showRegisteredStudentsCommand;
+    private final BotCommand sendMessageToUsersCommand;
 
     @Override
     public SendMessage onButtonClick(Update update) {
@@ -29,6 +30,7 @@ public class AdminCommandSelectionKeyboardButton implements KeyboardButton {
 
         return switch (commandName) {
             case SHOW_REGISTERED_USERS_COMMAND -> showRegisteredStudentsCommand.execute(userId, chatId);
+            case SEND_MESSAGE_TO_USERS_COMMAND -> sendMessageToUsersCommand.execute(userId, chatId);
             default -> null;
         };
     }

@@ -27,8 +27,8 @@ public class NotificationService {
         return notificationRepository.findAllEnabledScheduleDifferenceWithRegisteredStudents();
     }
 
-    public List<BotApiMethod<?>> createTomorrowScheduleNotificationsMessages() {
-        List<BotApiMethod<?>> messages = new ArrayList<>();
+    public List<SendMessage> createTomorrowScheduleNotificationsMessages() {
+        List<SendMessage> messages = new ArrayList<>();
         this.findAllTomorrowScheduleWithRegisteredStudents()
                 .forEach(notification -> {
                     Long userId = notification.getStudentId();
@@ -41,8 +41,8 @@ public class NotificationService {
         return messages;
     }
 
-    public List<BotApiMethod<?>> createScheduleDifferenceNotificationsMessages() {
-        List<BotApiMethod<?>> messages = new ArrayList<>();
+    public List<SendMessage> createScheduleDifferenceNotificationsMessages() {
+        List<SendMessage> messages = new ArrayList<>();
         List<NotificationRecord> notifications = this.findAllEnabledScheduleDifferenceWithRegisteredStudents();
 
         for (NotificationRecord notification : notifications) {

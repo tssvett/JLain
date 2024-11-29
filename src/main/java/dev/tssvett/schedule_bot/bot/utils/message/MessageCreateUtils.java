@@ -102,4 +102,10 @@ public class MessageCreateUtils {
                 ⚙ Доступные команды для админа ⚙
                 """);
     }
+
+    public static String createSendMessageToUsersMessage(List<Long> studentIds) {
+        return String.format("""
+                Введите сообщение, которое будет отправлено %s пользователям:
+                """, studentIds.size());
+    }
 }
