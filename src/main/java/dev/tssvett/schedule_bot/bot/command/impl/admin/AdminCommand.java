@@ -1,5 +1,6 @@
 package dev.tssvett.schedule_bot.bot.command.impl.admin;
 
+import dev.tssvett.schedule_bot.bot.annotation.AdminRequired;
 import dev.tssvett.schedule_bot.bot.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.admin.AdminKeyboard;
@@ -14,6 +15,7 @@ public class AdminCommand implements BotCommand {
     private final AdminKeyboard adminKeyboard;
 
     @Override
+    @AdminRequired
     public SendMessage execute(Long userId, Long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
