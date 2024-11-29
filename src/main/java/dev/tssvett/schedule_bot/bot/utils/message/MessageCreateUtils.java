@@ -96,4 +96,10 @@ public class MessageCreateUtils {
                 🍀 Количество зарегестрированных пользователей: %s
                 """, studentsInfoList.size());
     }
+
+    public static String createAdminMessage() {
+        return String.format("""
+                ⚙ Доступные команды для админа ⚙
+                """);
+    }
 }

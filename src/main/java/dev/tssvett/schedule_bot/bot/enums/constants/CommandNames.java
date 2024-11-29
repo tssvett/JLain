@@ -20,7 +20,8 @@ public enum CommandNames {
     INFO_COMMAND("/info"),
     TOMORROW_SCHEDULE_NOTIFICATION_COMMAND("/tomorrow_notification"),
     DIFFERENCE_SCHEDULE_NOTIFICATION_COMMAND("/difference_notification"),
-    SHOW_REGISTERED_USERS_COMMAND("/show_registered_users");
+    SHOW_REGISTERED_USERS_COMMAND("/show_registered_users"),
+    ADMIN_COMMAND("/admin");
 
     private final String commandName;
 

@@ -48,7 +48,9 @@ public class AdminRequiredPostProcessor implements BeanPostProcessor {
         Long chatId = castToLong(args[1]);
         log.info("Check registration with postBeanProcessor for userId: {} and chatId: {}", userId, chatId);
         try {
-            return studentService.isAdmin(userId) ? (SendMessage) method.invoke(bean, args) : sendNotAdminMessage(chatId);
+            return studentService.isAdmin(userId)
+                    ? (SendMessage) method.invoke(bean, args)
+                    : sendNotAdminMessage(chatId);
         } catch (Exception e) {
             log.error("Error invoking method {}: {}", method.getName(), e.getMessage());
             throw new PostBeanProcessorException(e.getMessage());

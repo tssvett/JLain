@@ -18,6 +18,7 @@ public class KeyboardHandler {
     private final KeyboardButton refreshRegistrationSelectionKeyboardButton;
     private final KeyboardButton tomorrowScheduleNotificationKeyboardButton;
     private final KeyboardButton scheduleDifferenceNotificationKeyboardButton;
+    private final KeyboardButton adminCommandSelectionKeyboardButton;
 
     public BotApiMethod<?> handleKeyboardAction(Update update) {
         return switch (CallbackDetails.fromString(update.getCallbackQuery().getData()).getAction()) {
@@ -27,6 +28,7 @@ public class KeyboardHandler {
             case REFRESH_REGISTRATION -> refreshRegistrationSelectionKeyboardButton.onButtonClick(update);
             case TOMORROW_SCHEDULE_NOTIFICATION -> tomorrowScheduleNotificationKeyboardButton.onButtonClick(update);
             case SCHEDULE_DIFFERENCE_NOTIFICATION -> scheduleDifferenceNotificationKeyboardButton.onButtonClick(update);
+            case ADMIN_COMMAND_SELECTION -> adminCommandSelectionKeyboardButton.onButtonClick(update);
         };
     }
 }

@@ -11,7 +11,8 @@ public enum Action {
     GROUP_CHOOSE("group"),
     REFRESH_REGISTRATION("refresh_registration"),
     TOMORROW_SCHEDULE_NOTIFICATION("notification"),
-    SCHEDULE_DIFFERENCE_NOTIFICATION("schedule_difference_notification");
+    SCHEDULE_DIFFERENCE_NOTIFICATION("schedule_difference_notification"),
+    ADMIN_COMMAND_SELECTION("admin_command_selection");
 
     private final String actionName;
 }

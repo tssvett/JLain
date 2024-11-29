@@ -64,4 +64,7 @@ public class UpdateUtils {
         return update.hasMessage() && update.getMessage().hasText();
     }
 
+    public static String getAdminCommand(Update update) {
+        return CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
+    }
 }

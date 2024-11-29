@@ -115,7 +115,9 @@ public class StudentService {
     private void createStudent(Long studentId, Long chatId) {
         log.debug("Student {} is not in database. Adding them to database", studentId);
 
-        String userRole = adminProperties.id().equals(studentId) ? Role.ADMIN.name() : Role.STUDENT.name();
+        String userRole = adminProperties.id().equals(studentId)
+                ? Role.ADMIN.name()
+                : Role.STUDENT.name();
         StudentRecord newStudent = new StudentRecord(
                 studentId,
                 chatId,
