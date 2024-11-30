@@ -1,6 +1,5 @@
 package dev.tssvett.schedule_bot.bot.command.impl.admin;
 
-import dev.tssvett.schedule_bot.backend.client.TelegramClientService;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.annotation.AdminRequired;
 import dev.tssvett.schedule_bot.bot.command.BotCommand;
@@ -15,7 +14,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @RequiredArgsConstructor
 public class SendMessageToUsersCommand implements BotCommand {
     private final StudentService studentService;
-    private final TelegramClientService telegramClientService;
+    //private final TelegramClientService telegramClientService;
 
     @Override
     @AdminRequired
@@ -29,7 +28,7 @@ public class SendMessageToUsersCommand implements BotCommand {
     }
 
     private SendMessage processSendMessageToUsers(List<Long> studentIds, Long chatId) {
-        telegramClientService.sendMessageList(MessageCreateUtils.createSendMessageToUsersMessages(studentIds));
+        //telegramClientService.sendMessageList(MessageCreateUtils.createSendMessageToUsersMessages(studentIds));
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageCreateUtils.createSendMessageToUsersMessage(studentIds))

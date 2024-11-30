@@ -105,7 +105,7 @@ public class MessageCreateUtils {
 
     public static String createSendMessageToUsersMessage(List<Long> studentIds) {
         return String.format("""
-                Введите сообщение, которое будет отправлено %s пользователям:
+                Начинаю отправлять введенное сообщение %s пользователям:
                 """, studentIds.size());
     }
 }
