@@ -45,3 +45,7 @@ databaseChangeLog:
   - include:
       file: table-student-column-role-add.sql
       relativeToChangelogFile: true
+
+  - include:
+      file: create-table-message.sql
+      relativeToChangelogFile: true

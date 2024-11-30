@@ -15,9 +15,11 @@ import dev.tssvett.schedule_bot.parsing.dto.LessonParserDto;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.FacultyRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
+import dev.tssvett.schedule_bot.persistence.model.tables.records.MessageRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
 import lombok.experimental.UtilityClass;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 @UtilityClass
 public class Mapper {
@@ -156,6 +158,21 @@ public class Mapper {
                 notification.tomorrowScheduleEnabled(),
                 notification.studentId(),
                 notification.scheduleDifferenceEnabled()
+        );
+    }
+
+    public static SendMessage toSendMessage(MessageRecord messageRecord) {
+        return SendMessage.builder()
+                .chatId(messageRecord.getChatId())
+                .text(messageRecord.getText())
+                .build();
+    }
+
+    public static MessageRecord toMessageRecord(SendMessage sendMessage) {
+        return new MessageRecord(
+                null,
+                Long.parseLong(sendMessage.getChatId()),
+                sendMessage.getText()
         );
     }
 }
