@@ -30,4 +30,8 @@ public class MessageService {
 
         messageRepository.saveAll(sendMessages);
     }
+
+    public void removeAllMessages() {
+        messageRepository.deleteAll();
+    }
 }

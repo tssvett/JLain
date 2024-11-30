@@ -36,7 +36,9 @@ public class TelegramClientService {
     public void sendMessageList(List<SendMessage> messages) {
         messages.forEach(message -> {
             try {
-                telegramClient.execute(message);
+                if (!message.getText().isEmpty()) {
+                    telegramClient.execute(message);
+                }
             } catch (TelegramApiException e) {
                 log.error("Error while sending message: {}", e.getMessage());
             }

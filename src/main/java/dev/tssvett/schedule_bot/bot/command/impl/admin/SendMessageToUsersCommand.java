@@ -19,21 +19,39 @@ public class SendMessageToUsersCommand implements BotCommand {
 
     @Override
     @AdminRequired
-    public SendMessage execute(Long userId, Long chatId) {
+    public SendMessage execute(Long userId, Long chatId, String message) {
         List<Long> studentIds = studentService.findAll()
                 .stream()
                 .map(StudentRecord::getUserId)
                 .toList();
 
-        return processSendMessageToUsers(studentIds, chatId, "string_argument");
+        return processSendMessageToUsers(studentIds, chatId, message);
     }
 
     private SendMessage processSendMessageToUsers(List<Long> studentIds, Long chatId, String message) {
+        if (isBlankArgument(message)) {
+            return createWarningNotBlankMessage(chatId);
+        }
         messageService.saveMessagesToDatabase(studentIds, message);
 
+        return createSendMessageToUsersMessage(studentIds, chatId);
+    }
+
+    private boolean isBlankArgument(String argument) {
+        return argument == null || argument.isBlank();
+    }
+
+    private SendMessage createSendMessageToUsersMessage(List<Long> studentIds, Long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageCreateUtils.createSendMessageToUsersMessage(studentIds))
+                .build();
+    }
+
+    private SendMessage createWarningNotBlankMessage(Long chatId) {
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(MessageCreateUtils.createNotBlankMessageWarning())
                 .build();
     }
 }

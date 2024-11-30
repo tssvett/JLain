@@ -1,19 +1,18 @@
 package dev.tssvett.schedule_bot.bot.command.impl.register;
 
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
-import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
+import dev.tssvett.schedule_bot.bot.command.BotCommand;
+import static dev.tssvett.schedule_bot.bot.enums.keyboard.Action.FACULTY_CHOOSE;
+import static dev.tssvett.schedule_bot.bot.enums.keyboard.Action.REFRESH_REGISTRATION;
+import static dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState.FACULTY_CHOOSING;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.faculty.FacultyKeyboard;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.refresh.RefreshRegistrationKeyboard;
+import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-
-import static dev.tssvett.schedule_bot.bot.enums.keyboard.Action.FACULTY_CHOOSE;
-import static dev.tssvett.schedule_bot.bot.enums.keyboard.Action.REFRESH_REGISTRATION;
-import static dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState.FACULTY_CHOOSING;
 
 @Slf4j
 @Component
@@ -25,7 +24,7 @@ public class RegisterBotCommand implements BotCommand {
 
     @Override
     @DirectMessageRequired
-    public SendMessage execute(Long userId, Long chatId) {
+    public SendMessage execute(Long userId, Long chatId, String message) {
         return sendRegisterCommandMessage(userId, chatId);
     }
 

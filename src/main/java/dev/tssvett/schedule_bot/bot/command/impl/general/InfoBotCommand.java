@@ -5,8 +5,8 @@ import dev.tssvett.schedule_bot.backend.mapper.Mapper;
 import dev.tssvett.schedule_bot.backend.service.FacultyService;
 import dev.tssvett.schedule_bot.backend.service.GroupService;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
+import dev.tssvett.schedule_bot.bot.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.enums.persistense.Role;
 import dev.tssvett.schedule_bot.bot.utils.message.MessageCreateUtils;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class InfoBotCommand implements BotCommand {
     @Override
     @Transactional
     @RegistrationRequired
-    public SendMessage execute(Long userId, Long chatId) {
+    public SendMessage execute(Long userId, Long chatId, String message) {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(getMessageText(userId))

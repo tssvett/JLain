@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.bot.command.impl.general;
 
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.NoneRequired;
+import dev.tssvett.schedule_bot.bot.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ public class StartBotCommand implements BotCommand {
 
     @Override
     @NoneRequired
-    public SendMessage execute(Long userId, Long chatId) {
+    public SendMessage execute(Long userId, Long chatId, String message) {
         studentService.createStudentIfNotExists(userId, chatId);
 
         return SendMessage.builder()

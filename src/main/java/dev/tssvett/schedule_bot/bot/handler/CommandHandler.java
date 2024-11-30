@@ -29,6 +29,7 @@ public class CommandHandler {
     private final BotCommand showRegisteredStudentsCommand;
     private final BotCommand adminCommand;
     private final BotCommand sendMessageToUsersCommand;
+    private static final String EMPTY_ARGUMENT = "";
 
     public SendMessage handleCommands(Update update) {
         Long userId = UpdateUtils.getUserIdFromMessage(update);
@@ -38,29 +39,41 @@ public class CommandHandler {
                 UpdateUtils.getFirstWordFromMessage(update)
         );
 
+        Optional<String> optionalArguments = UpdateUtils.getArgumentsFromMessage(update);
+
         if (optionalCommandName.isEmpty()) {
-            return unknownBotCommand.execute(userId, chatId);
+            return unknownBotCommand.execute(userId, chatId, EMPTY_ARGUMENT);
         }
 
         CommandNames commandName = optionalCommandName.get();
-        log.info("Received [{}] from user [{}]", commandName.getCommandName(), userId);
+        String argument = getArgument(optionalArguments);
+        log.info("Received [{}] with argument [{}] from user [{}]", commandName.getCommandName(), argument, userId);
 
         return switch (commandName) {
-            case START_COMMAND -> startBotCommand.execute(userId, chatId);
-            case HELP_COMMAND -> helpBotCommand.execute(userId, chatId);
-            case TODAY_COMMAND -> todayScheduleBotCommand.execute(userId, chatId);
-            case TOMORROW_COMMAND -> tomorrowScheduleBotCommand.execute(userId, chatId);
-            case WEEK_COMMAND -> weekScheduleBotCommand.execute(userId, chatId);
-            case PICTURE_COMMAND -> pictureBotCommand.execute(userId, chatId);
-            case REGISTER_COMMAND -> registerBotCommand.execute(userId, chatId);
-            case INFO_COMMAND -> infoBotCommand.execute(userId, chatId);
+            case START_COMMAND -> startBotCommand.execute(userId, chatId, argument);
+            case HELP_COMMAND -> helpBotCommand.execute(userId, chatId, argument);
+            case TODAY_COMMAND -> todayScheduleBotCommand.execute(userId, chatId, argument);
+            case TOMORROW_COMMAND -> tomorrowScheduleBotCommand.execute(userId, chatId, argument);
+            case WEEK_COMMAND -> weekScheduleBotCommand.execute(userId, chatId, argument);
+            case PICTURE_COMMAND -> pictureBotCommand.execute(userId, chatId, argument);
+            case REGISTER_COMMAND -> registerBotCommand.execute(userId, chatId, argument);
+            case INFO_COMMAND -> infoBotCommand.execute(userId, chatId, argument);
             case TOMORROW_SCHEDULE_NOTIFICATION_COMMAND ->
-                    tomorrowScheduleNotificationSettingsCommand.execute(userId, chatId);
+                    tomorrowScheduleNotificationSettingsCommand.execute(userId, chatId, argument);
             case DIFFERENCE_SCHEDULE_NOTIFICATION_COMMAND ->
-                    differenceScheduleNotificationSettingsCommand.execute(userId, chatId);
-            case SHOW_REGISTERED_USERS_COMMAND -> showRegisteredStudentsCommand.execute(userId, chatId);
-            case ADMIN_COMMAND -> adminCommand.execute(userId, chatId);
-            case SEND_MESSAGE_TO_USERS_COMMAND -> sendMessageToUsersCommand.execute(userId, chatId);
+                    differenceScheduleNotificationSettingsCommand.execute(userId, chatId, argument);
+            case SHOW_REGISTERED_USERS_COMMAND -> showRegisteredStudentsCommand.execute(userId, chatId, argument);
+            case ADMIN_COMMAND -> adminCommand.execute(userId, chatId, argument);
+            case SEND_MESSAGE_TO_USERS_COMMAND -> sendMessageToUsersCommand.execute(userId, chatId, argument);
         };
+    }
+
+
+    private String getArgument(Optional<String> optionalArguments) {
+        String argument = EMPTY_ARGUMENT;
+        if (optionalArguments.isPresent()) {
+            argument = optionalArguments.get();
+        }
+        return argument;
     }
 }

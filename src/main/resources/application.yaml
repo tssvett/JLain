@@ -40,8 +40,7 @@ scheduling:
     cron: "0 20 21 * * *" #Каждый день в 21:20
     enabled: true
   messages-sender:
-    cron: "0 0 * * * *" #Каждый час в :00 мин
-    delay: 50000000
+    cron: "0 30 * * * *" #Каждый час в :30 мин
     enabled: true
 
 samara-university:

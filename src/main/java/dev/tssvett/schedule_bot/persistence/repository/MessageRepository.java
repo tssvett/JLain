@@ -23,4 +23,9 @@ public class MessageRepository {
         dslContext.batchInsert(messages)
                 .execute();
     }
+
+    public void deleteAll() {
+        dslContext.deleteFrom(MESSAGE)
+                .execute();
+    }
 }

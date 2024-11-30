@@ -1,8 +1,8 @@
 package dev.tssvett.schedule_bot.bot.command.impl.settings;
 
-import dev.tssvett.schedule_bot.bot.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
 import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
+import dev.tssvett.schedule_bot.bot.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.notification.differenceschedule.ScheduleDifferenceNotificationKeyboard;
 import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
@@ -20,7 +20,7 @@ public class DifferenceScheduleNotificationSettingsCommand implements BotCommand
     @Override
     @DirectMessageRequired
     @RegistrationRequired
-    public SendMessage execute(Long userId, Long chatId) {
+    public SendMessage execute(Long userId, Long chatId, String stringArgument) {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(MessageTextConstantsUtils.SETUP_NOTIFICATION)

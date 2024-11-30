@@ -20,7 +20,7 @@ public class ShowRegisteredStudentsCommand implements BotCommand {
 
     @Override
     @AdminRequired
-    public SendMessage execute(Long userId, Long chatId) {
+    public SendMessage execute(Long userId, Long chatId, String message) {
         List<StudentInfoDto> studentsInfoList = studentService.findAll()
                 .stream()
                 .map(Mapper::toStudentInfoDto)

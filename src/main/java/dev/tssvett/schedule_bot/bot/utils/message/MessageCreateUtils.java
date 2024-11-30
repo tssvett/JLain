@@ -108,4 +108,16 @@ public class MessageCreateUtils {
                 🍀 Сообщение добавлено в базу для дальнейшей рассылки %s пользователям
                 """, studentIds.size());
     }
+
+    public static String createHelpSendMessageMessage() {
+        return String.format("""
+                🍀 Для рассылки используется команда /send_message_to_users [сообщение, которое будет разослано]
+                """);
+    }
+
+    public static String createNotBlankMessageWarning() {
+        return String.format("""
+                ⚠️ Внимание! Эта команда должна использовать 1 аргумент
+                """);
+    }
 }
