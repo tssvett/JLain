@@ -2,8 +2,8 @@ package dev.tssvett.schedule_bot.bot.keyboard.impl.notification.tomorrowschedule
 
 import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.Keyboard;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,26 +25,18 @@ public class TomorrowScheduleNotificationKeyboard extends Keyboard {
     }
 
     private List<InlineKeyboardRow> createRows(List<String> actions, Action action) {
-        List<InlineKeyboardRow> rows = new ArrayList<>();
-
-        for (int i = 0; i < actions.size(); i += NOTIFICATION_ROW_SIZE) {
-            InlineKeyboardRow keyboardButtonRow = createRow(i, actions, action);
-            if (!keyboardButtonRow.isEmpty()) {
-                rows.add(keyboardButtonRow);
-            }
-        }
-
-        return rows;
+        return IntStream.iterate(0, i -> i < actions.size(), i -> i + NOTIFICATION_ROW_SIZE)
+                .mapToObj(i -> createRow(i, actions, action))
+                .filter(row -> !row.isEmpty())
+                .toList();
     }
 
     private InlineKeyboardRow createRow(int startIndex, List<String> actions, Action action) {
-        InlineKeyboardRow keyboardButtonRow = new InlineKeyboardRow();
-
-        for (int j = 0; j < NOTIFICATION_ROW_SIZE && (startIndex + j) < actions.size(); j++) {
-            String callbackInformation = actions.get(startIndex + j);
-            keyboardButtonRow.add(createButton(callbackInformation, callbackInformation, action));
-        }
-
-        return keyboardButtonRow;
+        return new InlineKeyboardRow(
+                IntStream.iterate(0, i -> (i < NOTIFICATION_ROW_SIZE && (startIndex + i) < actions.size()),
+                                i -> i + 1)
+                        .mapToObj(i -> createButton(actions.get(startIndex + i), actions.get(startIndex + i), action))
+                        .toList()
+        );
     }
 }

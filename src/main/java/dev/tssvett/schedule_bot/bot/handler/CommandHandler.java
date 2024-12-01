@@ -50,20 +50,20 @@ public class CommandHandler {
         log.info("Received [{}] with argument [{}] from user [{}]", commandName.getCommandName(), argument, userId);
 
         return switch (commandName) {
-            case START_COMMAND -> startBotCommand.execute(userId, chatId, argument);
-            case HELP_COMMAND -> helpBotCommand.execute(userId, chatId, argument);
-            case TODAY_COMMAND -> todayScheduleBotCommand.execute(userId, chatId, argument);
-            case TOMORROW_COMMAND -> tomorrowScheduleBotCommand.execute(userId, chatId, argument);
-            case WEEK_COMMAND -> weekScheduleBotCommand.execute(userId, chatId, argument);
-            case PICTURE_COMMAND -> pictureBotCommand.execute(userId, chatId, argument);
-            case REGISTER_COMMAND -> registerBotCommand.execute(userId, chatId, argument);
-            case INFO_COMMAND -> infoBotCommand.execute(userId, chatId, argument);
+            case START_COMMAND -> startBotCommand.execute(userId, chatId);
+            case HELP_COMMAND -> helpBotCommand.execute(userId, chatId);
+            case TODAY_COMMAND -> todayScheduleBotCommand.execute(userId, chatId);
+            case TOMORROW_COMMAND -> tomorrowScheduleBotCommand.execute(userId, chatId);
+            case WEEK_COMMAND -> weekScheduleBotCommand.execute(userId, chatId);
+            case PICTURE_COMMAND -> pictureBotCommand.execute(userId, chatId);
+            case REGISTER_COMMAND -> registerBotCommand.execute(userId, chatId);
+            case INFO_COMMAND -> infoBotCommand.execute(userId, chatId);
             case TOMORROW_SCHEDULE_NOTIFICATION_COMMAND ->
-                    tomorrowScheduleNotificationSettingsCommand.execute(userId, chatId, argument);
+                    tomorrowScheduleNotificationSettingsCommand.execute(userId, chatId);
             case DIFFERENCE_SCHEDULE_NOTIFICATION_COMMAND ->
-                    differenceScheduleNotificationSettingsCommand.execute(userId, chatId, argument);
-            case SHOW_REGISTERED_USERS_COMMAND -> showRegisteredStudentsCommand.execute(userId, chatId, argument);
-            case ADMIN_COMMAND -> adminCommand.execute(userId, chatId, argument);
+                    differenceScheduleNotificationSettingsCommand.execute(userId, chatId);
+            case SHOW_REGISTERED_USERS_COMMAND -> showRegisteredStudentsCommand.execute(userId, chatId);
+            case ADMIN_COMMAND -> adminCommand.execute(userId, chatId);
             case SEND_MESSAGE_TO_USERS_COMMAND -> sendMessageToUsersCommand.execute(userId, chatId, argument);
         };
     }

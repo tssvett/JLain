@@ -4,8 +4,8 @@ import dev.tssvett.schedule_bot.backend.service.GroupService;
 import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.Keyboard;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGroupRecord;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,32 +23,27 @@ public class GroupKeyboard extends Keyboard {
     @Transactional
     public InlineKeyboardMarkup createInlineKeyboard(Action action, Long userId) {
         List<EducationalGroupRecord> educationalGroups = groupService.getFilteredByCourseAndFacultyGroups(userId);
-        List<InlineKeyboardRow> rows = createRows(educationalGroups, action);
 
-        return new InlineKeyboardMarkup(rows);
+        return new InlineKeyboardMarkup(createRows(educationalGroups, action));
     }
 
     private List<InlineKeyboardRow> createRows(List<EducationalGroupRecord> educationalGroups, Action action) {
-        List<InlineKeyboardRow> rows = new ArrayList<>();
-
-        for (int i = 0; i < educationalGroups.size(); i += GROUP_KEYS_IN_ROW) {
-            InlineKeyboardRow keyboardButtonRow = createRow(i, educationalGroups, action);
-            if (!keyboardButtonRow.isEmpty()) {
-                rows.add(keyboardButtonRow);
-            }
-        }
-
-        return rows;
+        return IntStream.iterate(0, i -> i < educationalGroups.size(), i -> i + GROUP_KEYS_IN_ROW)
+                .mapToObj(i -> createRow(i, educationalGroups, action))
+                .filter(row -> !row.isEmpty())
+                .toList();
     }
 
     private InlineKeyboardRow createRow(int startIndex, List<EducationalGroupRecord> educationalGroups, Action action) {
-        InlineKeyboardRow keyboardButtonRow = new InlineKeyboardRow();
-
-        for (int j = 0; j < GROUP_KEYS_IN_ROW && (startIndex + j) < educationalGroups.size(); j++) {
-            EducationalGroupRecord educationalGroup = educationalGroups.get(startIndex + j);
-            keyboardButtonRow.add(createButton(educationalGroup.getName(), String.valueOf(educationalGroup.getGroupId()), action));
-        }
-
-        return keyboardButtonRow;
+        return new InlineKeyboardRow(
+                IntStream.iterate(0, i -> (i < GROUP_KEYS_IN_ROW && (startIndex + i) < educationalGroups.size()),
+                                i -> i + 1)
+                        .mapToObj(i -> {
+                            EducationalGroupRecord educationalGroup = educationalGroups.get(startIndex + i);
+                            return createButton(educationalGroup.getName(),
+                                    String.valueOf(educationalGroup.getGroupId()), action);
+                        })
+                        .toList()
+        );
     }
 }

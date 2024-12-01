@@ -29,8 +29,8 @@ public class AdminCommandSelectionKeyboardButton implements KeyboardButton {
                 .orElseThrow(() -> new IllegalArgumentException("Unknown command: " + command));
 
         return switch (commandName) {
-            case SHOW_REGISTERED_USERS_COMMAND -> showRegisteredStudentsCommand.execute(userId, chatId, "");
-            case SEND_MESSAGE_TO_USERS_COMMAND -> helpSendMessageCommand.execute(userId, chatId, "");
+            case SHOW_REGISTERED_USERS_COMMAND -> showRegisteredStudentsCommand.execute(userId, chatId);
+            case SEND_MESSAGE_TO_USERS_COMMAND -> helpSendMessageCommand.execute(userId, chatId);
             default -> null;
         };
     }

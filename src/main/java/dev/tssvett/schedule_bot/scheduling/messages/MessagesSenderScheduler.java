@@ -23,7 +23,6 @@ public class MessagesSenderScheduler {
         log.info("Staring sending messages to users");
         List<SendMessage> allMessages = messageService.findAllMessages();
         telegramClientService.sendMessageList(allMessages);
-        //потенциально выстрел в ногу с удалением всей таблички, да?
         messageService.removeAllMessages();
         log.info("Sending messages to users finished");
     }
