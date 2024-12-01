@@ -1,15 +1,14 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.notification.differenceschedule;
 
-import dev.tssvett.schedule_bot.bot.enums.Action;
+import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.Keyboard;
+import java.util.List;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
 @Slf4j
 @Component
@@ -20,32 +19,24 @@ public class ScheduleDifferenceNotificationKeyboard extends Keyboard {
     @Override
     public InlineKeyboardMarkup createInlineKeyboard(Action action, Long userId) {
         List<String> actions = List.of("Включить", "Отключить");
-        List<List<InlineKeyboardButton>> rows = createRows(actions, action);
+        List<InlineKeyboardRow> rows = createRows(actions, action);
 
         return new InlineKeyboardMarkup(rows);
     }
 
-    private List<List<InlineKeyboardButton>> createRows(List<String> actions, Action action) {
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-
-        for (int i = 0; i < actions.size(); i += NOTIFICATION_ROW_SIZE) {
-            List<InlineKeyboardButton> keyboardButtonRow = createRow(i, actions, action);
-            if (!keyboardButtonRow.isEmpty()) {
-                rows.add(keyboardButtonRow);
-            }
-        }
-
-        return rows;
+    private List<InlineKeyboardRow> createRows(List<String> actions, Action action) {
+        return IntStream.iterate(0, i -> i < actions.size(), i -> i + NOTIFICATION_ROW_SIZE)
+                .mapToObj(i -> createRow(i, actions, action))
+                .filter(row -> !row.isEmpty())
+                .toList();
     }
 
-    private List<InlineKeyboardButton> createRow(int startIndex, List<String> actions, Action action) {
-        List<InlineKeyboardButton> keyboardButtonRow = new ArrayList<>();
-
-        for (int j = 0; j < NOTIFICATION_ROW_SIZE && (startIndex + j) < actions.size(); j++) {
-            String callbackInformation = actions.get(startIndex + j);
-            keyboardButtonRow.add(createButton(callbackInformation, callbackInformation, action));
-        }
-
-        return keyboardButtonRow;
+    private InlineKeyboardRow createRow(int startIndex, List<String> actions, Action action) {
+        return new InlineKeyboardRow(
+                IntStream.iterate(0, i -> (i < NOTIFICATION_ROW_SIZE && (startIndex + i) < actions.size()),
+                                i -> i + 1)
+                        .mapToObj(i -> createButton(actions.get(startIndex + i), actions.get(startIndex + i), action))
+                        .toList()
+        );
     }
 }

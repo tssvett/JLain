@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static dev.tssvett.schedule_bot.bot.enums.Action.GROUP_CHOOSE;
+import static dev.tssvett.schedule_bot.bot.enums.keyboard.Action.GROUP_CHOOSE;
 
 @Slf4j
 @Component

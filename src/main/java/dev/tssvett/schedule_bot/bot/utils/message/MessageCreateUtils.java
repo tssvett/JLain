@@ -2,11 +2,11 @@ package dev.tssvett.schedule_bot.bot.utils.message;
 
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
-import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
-import dev.tssvett.schedule_bot.bot.enums.Subgroup;
+import dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState;
+import dev.tssvett.schedule_bot.bot.enums.persistense.Role;
+import dev.tssvett.schedule_bot.bot.enums.persistense.Subgroup;
 import static dev.tssvett.schedule_bot.bot.utils.StringUtils.capitalizeFirstLetter;
-import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
-import java.util.Map;
+import java.util.List;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -17,7 +17,8 @@ public class MessageCreateUtils {
              String facultyName,
              String groupName,
              boolean tomorrowNotification,
-             boolean differenceNotification) {
+             boolean differenceNotification,
+             Role role) {
         return """
                 ℹ️ **Информация о пользователе:**
                 👤 **ID пользователя:** %d
@@ -27,7 +28,8 @@ public class MessageCreateUtils {
                 👥 **Группа:** %s
                 📝 **Статус регистрации:** %s
                 🔔 **Уведомления на завтра:** %s
-                🔔 **Уведомления на изменения:** %s""".formatted(
+                🔔 **Уведомления на изменения:** %s
+                👤 **Роль:** %s""".formatted(
                 studentInfoDto.userId(),
                 studentInfoDto.chatId(),
                 facultyName,
@@ -41,7 +43,9 @@ public class MessageCreateUtils {
                         : "❌ Отключены",
                 differenceNotification
                         ? "✅ Включены"
-                        : "❌ Отключены");
+                        : "❌ Отключены",
+                role.getValue()
+        );
     }
 
     public static String createDayHeader(String day, String lessonDate) {
@@ -87,10 +91,33 @@ public class MessageCreateUtils {
         };
     }
 
-    public static String createScheduleDifferenceMessage(Map<LessonRecord, LessonRecord> difference) {
-
+    public static String createRegisteredStudentsMessage(List<StudentInfoDto> studentsInfoList) {
         return String.format("""
-                %s
-                """, difference);
+                🍀 Количество зарегестрированных пользователей: %s
+                """, studentsInfoList.size());
+    }
+
+    public static String createAdminMessage() {
+        return String.format("""
+                ⚙ Доступные команды для админа ⚙
+                """);
+    }
+
+    public static String createSendMessageToUsersMessage(List<Long> studentIds) {
+        return String.format("""
+                🍀 Сообщение добавлено в базу для дальнейшей рассылки %s пользователям
+                """, studentIds.size());
+    }
+
+    public static String createHelpSendMessageMessage() {
+        return String.format("""
+                🍀 Для рассылки используется команда /send_message_to_users [сообщение, которое будет разослано]
+                """);
+    }
+
+    public static String createNotBlankMessageWarning() {
+        return String.format("""
+                ⚠️ Внимание! Эта команда должна использовать 1 аргумент
+                """);
     }
 }

@@ -19,7 +19,11 @@ public enum CommandNames {
     PICTURE_COMMAND("/picture"),
     INFO_COMMAND("/info"),
     TOMORROW_SCHEDULE_NOTIFICATION_COMMAND("/tomorrow_notification"),
-    DIFFERENCE_SCHEDULE_NOTIFICATION_COMMAND("/difference_notification");
+    DIFFERENCE_SCHEDULE_NOTIFICATION_COMMAND("/difference_notification"),
+    SHOW_REGISTERED_USERS_COMMAND("/show_registered_users"),
+    ADMIN_COMMAND("/admin"),
+    SEND_MESSAGE_TO_USERS_COMMAND("/send_message_to_users");
+
 
     private final String commandName;
 

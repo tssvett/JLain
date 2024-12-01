@@ -1,6 +1,8 @@
 package dev.tssvett.schedule_bot.bot.utils;
 
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
+import java.util.Arrays;
+import java.util.Optional;
 import lombok.experimental.UtilityClass;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -64,4 +66,19 @@ public class UpdateUtils {
         return update.hasMessage() && update.getMessage().hasText();
     }
 
+    public static String getAdminCommand(Update update) {
+        return CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
+    }
+
+    public static Optional<String> getArgumentsFromMessage(Update update) {
+        String messageText = update.getMessage().getText();
+        String[] parts = messageText.split(" ");
+
+        if (parts.length <= 1) {
+            return Optional.empty();
+        }
+        String arguments = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
+
+        return Optional.of(arguments);
+    }
 }

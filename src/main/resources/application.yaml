@@ -39,6 +39,9 @@ scheduling:
   parser:
     cron: "0 20 21 * * *" #Каждый день в 21:20
     enabled: true
+  messages-sender:
+    cron: "0 30 * * * *" #Каждый час в :30 мин
+    enabled: true
 
 samara-university:
   semester-start-date: 2024-09-02

@@ -8,7 +8,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 @Slf4j
@@ -27,8 +26,8 @@ public class NotificationService {
         return notificationRepository.findAllEnabledScheduleDifferenceWithRegisteredStudents();
     }
 
-    public List<BotApiMethod<?>> createTomorrowScheduleNotificationsMessages() {
-        List<BotApiMethod<?>> messages = new ArrayList<>();
+    public List<SendMessage> createTomorrowScheduleNotificationsMessages() {
+        List<SendMessage> messages = new ArrayList<>();
         this.findAllTomorrowScheduleWithRegisteredStudents()
                 .forEach(notification -> {
                     Long userId = notification.getStudentId();
@@ -41,8 +40,8 @@ public class NotificationService {
         return messages;
     }
 
-    public List<BotApiMethod<?>> createScheduleDifferenceNotificationsMessages() {
-        List<BotApiMethod<?>> messages = new ArrayList<>();
+    public List<SendMessage> createScheduleDifferenceNotificationsMessages() {
+        List<SendMessage> messages = new ArrayList<>();
         List<NotificationRecord> notifications = this.findAllEnabledScheduleDifferenceWithRegisteredStudents();
 
         for (NotificationRecord notification : notifications) {

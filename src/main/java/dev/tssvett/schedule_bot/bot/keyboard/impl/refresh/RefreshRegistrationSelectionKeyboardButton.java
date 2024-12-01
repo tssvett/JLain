@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot.keyboard.impl.refresh;
 
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState;
 import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.faculty.FacultyKeyboard;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static dev.tssvett.schedule_bot.bot.enums.Action.FACULTY_CHOOSE;
+import static dev.tssvett.schedule_bot.bot.enums.keyboard.Action.FACULTY_CHOOSE;
 
 @Slf4j
 @Component

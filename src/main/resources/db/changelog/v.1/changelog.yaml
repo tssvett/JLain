@@ -41,3 +41,11 @@ databaseChangeLog:
   - include:
       file: table-notification-column-tomorrow-add.sql
       relativeToChangelogFile: true
+
+  - include:
+      file: table-student-column-role-add.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: create-table-message.sql
+      relativeToChangelogFile: true

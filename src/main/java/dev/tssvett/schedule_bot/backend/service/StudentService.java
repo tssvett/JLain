@@ -3,12 +3,15 @@ package dev.tssvett.schedule_bot.backend.service;
 import dev.tssvett.schedule_bot.backend.exception.NotificationNotExistsException;
 import dev.tssvett.schedule_bot.backend.exception.database.StudentNotExistsException;
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
-import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
-import static dev.tssvett.schedule_bot.bot.enums.RegistrationState.START_REGISTER;
+import dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState;
+import static dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState.START_REGISTER;
+import dev.tssvett.schedule_bot.bot.enums.persistense.Role;
+import dev.tssvett.schedule_bot.bot.properties.AdminProperties;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
 import dev.tssvett.schedule_bot.persistence.repository.NotificationRepository;
 import dev.tssvett.schedule_bot.persistence.repository.StudentRepository;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +24,16 @@ import org.springframework.stereotype.Service;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final NotificationRepository notificationRepository;
+    private final AdminProperties adminProperties;
 
 
     public StudentRecord getStudentInfoById(Long studentId) {
         return studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotExistsException("No student with id: " + studentId));
+    }
+
+    public List<StudentRecord> findAll() {
+        return studentRepository.findAll();
     }
 
     public void updateStudentFaculty(Long studentId, Long facultyId) {
@@ -107,6 +115,9 @@ public class StudentService {
     private void createStudent(Long studentId, Long chatId) {
         log.debug("Student {} is not in database. Adding them to database", studentId);
 
+        String userRole = adminProperties.id().equals(studentId)
+                ? Role.ADMIN.name()
+                : Role.STUDENT.name();
         StudentRecord newStudent = new StudentRecord(
                 studentId,
                 chatId,
@@ -114,7 +125,8 @@ public class StudentService {
                 START_REGISTER.name(),
                 null,
                 null,
-                null
+                null,
+                userRole
         );
 
         studentRepository.save(newStudent);
@@ -140,5 +152,9 @@ public class StudentService {
         return notificationRepository.findById(studentRecord.getNotificationId())
                 .orElseThrow(() -> new NotificationNotExistsException("No notification with id: " + studentRecord.getNotificationId()))
                 .getScheduleDifferenceEnabled();
+    }
+
+    public boolean isAdmin(Long userId) {
+        return this.getStudentInfoById(userId).getRole().equals(Role.ADMIN.name());
     }
 }

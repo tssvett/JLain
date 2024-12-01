@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot.keyboard;
 
 import dev.tssvett.schedule_bot.bot.actions.keyboard.impl.details.CallbackDetails;
-import dev.tssvett.schedule_bot.bot.enums.Action;
+import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 

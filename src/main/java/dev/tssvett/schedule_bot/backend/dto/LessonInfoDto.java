@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.backend.dto;
 
-import dev.tssvett.schedule_bot.bot.enums.LessonType;
-import dev.tssvett.schedule_bot.bot.enums.Subgroup;
+import dev.tssvett.schedule_bot.bot.enums.persistense.LessonType;
+import dev.tssvett.schedule_bot.bot.enums.persistense.Subgroup;
 
 import java.util.UUID;
 

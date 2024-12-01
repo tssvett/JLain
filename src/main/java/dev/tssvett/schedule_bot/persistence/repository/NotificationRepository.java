@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.persistence.repository;
 
-import dev.tssvett.schedule_bot.bot.enums.RegistrationState;
+import dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState;
 import dev.tssvett.schedule_bot.persistence.model.tables.Notification;
 import dev.tssvett.schedule_bot.persistence.model.tables.Student;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
