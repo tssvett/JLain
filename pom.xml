@@ -275,6 +275,11 @@
                                 <exclude>**/dev/tssvett/schedule_bot/bot/parsing/dto/**</exclude>
                                 <exclude>**/dev/tssvett/schedule_bot/bot/parsing/enums/**</exclude>
                                 <exclude>**/dev/tssvett/schedule_bot/scheduling/messages/**</exclude>
+                                <exclude>**/dev/tssvett/schedule_bot/bot/actions/keyboard/impl/details/**</exclude>
+                                <exclude>**/dev/tssvett/schedule_bot/bot/command/BotCommand.class</exclude>
+                                <exclude>**/dev/tssvett/schedule_bot/ScheduleBotApplication.class</exclude>
+                                <exclude>**/dev/tssvett/schedule_bot/bot/TelegramListener.class</exclude>
+                                <exclude>**/dev/tssvett/schedule_bot/bot/keyboard/Keyboard.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>
