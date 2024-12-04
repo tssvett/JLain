@@ -40,10 +40,13 @@ public class AdminRequiredPostProcessor implements BeanPostProcessor {
         return Proxy.newProxyInstance(
                 beanClass.getClassLoader(),
                 beanClass.getInterfaces(),
-                (proxy, method, args) -> isExecuteMethod(method) ? handleExecuteMethod(bean, method, args) : method.invoke(bean, args));
+                (proxy, method, args) ->
+                        isExecuteMethod(method)
+                                ? handleExecuteMethod(bean, method, args)
+                                : method.invoke(bean, args));
     }
 
-    private SendMessage handleExecuteMethod(Object bean, Method method, Object[] args) {
+    SendMessage handleExecuteMethod(Object bean, Method method, Object[] args) {
         Long userId = castToLong(args[0]);
         Long chatId = castToLong(args[1]);
         log.info("Check registration with postBeanProcessor for userId: {} and chatId: {}", userId, chatId);
@@ -53,6 +56,7 @@ public class AdminRequiredPostProcessor implements BeanPostProcessor {
                     : sendNotAdminMessage(chatId);
         } catch (Exception e) {
             log.error("Error invoking method {}: {}", method.getName(), e.getMessage());
+
             throw new PostBeanProcessorException(e.getMessage());
         }
     }

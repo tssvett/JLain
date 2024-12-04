@@ -38,7 +38,7 @@ public class DirectMessageRequiredPostProcessor implements BeanPostProcessor {
                 (proxy, method, args) -> isExecuteMethod(method) ? handleExecuteMethod(bean, method, args) : method.invoke(bean, args));
     }
 
-    private SendMessage handleExecuteMethod(Object bean, Method method, Object[] args) throws Throwable {
+    SendMessage handleExecuteMethod(Object bean, Method method, Object[] args) throws Throwable {
         Long userId = (Long) args[0];
         Long chatId = (Long) args[1];
         log.info("Check isDirectMessage with postBeanProcessor for userId: {} and chatId: {}", userId, chatId);
