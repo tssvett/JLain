@@ -269,7 +269,8 @@
                                 <exclude>**/backend/exception/**</exclude>
                                 <exclude>**/dev/tssvett/schedule_bot/bot/config/**</exclude>
                                 <exclude>**/enums/**</exclude>
-                                <exclude>**/utils/**</exclude>
+                                <exclude>**/utils/DateUtils.class</exclude>
+                                <exclude>**/utils/message/**</exclude>
                                 <exclude>**/dev/tssvett/schedule_bot/bot/menu/**</exclude>
                                 <exclude>**/dev/tssvett/schedule_bot/bot/properties/**</exclude>
                                 <exclude>**/dev/tssvett/schedule_bot/bot/parsing/dto/**</exclude>

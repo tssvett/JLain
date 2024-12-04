@@ -9,7 +9,6 @@ import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGrou
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import dev.tssvett.schedule_bot.persistence.repository.LessonRepository;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,22 +30,6 @@ public class LessonService {
     private final LessonRepository lessonRepository;
     private final DateUtils dateUtils;
 
-
-    public List<LessonInfoDto> getWeekScheduleList(Long userId) {
-        Long groupId = Mapper.toStudentInfoDto(studentService.getStudentInfoById(userId)).groupId();
-
-        List<LessonRecord> lessonsInWeek = lessonParser.parse(
-                        groupId, dateUtils.calculateCurrentUniversityEducationalWeek()
-                )
-                .stream()
-                .map(Mapper::toLessonRecord)
-                .toList();
-
-        return lessonsInWeek
-                .stream()
-                .map(Mapper::toLessonInfoDto)
-                .toList();
-    }
 
     public Map<String, List<LessonInfoDto>> getWeekScheduleMapByDate(Long userId) {
         Long groupId = Mapper.toStudentInfoDto(studentService.getStudentInfoById(userId)).groupId();
@@ -133,10 +116,6 @@ public class LessonService {
     private static void setLessonsRelations(EducationalGroupRecord educationalGroupRecord, List<LessonRecord> list) {
         list.forEach(lesson ->
                 lesson.setGroupId(educationalGroupRecord.getGroupId()));
-    }
-
-    public void saveAllLessons(List<LessonRecord> lessonsToSave) {
-        lessonRepository.saveAll(lessonsToSave);
     }
 
     public void saveLessonsWithoutDuplication(List<LessonRecord> lessonsToSave) {
