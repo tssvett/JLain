@@ -1,11 +1,10 @@
 package dev.tssvett.schedule_bot.bot.enums.constants;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
@@ -16,7 +15,6 @@ public enum CommandNames {
     TOMORROW_COMMAND("/tomorrow"),
     WEEK_COMMAND("/week"),
     REGISTER_COMMAND("/register"),
-    PICTURE_COMMAND("/picture"),
     INFO_COMMAND("/info"),
     TOMORROW_SCHEDULE_NOTIFICATION_COMMAND("/tomorrow_notification"),
     DIFFERENCE_SCHEDULE_NOTIFICATION_COMMAND("/difference_notification"),

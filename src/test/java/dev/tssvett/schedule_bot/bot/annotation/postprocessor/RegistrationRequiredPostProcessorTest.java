@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.bot.annotation.postprocessor;
 
 import dev.tssvett.schedule_bot.backend.exception.annotation.PostBeanProcessorException;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.command.impl.general.PictureBotCommand;
+import dev.tssvett.schedule_bot.bot.command.impl.general.InfoBotCommand;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,7 +26,7 @@ class RegistrationRequiredPostProcessorTest {
     RegistrationRequiredPostProcessor registrationRequiredPostProcessor;
 
     @Mock
-    PictureBotCommand pictureBotCommand;
+    InfoBotCommand pictureBotCommand;
 
     @Test
     void testPostProcessBeforeInitializationWithRegistrationRequired() {

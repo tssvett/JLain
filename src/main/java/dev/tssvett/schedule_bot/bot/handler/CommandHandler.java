@@ -20,7 +20,6 @@ public class CommandHandler {
     private final BotCommand todayScheduleBotCommand;
     private final BotCommand tomorrowScheduleBotCommand;
     private final BotCommand weekScheduleBotCommand;
-    private final BotCommand pictureBotCommand;
     private final BotCommand registerBotCommand;
     private final BotCommand unknownBotCommand;
     private final BotCommand infoBotCommand;
@@ -55,7 +54,6 @@ public class CommandHandler {
             case TODAY_COMMAND -> todayScheduleBotCommand.execute(userId, chatId);
             case TOMORROW_COMMAND -> tomorrowScheduleBotCommand.execute(userId, chatId);
             case WEEK_COMMAND -> weekScheduleBotCommand.execute(userId, chatId);
-            case PICTURE_COMMAND -> pictureBotCommand.execute(userId, chatId);
             case REGISTER_COMMAND -> registerBotCommand.execute(userId, chatId);
             case INFO_COMMAND -> infoBotCommand.execute(userId, chatId);
             case TOMORROW_SCHEDULE_NOTIFICATION_COMMAND ->

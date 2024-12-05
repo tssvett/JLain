@@ -38,9 +38,6 @@ class CommandHandlerTest {
     private BotCommand weekScheduleBotCommand;
 
     @Mock
-    private BotCommand pictureBotCommand;
-
-    @Mock
     private BotCommand registerBotCommand;
 
     @Mock
@@ -85,7 +82,6 @@ class CommandHandlerTest {
                 todayScheduleBotCommand,
                 tomorrowScheduleBotCommand,
                 weekScheduleBotCommand,
-                pictureBotCommand,
                 registerBotCommand,
                 unknownBotCommand,
                 infoBotCommand,
@@ -151,17 +147,6 @@ class CommandHandlerTest {
 
         assertEquals(expectedMessage, result);
         verify(weekScheduleBotCommand).execute(123L, 456L);
-    }
-
-    @Test
-    void handlePictureCommand() {
-        update.getMessage().setText("/picture");
-        when(pictureBotCommand.execute(123L, 456L)).thenReturn(expectedMessage);
-
-        SendMessage result = commandHandler.handleCommands(update);
-
-        assertEquals(expectedMessage, result);
-        verify(pictureBotCommand).execute(123L, 456L);
     }
 
     @Test

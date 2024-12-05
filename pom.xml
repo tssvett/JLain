@@ -281,6 +281,7 @@
                                 <exclude>**/dev/tssvett/schedule_bot/ScheduleBotApplication.class</exclude>
                                 <exclude>**/dev/tssvett/schedule_bot/bot/TelegramListener.class</exclude>
                                 <exclude>**/dev/tssvett/schedule_bot/bot/keyboard/Keyboard.class</exclude>
+                                <exclude>**/dev/tssvett/schedule_bot/bot/formatter/**</exclude>
                             </excludes>
                         </configuration>
                     </execution>
