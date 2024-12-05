@@ -36,25 +36,21 @@ class NotificationServiceTest {
     @InjectMocks
     NotificationService notificationService;
 
-    private String key;
-    private LessonInfoDto lessonInfoDto;
-    private List<LessonInfoDto> lessonInfoDtos;
     private Map<String, List<LessonInfoDto>> map;
-    private NotificationRecord notification;
     private List<NotificationRecord> notifications;
     private ScheduleDifference scheduleDifference;
 
     @BeforeEach
     void setUp() {
-        key = "test_key";
-        lessonInfoDto = new LessonInfoDto(UUID.randomUUID(), "test", LessonType.ANOTHER, "test",
+        String key = "test_key";
+        LessonInfoDto lessonInfoDto = new LessonInfoDto(UUID.randomUUID(), "test", LessonType.ANOTHER, "test",
                 "test", Subgroup.FIRST, "test", "test", "test", 1L);
-        lessonInfoDtos = List.of(lessonInfoDto);
+        List<LessonInfoDto> lessonInfoDtos = List.of(lessonInfoDto);
         map = Map.of(key, lessonInfoDtos);
-        notification = new NotificationRecord(1L, true, 1L, true);
+        NotificationRecord notification = new NotificationRecord(1L, true, 1L, true);
         notifications = List.of(notification);
         List<LessonRecord> list = List.of(new LessonRecord(UUID.randomUUID(), "test", "другое", "test",
-                "test", "1", "test", "test", "test", 1L));
+                "test", "1", "test", "test", "test", 1L, 1L));
         scheduleDifference = new ScheduleDifference(list, list, list, list);
     }
 

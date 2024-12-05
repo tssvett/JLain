@@ -47,12 +47,12 @@ class MapperTest {
 
         UUID uuid = UUID.randomUUID();
         lessonRecord = new LessonRecord(uuid, "lesson", "практика", "place", "teacher",
-                "1", "time", "day", "number", 123L);
+                "1", "time", "day", "number", 123L, 1L);
         lessonInfoDto = new LessonInfoDto(uuid, "lesson", LessonType.fromName("практика"),
                 "place", "teacher", Subgroup.fromName("1"),
                 "time", "day", "number", 123L);
         lessonParserDto = new LessonParserDto(uuid, "lesson", "практика", "place", "teacher",
-                "1", "time", "day", "number", 123L);
+                "1", "time", "day", "number", 123L, 1L);
 
         educationalGroupRecord = new EducationalGroupRecord(123L, "group", 123L, 123L);
         groupParserDto = new GroupParserDto(123L, "group");

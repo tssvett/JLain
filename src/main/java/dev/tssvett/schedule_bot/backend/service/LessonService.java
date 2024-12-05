@@ -34,12 +34,8 @@ public class LessonService {
     public Map<String, List<LessonInfoDto>> getWeekScheduleMapByDate(Long userId) {
         Long groupId = Mapper.toStudentInfoDto(studentService.getStudentInfoById(userId)).groupId();
 
-        List<LessonRecord> lessons = lessonParser.parse(
-                        groupId, dateUtils.calculateCurrentUniversityEducationalWeek()
-                )
-                .stream()
-                .map(Mapper::toLessonRecord)
-                .toList();
+        List<LessonRecord> lessons = lessonRepository.findLessonsByGroupIdAndEducationalWeek(groupId,
+                dateUtils.calculateCurrentUniversityEducationalWeek().longValue());
 
         return lessons.stream()
                 .filter(this::isExist)

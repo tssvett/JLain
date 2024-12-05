@@ -1,5 +1,6 @@
 package dev.tssvett.schedule_bot.backend.service;
 
+import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState;
 import dev.tssvett.schedule_bot.bot.enums.persistense.Role;
 import dev.tssvett.schedule_bot.bot.utils.DateUtils;
@@ -11,6 +12,7 @@ import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
 import dev.tssvett.schedule_bot.persistence.repository.LessonRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,6 +52,7 @@ class LessonServiceTest {
     private static final Long userId = 123L;
     private static final Long groupId = 456L;
     private LessonRecord lessonRecord;
+    private List<LessonRecord> lessonRecords;
     private LessonParserDto lessonParserDto;
     private StudentRecord studentRecord;
     private EducationalGroupRecord educationalGroupRecord;
@@ -59,13 +62,30 @@ class LessonServiceTest {
         Long notificationId = 999L;
         Long course = 3L;
         Long facultyId = 789L;
-        lessonRecord = new LessonRecord(UUID.randomUUID(), "Math", "Lecture", "Room 101",
-                "Teacher", "1", "8:00", "monday", "04.12.2024", groupId);
+        lessonRecord = new LessonRecord(UUID.randomUUID(), "Math", "лекция", "Room 101",
+                "Teacher", "1", "8:00", "monday", "04.12.2024", groupId, 1L);
+        lessonRecords = List.of(lessonRecord, lessonRecord);
         lessonParserDto = new LessonParserDto(UUID.randomUUID(), "Math", "лекция", "Room 101",
-                "Teacher", "1", "8:00", "monday", "04.12.2024", groupId);
+                "Teacher", "1", "8:00", "monday", "04.12.2024", groupId, 1L);
         studentRecord = new StudentRecord(userId, userId, course, RegistrationState.FACULTY_CHOOSING.name(),
-                facultyId, groupId, notificationId, Role.STUDENT.getValue());
+                facultyId, groupId, notificationId, Role.STUDENT.name());
         educationalGroupRecord = new EducationalGroupRecord(groupId, "Math", course, facultyId);
+    }
+
+    @Test
+    void getWeekScheduleMapByDate() {
+        //Arrange
+        when(studentService.getStudentInfoById(userId)).thenReturn(studentRecord);
+        when(lessonRepository.findLessonsByGroupIdAndEducationalWeek(groupId, 1L)).thenReturn(lessonRecords);
+        when(dateUtils.calculateCurrentUniversityEducationalWeek()).thenReturn(1);
+        //Act
+        Map<String, List<LessonInfoDto>> weekScheduleMapByDate = lessonService.getWeekScheduleMapByDate(userId);
+
+        //Assert
+        verify(studentService).getStudentInfoById(userId);
+        verify(lessonRepository).findLessonsByGroupIdAndEducationalWeek(groupId, 1L);
+        assertEquals(1, weekScheduleMapByDate.entrySet().size());
+        assertEquals(2, weekScheduleMapByDate.get("monday").size());
     }
 
 
@@ -107,6 +127,7 @@ class LessonServiceTest {
         when(dateUtils.calculateCurrentUniversityEducationalWeek()).thenReturn(1);
         when(lessonParser.parse(anyLong(), anyInt())).thenReturn(parsedLessons);
         lessonService.findScheduleDifference(userId);
-        verify(lessonRepository, times(1)).findAllLessons();
+        verify(lessonRepository, times(1)).findLessonsByGroupIdAndEducationalDay(
+                anyLong(), any());
     }
 }

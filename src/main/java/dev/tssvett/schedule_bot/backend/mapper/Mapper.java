@@ -59,7 +59,8 @@ public class Mapper {
                 lesson.time(),
                 lesson.dateDay(),
                 lesson.dateNumber(),
-                lesson.groupId()
+                lesson.groupId(),
+                lesson.week()
         );
     }
 

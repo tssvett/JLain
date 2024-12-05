@@ -49,3 +49,7 @@ databaseChangeLog:
   - include:
       file: create-table-message.sql
       relativeToChangelogFile: true
+
+  - include:
+      file: table-lesson-column-week-add.sql
+      relativeToChangelogFile: true
