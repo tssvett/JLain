@@ -1,9 +1,6 @@
 package dev.tssvett.schedule_bot.backend.mapper;
 
-import dev.tssvett.schedule_bot.backend.dto.FacultyInfoDto;
-import dev.tssvett.schedule_bot.backend.dto.GroupInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
-import dev.tssvett.schedule_bot.backend.dto.NotificationInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
 import dev.tssvett.schedule_bot.bot.enums.persistense.LessonType;
 import dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState;
@@ -16,7 +13,6 @@ import dev.tssvett.schedule_bot.persistence.model.tables.records.EducationalGrou
 import dev.tssvett.schedule_bot.persistence.model.tables.records.FacultyRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.LessonRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.MessageRecord;
-import dev.tssvett.schedule_bot.persistence.model.tables.records.NotificationRecord;
 import dev.tssvett.schedule_bot.persistence.model.tables.records.StudentRecord;
 import lombok.experimental.UtilityClass;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -37,19 +33,6 @@ public class Mapper {
         );
     }
 
-    public static StudentRecord toStudentRecord(StudentInfoDto student) {
-        return new StudentRecord(
-                student.userId(),
-                student.chatId(),
-                student.course(),
-                student.registrationState().name(),
-                student.facultyId(),
-                student.groupId(),
-                student.notificationId(),
-                student.role().name()
-        );
-    }
-
     public static LessonInfoDto toLessonInfoDto(LessonRecord lesson) {
         return new LessonInfoDto(
                 lesson.getId(),
@@ -65,21 +48,6 @@ public class Mapper {
         );
     }
 
-    public static LessonRecord toLessonRecord(LessonInfoDto lesson) {
-        return new LessonRecord(
-                lesson.lessonId(),
-                lesson.name(),
-                lesson.type().getName(),
-                lesson.place(),
-                lesson.teacher(),
-                lesson.subgroup().getName(),
-                lesson.time(),
-                lesson.dateDay(),
-                lesson.dateNumber(),
-                lesson.groupId()
-        );
-    }
-
     public static LessonRecord toLessonRecord(LessonParserDto lesson) {
         return new LessonRecord(
                 lesson.id(),
@@ -91,25 +59,8 @@ public class Mapper {
                 lesson.time(),
                 lesson.dateDay(),
                 lesson.dateNumber(),
-                lesson.groupId()
-        );
-    }
-
-    public static GroupInfoDto toGroupInfoDto(EducationalGroupRecord educationalGroupRecord) {
-        return new GroupInfoDto(
-                educationalGroupRecord.getGroupId(),
-                educationalGroupRecord.getName(),
-                educationalGroupRecord.getCourse(),
-                educationalGroupRecord.getFacultyId()
-        );
-    }
-
-    public static EducationalGroupRecord toEducationalGroupRecord(GroupInfoDto group) {
-        return new EducationalGroupRecord(
-                group.groupId(),
-                group.name(),
-                group.course(),
-                group.facultyId()
+                lesson.groupId(),
+                lesson.week()
         );
     }
 
@@ -122,42 +73,10 @@ public class Mapper {
         );
     }
 
-    public static FacultyInfoDto toFacultyInfoDto(EducationalGroupRecord educationalGroupRecord) {
-        return new FacultyInfoDto(
-                educationalGroupRecord.getFacultyId(),
-                educationalGroupRecord.getName()
-        );
-    }
-
-    public static FacultyRecord toFacultyRecord(FacultyInfoDto faculty) {
-        return new FacultyRecord(
-                faculty.facultyId(),
-                faculty.name()
-        );
-    }
-
     public static FacultyRecord toFacultyRecord(FacultyParserDto facultyParserDto) {
         return new FacultyRecord(
                 facultyParserDto.facultyId(),
                 facultyParserDto.facultyName()
-        );
-    }
-
-    public static NotificationInfoDto toNotificationInfoDto(NotificationRecord notificationRecord) {
-        return new NotificationInfoDto(
-                notificationRecord.getId(),
-                notificationRecord.getTomorrowScheduleEnabled(),
-                notificationRecord.getScheduleDifferenceEnabled(),
-                notificationRecord.getStudentId()
-        );
-    }
-
-    public static NotificationRecord toNotificationRecord(NotificationInfoDto notification) {
-        return new NotificationRecord(
-                notification.notificationId(),
-                notification.tomorrowScheduleEnabled(),
-                notification.studentId(),
-                notification.scheduleDifferenceEnabled()
         );
     }
 
@@ -166,13 +85,5 @@ public class Mapper {
                 .chatId(messageRecord.getChatId())
                 .text(messageRecord.getText())
                 .build();
-    }
-
-    public static MessageRecord toMessageRecord(SendMessage sendMessage) {
-        return new MessageRecord(
-                null,
-                Long.parseLong(sendMessage.getChatId()),
-                sendMessage.getText()
-        );
     }
 }

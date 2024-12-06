@@ -12,6 +12,7 @@ public record LessonParserDto(
         String time,
         String dateDay,
         String dateNumber,
-        Long groupId
+        Long groupId,
+        Long week
 ) {
 }

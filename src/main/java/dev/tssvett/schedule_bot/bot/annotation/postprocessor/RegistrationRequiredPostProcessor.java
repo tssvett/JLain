@@ -46,7 +46,7 @@ public class RegistrationRequiredPostProcessor implements BeanPostProcessor {
         );
     }
 
-    private SendMessage handleExecuteMethod(Object bean, Method method, Object[] args) throws Throwable {
+    SendMessage handleExecuteMethod(Object bean, Method method, Object[] args) throws Throwable {
         Long userId = castToLong(args[0]);
         Long chatId = castToLong(args[1]);
         log.info("Check registration with postBeanProcessor for userId: {} and chatId: {}", userId, chatId);

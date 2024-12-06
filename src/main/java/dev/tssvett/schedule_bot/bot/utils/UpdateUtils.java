@@ -25,10 +25,6 @@ public class UpdateUtils {
         return update.getMessage().getFrom().getId();
     }
 
-    public static String getData(Update update) {
-        return update.getCallbackQuery().getData();
-    }
-
     public static String getFirstWordFromMessage(Update update) {
         return update.getMessage().getText().split(" ")[0];
     }
@@ -47,18 +43,13 @@ public class UpdateUtils {
 
     public static boolean getTomorrowScheduleNotificationStatus(Update update) {
         String answer = CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
-        return answer.equals("Включить");
-    }
 
-    public static boolean getScheduleDifferenceNotificationStatus(Update update) {
-        String answer = CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
         return answer.equals("Включить");
     }
 
     public static boolean getRefreshRegistrationStatus(Update update) {
         String answer = CallbackDetails.fromString(update.getCallbackQuery().getData()).getCallbackInformation();
-        //представим что он бегает по списку разрешенных слов, которых много
-        //но сейчас оно ровно 1
+
         return answer.equals("Да");
     }
 

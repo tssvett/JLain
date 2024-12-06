@@ -2,6 +2,7 @@ package dev.tssvett.schedule_bot.parsing.parser;
 
 import dev.tssvett.schedule_bot.bot.enums.persistense.LessonType;
 import dev.tssvett.schedule_bot.bot.enums.persistense.Subgroup;
+import dev.tssvett.schedule_bot.bot.utils.DateUtils;
 import dev.tssvett.schedule_bot.bot.utils.StringUtils;
 import dev.tssvett.schedule_bot.parsing.dto.LessonParserDto;
 import dev.tssvett.schedule_bot.parsing.enums.Selector;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class LessonParser {
+    private final DateUtils dateUtils;
     private final SamaraUniversityClientService samaraUniversityClientService;
     private static final int TIME_ELEMENTS_NUMBER = 7;
     private static final int UNIFIED_TIME_PARTS_NUMBER = 2;
@@ -79,10 +81,12 @@ public class LessonParser {
                 schoolWeek.select(Selector.SCHOOL_WEEK_SELECTOR.getName()), TIME_ELEMENTS_NUMBER
         );
 
+        Long educationalWeek = dateUtils.calculateCurrentUniversityEducationalWeek().longValue();
+
         for (int i = 0; i < lessonsElements.size(); i++) {
             Elements lessons = lessonsElements.get(i).select(Selector.LESSON_SELECTOR.getName());
             for (Element lessonElement : lessons) {
-                lessonsList.add(buildLesson(lessonTimes, dates, lessonElement, i, groupId));
+                lessonsList.add(buildLesson(lessonTimes, dates, lessonElement, i, groupId, educationalWeek));
             }
         }
 
@@ -90,7 +94,7 @@ public class LessonParser {
     }
 
     private LessonParserDto buildLesson(List<String> lessonTimes, List<String> dates, Element lessonElement, int i,
-                                        Long groupId) {
+                                        Long groupId, Long educationalWeek) {
         return new LessonParserDto(
                 UUID.randomUUID(),
                 getName(lessonElement),
@@ -101,7 +105,8 @@ public class LessonParser {
                 getTime(lessonTimes, dates, i),
                 getDateDay(dates, i),
                 getDateNumber(dates, i),
-                groupId
+                groupId,
+                educationalWeek
         );
     }
 

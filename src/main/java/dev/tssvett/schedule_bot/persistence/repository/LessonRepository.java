@@ -41,4 +41,11 @@ public class LessonRepository {
                 .where(Lesson.LESSON.ID.in(list.stream().map(LessonRecord::getId).toList()))
                 .execute();
     }
+
+    public List<LessonRecord> findLessonsByGroupIdAndEducationalWeek(Long groupId, Long week) {
+        return dslContext.selectFrom(Lesson.LESSON)
+                .where(Lesson.LESSON.GROUP_ID.eq(groupId))
+                .and(Lesson.LESSON.WEEK.eq(week))
+                .fetchInto(LessonRecord.class);
+    }
 }

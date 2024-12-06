@@ -3,7 +3,6 @@ package dev.tssvett.schedule_bot.bot.enums.command;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.DIFFERENCE_SCHEDULE_NOTIFICATION_COMMAND;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.HELP_COMMAND;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.INFO_COMMAND;
-import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.PICTURE_COMMAND;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.REGISTER_COMMAND;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.START_COMMAND;
 import static dev.tssvett.schedule_bot.bot.enums.constants.CommandNames.TODAY_COMMAND;
@@ -23,7 +22,6 @@ public enum StudentAllowedCommands {
     REGISTER(REGISTER_COMMAND.getCommandName(), "Регистрация нового пользователя"),
     START(START_COMMAND.getCommandName(), "Начало работы"),
     HELP(HELP_COMMAND.getCommandName(), "Помощь"),
-    PICTURE(PICTURE_COMMAND.getCommandName(), "Рандомная картинка"),
     INFO(INFO_COMMAND.getCommandName(), "Информация о пользователе"),
     TOMORROW_SCHEDULE_NOTIFICATION_SETTINGS(TOMORROW_SCHEDULE_NOTIFICATION_COMMAND.getCommandName(),
             "Настройка ежедневной рассылки расписания"),
