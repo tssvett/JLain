@@ -30,15 +30,13 @@ public class GroupRepository {
     public void saveAll(List<EducationalGroupRecord> educationalGroups) {
         for (EducationalGroupRecord educationalGroup : educationalGroups) {
             try {
-                dslContext.insertInto(EducationalGroup.EDUCATIONAL_GROUP,
-                                EducationalGroup.EDUCATIONAL_GROUP.GROUP_ID,
-                                EducationalGroup.EDUCATIONAL_GROUP.NAME,
-                                EducationalGroup.EDUCATIONAL_GROUP.COURSE,
-                                EducationalGroup.EDUCATIONAL_GROUP.FACULTY_ID)
-                        .values(educationalGroup.getGroupId(),
-                                educationalGroup.getName(),
-                                educationalGroup.getCourse(),
-                                educationalGroup.getFacultyId())
+                dslContext.insertInto(EducationalGroup.EDUCATIONAL_GROUP)
+                        .set(EducationalGroup.EDUCATIONAL_GROUP.FACULTY_ID, educationalGroup.getFacultyId())
+                        .set(EducationalGroup.EDUCATIONAL_GROUP.COURSE, educationalGroup.getCourse())
+                        .set(EducationalGroup.EDUCATIONAL_GROUP.GROUP_ID, educationalGroup.getGroupId())
+                        .set(EducationalGroup.EDUCATIONAL_GROUP.NAME, educationalGroup.getName())
+                        .onDuplicateKeyUpdate()
+                        .set(EducationalGroup.EDUCATIONAL_GROUP.NAME, educationalGroup.getName())
                         .execute();
             } catch (Exception e) {
                 log.debug("Error with saving group {}", e.getMessage());
@@ -49,7 +47,12 @@ public class GroupRepository {
     public List<EducationalGroupRecord> findAllByFacultyIdAndCourse(Long facultyId, Long course) {
         return dslContext.select()
                 .from(EducationalGroup.EDUCATIONAL_GROUP)
-                .where(EducationalGroup.EDUCATIONAL_GROUP.FACULTY_ID.eq(facultyId).and(EducationalGroup.EDUCATIONAL_GROUP.COURSE.eq(course)))
+                .where(EducationalGroup.EDUCATIONAL_GROUP.FACULTY_ID.eq(facultyId)
+                        .and(EducationalGroup.EDUCATIONAL_GROUP.COURSE.eq(course)))
                 .fetchInto(EducationalGroupRecord.class);
+    }
+
+    public void deleteAll() {
+        dslContext.deleteFrom(EducationalGroup.EDUCATIONAL_GROUP).execute();
     }
 }

@@ -155,7 +155,7 @@ public class LessonService {
         Long groupId = studentService.getStudentInfoById(userId).getGroupId();
         String date = dateUtils.getCurrentDate();
 
-        List<LessonRecord> savedDayLessons = lessonRepository.findLessonsByGroupIdAndEducationalDay(
+        List<LessonRecord> savedDayLessons = lessonRepository.findLessonsByGroupIdAndEducationalDayNumber(
                 groupId,
                 date
         );
@@ -182,7 +182,7 @@ public class LessonService {
                                 )
                 )
                 .toList();
-        lessonRepository.deleteAll(removedLessons);
+        lessonRepository.deleteList(removedLessons);
 
         List<LessonRecord> addedLessons = parsedLessons
                 .stream()

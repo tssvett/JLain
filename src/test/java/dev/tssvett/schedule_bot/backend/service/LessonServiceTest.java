@@ -120,14 +120,14 @@ class LessonServiceTest {
     void findScheduleDifference() {
         List<LessonRecord> dbLessons = List.of(lessonRecord);
         List<LessonParserDto> parsedLessons = List.of(lessonParserDto);
-        when(lessonRepository.findLessonsByGroupIdAndEducationalDay(groupId, "04.12.2024"))
+        when(lessonRepository.findLessonsByGroupIdAndEducationalDayNumber(groupId, "04.12.2024"))
                 .thenReturn(dbLessons);
         when(studentService.getStudentInfoById(userId)).thenReturn(studentRecord);
         when(dateUtils.getCurrentDate()).thenReturn("04.12.2024");
         when(dateUtils.calculateCurrentUniversityEducationalWeek()).thenReturn(1);
         when(lessonParser.parse(anyLong(), anyInt())).thenReturn(parsedLessons);
         lessonService.findScheduleDifference(userId);
-        verify(lessonRepository, times(1)).findLessonsByGroupIdAndEducationalDay(
+        verify(lessonRepository, times(1)).findLessonsByGroupIdAndEducationalDayNumber(
                 anyLong(), any());
     }
 }
