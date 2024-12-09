@@ -66,4 +66,8 @@ public class StudentRepository {
                 .where(Student.STUDENT.USER_ID.eq(newStudent.getUserId()))
                 .execute();
     }
+
+    public void deleteAll() {
+        dslContext.deleteFrom(Student.STUDENT).execute();
+    }
 }
