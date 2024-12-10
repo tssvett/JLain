@@ -42,4 +42,8 @@ public class FacultyRepository {
                 .where(Faculty.FACULTY.FACULTY_ID.eq(facultyId))
                 .fetchOptional();
     }
+
+    public void deleteAll() {
+        dslContext.deleteFrom(Faculty.FACULTY).execute();
+    }
 }

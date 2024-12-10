@@ -23,11 +23,11 @@ spring:
     time-zone: Europe/Samara
 
 bot:
-  name: ${BOT_NAME}
-  token: ${BOT_TOKEN}
+  name: ${BOT_NAME:ScheduleBot}
+  token: ${BOT_TOKEN:5926617975:AAG8_WzhM6gE3ZdA3XCVJRSWTFBsNWuFx9M}
 
 admin:
-  id: ${ADMIN_ID}
+  id: ${ADMIN_ID:123}
 
 scheduling:
   tomorrow-schedule-notification:

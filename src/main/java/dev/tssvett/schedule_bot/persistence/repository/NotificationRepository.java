@@ -70,4 +70,9 @@ public class NotificationRepository {
                 .where(Notification.NOTIFICATION.ID.eq(notificationId))
                 .execute();
     }
+
+    public void deleteAll() {
+        dslContext.delete(Notification.NOTIFICATION)
+                .execute();
+    }
 }
