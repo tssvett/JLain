@@ -71,7 +71,6 @@ class FacultyServiceTest {
         assertThrows(FacultyNotExistException.class, () -> facultyService.getFacultyById(facultyId));
     }
 
-    //TODO нагенеришь список
     private List<FacultyRecord> getListFaculties1() {
         return List.of(new FacultyRecord(1L, "Faculty 1"), new FacultyRecord(2L, "Faculty 2"), new FacultyRecord(3L, "Faculty 3"));
     }
