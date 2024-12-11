@@ -39,10 +39,6 @@ class GroupRepositoryTest {
         dynamicPropertyRegistry.add("spring.datasource.username", postgresContainer::getUsername);
         dynamicPropertyRegistry.add("spring.datasource.password", postgresContainer::getPassword);
         dynamicPropertyRegistry.add("spring.datasource.driver-class-name", postgresContainer::getDriverClassName);
-        dynamicPropertyRegistry.add("spring.liquibase.url", postgresContainer::getJdbcUrl);
-        dynamicPropertyRegistry.add("spring.liquibase.user", postgresContainer::getUsername);
-        dynamicPropertyRegistry.add("spring.liquibase.password", postgresContainer::getPassword);
-        dynamicPropertyRegistry.add("spring.liquibase.driver-class-name", postgresContainer::getDriverClassName);
     }
 
     @BeforeAll

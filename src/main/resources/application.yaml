@@ -12,15 +12,15 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   liquibase:
-    url: ${DB_URL}
-    user: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     change-log: db/changelog/changelog-master.yaml
     enabled: true
 
   jackson:
     time-zone: Europe/Samara
+
+  jooq:
+    sql-dialect: postgres
 
 bot:
   name: ${BOT_NAME:ScheduleBot}
