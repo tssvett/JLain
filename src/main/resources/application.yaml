@@ -24,7 +24,7 @@ spring:
 
 bot:
   name: ${BOT_NAME:ScheduleBot}
-  token: ${BOT_TOKEN:5926617975:AAG8_WzhM6gE3ZdA3XCVJRSWTFBsNWuFx9M}
+  token: ${BOT_TOKEN}
 
 admin:
   id: ${ADMIN_ID:123}
