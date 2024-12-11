@@ -32,10 +32,6 @@
         <jacoco.version>0.8.12</jacoco.version>
         <spring.test.version>3.4.0</spring.test.version>
 
-        <!-- Database Properties -->
-        <db.url>${DB_URL}</db.url>
-        <db.user>${DB_USERNAME}</db.user>
-        <db.password>${DB_PASSWORD}</db.password>
     </properties>
 
     <dependencies>
@@ -117,6 +113,12 @@
             <version>${liquibase.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-maven-plugin</artifactId>
+            <version>${liquibase.version}</version>
+        </dependency>
+
         <!--Jooq Dependency -->
         <dependency>
             <groupId>org.jooq</groupId>
@@ -127,6 +129,12 @@
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-codegen</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta-extensions-liquibase</artifactId>
             <version>${jooq.version}</version>
         </dependency>
 
@@ -242,27 +250,38 @@
                 </executions>
 
                 <configuration>
-
-                    <!-- JDBC connection parameters -->
-                    <jdbc>
-                        <driver>org.postgresql.Driver</driver>
-                        <url>${db.url}</url>
-                        <user>${db.user}</user>
-                        <password>${db.password}</password>
-                    </jdbc>
-
                     <!-- Generator parameters -->
                     <generator>
                         <database>
-                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
-                            <includes>.*</includes>
-                            <excludes>Databasechangelog.*</excludes>
-                            <inputSchema>public</inputSchema>
+                            <name>org.jooq.meta.extensions.liquibase.LiquibaseDatabase</name>
+                            <properties>
+                                <property>
+                                    <key>rootPath</key>
+                                    <value>${basedir}/src/main/resources</value>
+                                </property>
+
+                                <property>
+                                    <key>scripts</key>
+                                    <value>/db/changelog/changelog-master.yaml</value>
+                                </property>
+
+                                <property>
+                                    <key>includeLiquibaseTables</key>
+                                    <value>false</value>
+                                </property>
+
+                                <property>
+                                    <key>changeLogParameters.contexts</key>
+                                    <value>!test</value>
+                                </property>
+                            </properties>
                         </database>
+
                         <target>
                             <directory>src/main/java</directory>
                             <packageName>dev.tssvett.schedule_bot.persistence.model</packageName>
                         </target>
+
                     </generator>
                 </configuration>
             </plugin>

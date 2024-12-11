@@ -14,13 +14,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.telegram.telegrambots.longpolling.starter.TelegramBotInitializer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 @SpringBootTest
 class MessageRepositoryTest {
+
+    @MockBean
+    TelegramBotInitializer telegramBotInitializer;
 
     @Container
     private static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:17")
@@ -37,10 +42,6 @@ class MessageRepositoryTest {
         dynamicPropertyRegistry.add("spring.datasource.username", postgresContainer::getUsername);
         dynamicPropertyRegistry.add("spring.datasource.password", postgresContainer::getPassword);
         dynamicPropertyRegistry.add("spring.datasource.driver-class-name", postgresContainer::getDriverClassName);
-        dynamicPropertyRegistry.add("spring.liquibase.url", postgresContainer::getJdbcUrl);
-        dynamicPropertyRegistry.add("spring.liquibase.user", postgresContainer::getUsername);
-        dynamicPropertyRegistry.add("spring.liquibase.password", postgresContainer::getPassword);
-        dynamicPropertyRegistry.add("spring.liquibase.driver-class-name", postgresContainer::getDriverClassName);
     }
 
     @BeforeAll
