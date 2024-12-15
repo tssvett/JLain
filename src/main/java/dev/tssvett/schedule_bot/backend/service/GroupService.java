@@ -58,7 +58,9 @@ public class GroupService {
     }
 
     public void parseAndSaveGroups() {
+        log.info("Starting parsing and saving groups");
         this.saveGroups(this.parseGroupsFromAllFaculties());
+        log.info("Finished parsing and saving groups");
     }
 
     private List<EducationalGroupRecord> parseGroupsFromFaculty(FacultyRecord faculty) {

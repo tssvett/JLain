@@ -1,5 +1,6 @@
 package dev.tssvett.schedule_bot.bot.command.impl.register;
 
+import dev.tssvett.schedule_bot.backend.service.FacultyService;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.annotation.DirectMessageRequired;
 import dev.tssvett.schedule_bot.bot.command.BotCommand;
@@ -19,6 +20,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @RequiredArgsConstructor
 public class RegisterBotCommand implements BotCommand {
     private final StudentService studentService;
+    private final FacultyService facultyService;
     private final RefreshRegistrationKeyboard refreshRegistrationKeyboard;
     private final FacultyKeyboard facultyKeyboard;
 
@@ -37,16 +39,25 @@ public class RegisterBotCommand implements BotCommand {
                     .replyMarkup(refreshRegistrationKeyboard.createInlineKeyboard(REFRESH_REGISTRATION, userId))
                     .text(MessageTextConstantsUtils.ALREADY_REGISTERED_MESSAGE)
                     .build();
-        } else {
-            log.info("User {} is not registered with SUCCESSFUL_REGISTRATION. Starting registration process.", userId);
-            studentService.createStudentIfNotExists(userId, chatId);
-            studentService.updateStudentRegistrationState(userId, FACULTY_CHOOSING);
+        }
+
+        if (facultyService.findAllFaculties().isEmpty()) {
+            log.info("No faculties found.");
 
             return SendMessage.builder()
                     .chatId(chatId)
-                    .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId))
-                    .text(MessageTextConstantsUtils.REGISTER_FACULTY_CHOOSING_MESSAGE)
+                    .text(MessageTextConstantsUtils.NO_FACULTIES_FOUND_MESSAGE)
                     .build();
         }
+
+        log.info("User {} is not registered with SUCCESSFUL_REGISTRATION. Starting registration process.", userId);
+        studentService.createStudentIfNotExists(userId, chatId);
+        studentService.updateStudentRegistrationState(userId, FACULTY_CHOOSING);
+
+        return SendMessage.builder()
+                .chatId(chatId)
+                .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId))
+                .text(MessageTextConstantsUtils.REGISTER_FACULTY_CHOOSING_MESSAGE)
+                .build();
     }
 }

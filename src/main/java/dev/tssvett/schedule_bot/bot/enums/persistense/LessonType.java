@@ -17,7 +17,8 @@ public enum LessonType {
     COURSEWORK("курсовые"),
     TEST("зачет"),
     INDUSTRIAL("производственная"),
-    ANOTHER("другое");
+    ANOTHER("другое"),
+    LEARN("учебная");
 
     private final String name;
 

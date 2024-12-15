@@ -9,7 +9,6 @@ FROM maven:3.9.7-eclipse-temurin-17 AS builder
 WORKDIR /opt/app
 COPY --from=dependencies /root/.m2 /root/.m2
 COPY --from=dependencies /opt/app/ /opt/app
-COPY .git/ /opt/app/.git/
 COPY src /opt/app/src/
 RUN mvn -B -e -am clean install -DskipTests
 

@@ -31,11 +31,13 @@ public class FacultyService {
     }
 
     public void parseAndSaveFaculties() {
+        log.info("Parsing faculties");
         this.saveFaculties(
                 facultyParser.parse()
                         .stream()
                         .map(Mapper::toFacultyRecord)
                         .toList()
         );
+        log.info("Parsing faculties finished");
     }
 }

@@ -63,6 +63,7 @@ public class LessonService {
     }
 
     public void parseAndSaveLessonsFromAllGroupsCompletableFuture() {
+        log.info("Started parsing lessons from all groups");
         AtomicInteger currentGroupCounter = new AtomicInteger();
         List<LessonRecord> lessonsToSave = new ArrayList<>();
         List<EducationalGroupRecord> allGroups = groupService.findAllGroups();
