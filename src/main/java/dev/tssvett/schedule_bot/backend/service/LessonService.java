@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class LessonService {
     private final LessonParser lessonParser;
     private final LessonRepository lessonRepository;
     private final DateUtils dateUtils;
+    public static final int THREAD_NUMBER = 10;
 
 
     public Map<String, List<LessonInfoDto>> getWeekScheduleMapByDate(Long userId) {
@@ -70,6 +73,7 @@ public class LessonService {
         int groupsCount = allGroups.size();
         int currentEducationalWeek = dateUtils.calculateCurrentUniversityEducationalWeek();
 
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_NUMBER);
         List<CompletableFuture<List<LessonRecord>>> futures = new ArrayList<>();
         allGroups.forEach(educationalGroupRecord ->
                 futures.add(CompletableFuture.supplyAsync(() -> {
@@ -79,7 +83,7 @@ public class LessonService {
                             educationalGroupRecord.getName());
 
                     return list;
-                }))
+                }, executorService))
         );
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -97,6 +101,7 @@ public class LessonService {
         });
 
         this.saveLessonsWithoutDuplication(lessonsToSave);
+        executorService.shutdown();
         log.info("Lessons saved successfully");
     }
 
