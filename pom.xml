@@ -267,7 +267,7 @@
 
                                 <property>
                                     <key>includeLiquibaseTables</key>
-                                    <value>false</value>
+                                    <value>true</value>
                                 </property>
 
                                 <property>
