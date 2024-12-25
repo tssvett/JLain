@@ -35,7 +35,7 @@ public class CommandHandler {
         Long chatId = UpdateUtils.getChatIdFromMessage(update);
 
         Optional<CommandNames> optionalCommandName = CommandNames.fromCommandName(
-                UpdateUtils.getFirstWordFromMessage(update)
+                UpdateUtils.getCommandNameFromMessage(update)
         );
 
         Optional<String> optionalArguments = UpdateUtils.getArgumentsFromMessage(update);

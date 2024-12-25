@@ -5,6 +5,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class StringUtils {
 
+    private static final String COMMAND_SYMBOL = "@";
+
     public static String capitalizeFirstLetter(String str) {
         if (str == null || str.isEmpty()) {
             return str;
@@ -29,5 +31,19 @@ public class StringUtils {
     public static String extractNotUnifiedTime(String[] timeParts) {
         return String.format("%s %s - %s, %s %s - %s", timeParts[0], timeParts[1], timeParts[2], timeParts[3],
                 timeParts[4], timeParts[5]);
+    }
+
+    /**
+     * При выборе команды с телефона/ноутбука к команде добавляется тег бота, то есть:
+     * /help@JLainbot.
+     * Этот метод берет /help из строки выше
+     * @param command Строка
+     * @return Строку команды до командного символа
+     */
+    public static String getCommandNameFromMessage(String command) {
+        int symbolIndex = command.indexOf(COMMAND_SYMBOL);
+        return command.contains(COMMAND_SYMBOL)
+                ? command.substring(0, symbolIndex)
+                : command;
     }
 }

@@ -69,7 +69,7 @@ class UpdateUtilsTest {
     void getFirstWordFromMessage() {
         String expectedWord = "test";
 
-        String actualWord = UpdateUtils.getFirstWordFromMessage(update);
+        String actualWord = UpdateUtils.getCommandNameFromMessage(update);
 
         assertEquals(expectedWord, actualWord);
     }

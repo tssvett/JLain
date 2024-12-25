@@ -25,8 +25,11 @@ public class UpdateUtils {
         return update.getMessage().getFrom().getId();
     }
 
-    public static String getFirstWordFromMessage(Update update) {
-        return update.getMessage().getText().split(" ")[0];
+    public static String getCommandNameFromMessage(Update update) {
+        String text = update.getMessage().getText();
+        String firstWordFromMessage = text.split(" ")[0];
+
+        return StringUtils.getCommandNameFromMessage(firstWordFromMessage);
     }
 
     public static long getFacultyId(Update update) {
