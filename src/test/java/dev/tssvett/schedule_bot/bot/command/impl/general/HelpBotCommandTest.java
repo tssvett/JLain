@@ -1,6 +1,6 @@
 package dev.tssvett.schedule_bot.bot.command.impl.general;
 
-import static dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils.HELP_COMMAND;
+import static dev.tssvett.schedule_bot.bot.constants.MessageTextConstants.HELP_COMMAND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;

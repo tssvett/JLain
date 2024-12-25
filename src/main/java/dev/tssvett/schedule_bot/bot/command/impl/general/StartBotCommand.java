@@ -3,7 +3,7 @@ package dev.tssvett.schedule_bot.bot.command.impl.general;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.annotation.NoneRequired;
 import dev.tssvett.schedule_bot.bot.command.BotCommand;
-import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
+import dev.tssvett.schedule_bot.bot.constants.MessageTextConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ public class StartBotCommand implements BotCommand {
 
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageTextConstantsUtils.START_COMMAND)
+                .text(MessageTextConstants.START_COMMAND)
                 .build();
     }
 }

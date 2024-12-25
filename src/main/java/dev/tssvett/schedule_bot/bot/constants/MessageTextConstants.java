@@ -1,9 +1,9 @@
-package dev.tssvett.schedule_bot.bot.utils.message;
+package dev.tssvett.schedule_bot.bot.constants;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class MessageTextConstantsUtils {
+public class MessageTextConstants {
 
     // Command Responses
     public static final String START_COMMAND = """
@@ -64,7 +64,7 @@ public class MessageTextConstantsUtils {
             """;
 
     public static final String NO_FACULTIES_FOUND_MESSAGE = """
-            🌟 Похоже, что бот еще не нашел расписания 🌟
+            🌟 Похоже, что бот еще не распарсил факультеты 🌟
             Попробуйте попозже :(
             """;
 

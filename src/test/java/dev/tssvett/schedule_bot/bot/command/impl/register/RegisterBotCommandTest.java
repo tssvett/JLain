@@ -5,7 +5,7 @@ import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.faculty.FacultyKeyboard;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.refresh.RefreshRegistrationKeyboard;
-import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
+import dev.tssvett.schedule_bot.bot.constants.MessageTextConstants;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class RegisterBotCommandTest {
 
         //Assert
         verify(studentService).isRegistered(1L);
-        assertEquals(MessageTextConstantsUtils.ALREADY_REGISTERED_MESSAGE, result.getText());
+        assertEquals(MessageTextConstants.ALREADY_REGISTERED_MESSAGE, result.getText());
     }
 
     @Test
@@ -64,6 +64,6 @@ class RegisterBotCommandTest {
 
         //Assert
         verify(studentService).createStudentIfNotExists(1L, 1L);
-        assertEquals(MessageTextConstantsUtils.REGISTER_FACULTY_CHOOSING_MESSAGE, result.getText());
+        assertEquals(MessageTextConstants.REGISTER_FACULTY_CHOOSING_MESSAGE, result.getText());
     }
 }

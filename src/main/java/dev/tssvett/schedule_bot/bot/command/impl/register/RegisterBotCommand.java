@@ -9,7 +9,7 @@ import static dev.tssvett.schedule_bot.bot.enums.keyboard.Action.REFRESH_REGISTR
 import static dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState.FACULTY_CHOOSING;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.faculty.FacultyKeyboard;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.refresh.RefreshRegistrationKeyboard;
-import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
+import dev.tssvett.schedule_bot.bot.constants.MessageTextConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ public class RegisterBotCommand implements BotCommand {
             return SendMessage.builder()
                     .chatId(chatId)
                     .replyMarkup(refreshRegistrationKeyboard.createInlineKeyboard(REFRESH_REGISTRATION, userId))
-                    .text(MessageTextConstantsUtils.ALREADY_REGISTERED_MESSAGE)
+                    .text(MessageTextConstants.ALREADY_REGISTERED_MESSAGE)
                     .build();
         }
 
@@ -46,7 +46,7 @@ public class RegisterBotCommand implements BotCommand {
 
             return SendMessage.builder()
                     .chatId(chatId)
-                    .text(MessageTextConstantsUtils.NO_FACULTIES_FOUND_MESSAGE)
+                    .text(MessageTextConstants.NO_FACULTIES_FOUND_MESSAGE)
                     .build();
         }
 
@@ -57,7 +57,7 @@ public class RegisterBotCommand implements BotCommand {
         return SendMessage.builder()
                 .chatId(chatId)
                 .replyMarkup(facultyKeyboard.createInlineKeyboard(FACULTY_CHOOSE, userId))
-                .text(MessageTextConstantsUtils.REGISTER_FACULTY_CHOOSING_MESSAGE)
+                .text(MessageTextConstants.REGISTER_FACULTY_CHOOSING_MESSAGE)
                 .build();
     }
 }

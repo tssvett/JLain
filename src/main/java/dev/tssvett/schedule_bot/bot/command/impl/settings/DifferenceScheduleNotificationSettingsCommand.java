@@ -5,7 +5,7 @@ import dev.tssvett.schedule_bot.bot.annotation.RegistrationRequired;
 import dev.tssvett.schedule_bot.bot.command.BotCommand;
 import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.notification.differenceschedule.ScheduleDifferenceNotificationKeyboard;
-import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
+import dev.tssvett.schedule_bot.bot.constants.MessageTextConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class DifferenceScheduleNotificationSettingsCommand implements BotCommand
     public SendMessage execute(Long userId, Long chatId, String stringArgument) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageTextConstantsUtils.SETUP_NOTIFICATION)
+                .text(MessageTextConstants.SETUP_NOTIFICATION)
                 .replyMarkup(scheduleDifferenceNotificationKeyboard
                         .createInlineKeyboard(Action.SCHEDULE_DIFFERENCE_NOTIFICATION, userId))
                 .build();

@@ -2,8 +2,8 @@ package dev.tssvett.schedule_bot.bot.keyboard.impl.group;
 
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import static dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils.GROUP_CLICK_WITH_ERROR_STATE;
-import static dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils.SUCCESSFULLY_REGISTERED_MESSAGE;
+import static dev.tssvett.schedule_bot.bot.constants.MessageTextConstants.GROUP_CLICK_WITH_ERROR_STATE;
+import static dev.tssvett.schedule_bot.bot.constants.MessageTextConstants.SUCCESSFULLY_REGISTERED_MESSAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

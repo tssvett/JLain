@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.bot.keyboard.impl.course;
 
 import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrationStateException;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
+import dev.tssvett.schedule_bot.bot.constants.MessageTextConstants;
 import dev.tssvett.schedule_bot.bot.keyboard.KeyboardButton;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.group.GroupKeyboard;
 import dev.tssvett.schedule_bot.bot.utils.UpdateUtils;
@@ -47,7 +47,7 @@ public class CourseSelectionKeyboardButton implements KeyboardButton {
     private SendMessage sendGroupSelectionMessage(long userId, long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageTextConstantsUtils.REGISTER_CHOOSE_GROUP_SUCCESSFULLY_MESSAGE)
+                .text(MessageTextConstants.REGISTER_CHOOSE_GROUP_SUCCESSFULLY_MESSAGE)
                 .replyMarkup(groupKeyboard.createInlineKeyboard(GROUP_CHOOSE, userId))
                 .build();
     }
@@ -55,7 +55,7 @@ public class CourseSelectionKeyboardButton implements KeyboardButton {
     private SendMessage sendAlreadySelectedCourseMessage(long chatId) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageTextConstantsUtils.COURSE_CLICK_WITH_ERROR_STATE)
+                .text(MessageTextConstants.COURSE_CLICK_WITH_ERROR_STATE)
                 .build();
     }
 }

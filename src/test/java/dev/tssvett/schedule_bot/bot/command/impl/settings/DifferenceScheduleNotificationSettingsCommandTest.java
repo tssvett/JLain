@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.bot.command.impl.settings;
 
 import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.notification.differenceschedule.ScheduleDifferenceNotificationKeyboard;
-import static dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils.SETUP_NOTIFICATION;
+import static dev.tssvett.schedule_bot.bot.constants.MessageTextConstants.SETUP_NOTIFICATION;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;

@@ -4,8 +4,8 @@ import dev.tssvett.schedule_bot.backend.exception.registration.NotValidRegistrat
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.course.CourseKeyboard;
-import static dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils.FACULTY_CLICK_WITH_ERROR_STATE;
-import static dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils.REGISTER_CHOOSE_COURSE_MESSAGE;
+import static dev.tssvett.schedule_bot.bot.constants.MessageTextConstants.FACULTY_CLICK_WITH_ERROR_STATE;
+import static dev.tssvett.schedule_bot.bot.constants.MessageTextConstants.REGISTER_CHOOSE_COURSE_MESSAGE;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;

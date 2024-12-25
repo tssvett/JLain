@@ -4,8 +4,8 @@ import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.enums.keyboard.Action;
 import dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState;
 import dev.tssvett.schedule_bot.bot.keyboard.impl.faculty.FacultyKeyboard;
-import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
-import static dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils.NO_RE_REGISTRATION_ANSWER;
+import dev.tssvett.schedule_bot.bot.constants.MessageTextConstants;
+import static dev.tssvett.schedule_bot.bot.constants.MessageTextConstants.NO_RE_REGISTRATION_ANSWER;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,7 +67,7 @@ class RefreshRegistrationSelectionKeyboardButtonTest {
         SendMessage sendMessage = refreshRegistrationSelectionKeyboardButton.onButtonClick(update);
 
         //Assert
-        assertEquals(MessageTextConstantsUtils.REGISTER_FACULTY_CHOOSING_MESSAGE, sendMessage.getText());
+        assertEquals(MessageTextConstants.REGISTER_FACULTY_CHOOSING_MESSAGE, sendMessage.getText());
     }
 
     @Test

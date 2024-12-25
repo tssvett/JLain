@@ -1,7 +1,7 @@
 package dev.tssvett.schedule_bot.bot.command.impl.general;
 
 import dev.tssvett.schedule_bot.backend.service.StudentService;
-import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
+import dev.tssvett.schedule_bot.bot.constants.MessageTextConstants;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +32,6 @@ class StartBotCommandTest {
 
         //Assert
         verify(studentService).createStudentIfNotExists(1L, 1L);
-        assertEquals(MessageTextConstantsUtils.START_COMMAND, result.getText());
+        assertEquals(MessageTextConstants.START_COMMAND, result.getText());
     }
 }

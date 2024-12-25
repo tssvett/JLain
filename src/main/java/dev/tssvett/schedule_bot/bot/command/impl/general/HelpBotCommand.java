@@ -2,7 +2,7 @@ package dev.tssvett.schedule_bot.bot.command.impl.general;
 
 import dev.tssvett.schedule_bot.bot.annotation.NoneRequired;
 import dev.tssvett.schedule_bot.bot.command.BotCommand;
-import dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils;
+import dev.tssvett.schedule_bot.bot.constants.MessageTextConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,7 +16,7 @@ public class HelpBotCommand implements BotCommand {
     public SendMessage execute(Long userId, Long chatId, String message) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(MessageTextConstantsUtils.HELP_COMMAND)
+                .text(MessageTextConstants.HELP_COMMAND)
                 .build();
     }
 }

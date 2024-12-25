@@ -3,7 +3,7 @@ package dev.tssvett.schedule_bot.bot.annotation.postprocessor;
 import dev.tssvett.schedule_bot.backend.exception.annotation.PostBeanProcessorException;
 import dev.tssvett.schedule_bot.backend.service.StudentService;
 import dev.tssvett.schedule_bot.bot.annotation.AdminRequired;
-import static dev.tssvett.schedule_bot.bot.utils.message.MessageTextConstantsUtils.NOT_ADMIN_MESSAGE;
+import static dev.tssvett.schedule_bot.bot.constants.MessageTextConstants.NOT_ADMIN_MESSAGE;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import lombok.RequiredArgsConstructor;

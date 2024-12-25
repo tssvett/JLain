@@ -2,6 +2,7 @@ package dev.tssvett.schedule_bot.bot.utils.message;
 
 import dev.tssvett.schedule_bot.backend.dto.LessonInfoDto;
 import dev.tssvett.schedule_bot.backend.dto.StudentInfoDto;
+import dev.tssvett.schedule_bot.bot.constants.MessageTextConstants;
 import dev.tssvett.schedule_bot.bot.enums.persistense.RegistrationState;
 import dev.tssvett.schedule_bot.bot.enums.persistense.Role;
 import dev.tssvett.schedule_bot.bot.enums.persistense.Subgroup;
@@ -52,7 +53,7 @@ public class MessageCreateUtils {
         return String.format("""
                 %s %s (%s)
                                 
-                """, MessageTextConstantsUtils.DAY_HEADER, capitalizeFirstLetter(day), lessonDate);
+                """, MessageTextConstants.DAY_HEADER, capitalizeFirstLetter(day), lessonDate);
     }
 
     public static String createStringLesson(LessonInfoDto lesson) {
@@ -77,23 +78,23 @@ public class MessageCreateUtils {
                 %s %s (%s):
                 Зачилься, пар нет :)
                                 
-                """, MessageTextConstantsUtils.DAY_HEADER, capitalizeFirstLetter(weekDayName), currentDate);
+                """, MessageTextConstants.DAY_HEADER, capitalizeFirstLetter(weekDayName), currentDate);
     }
 
     private static String getEmojiForLesson(LessonInfoDto lesson) {
         return switch (lesson.type()) {
-            case LABORATORY -> MessageTextConstantsUtils.LAB_EMOJI;
-            case LECTURE -> MessageTextConstantsUtils.LECTURE_EMOJI;
-            case PRACTICE -> MessageTextConstantsUtils.PRACTICE_EMOJI;
-            case ANOTHER -> MessageTextConstantsUtils.OTHER_EMOJI;
-            case EXAM -> MessageTextConstantsUtils.EXAM_EMOJI;
+            case LABORATORY -> MessageTextConstants.LAB_EMOJI;
+            case LECTURE -> MessageTextConstants.LECTURE_EMOJI;
+            case PRACTICE -> MessageTextConstants.PRACTICE_EMOJI;
+            case ANOTHER -> MessageTextConstants.OTHER_EMOJI;
+            case EXAM -> MessageTextConstants.EXAM_EMOJI;
             default -> "";
         };
     }
 
     public static String createRegisteredStudentsMessage(List<StudentInfoDto> studentsInfoList) {
         return String.format("""
-                🍀 Количество зарегестрированных пользователей: %s
+                🍀 Количество зарегистрированных пользователей: %s
                 """, studentsInfoList.size());
     }
 
